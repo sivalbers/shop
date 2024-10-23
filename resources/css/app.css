@@ -1,0 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.suchFilter{
+    @apply  h-4 bg-slate-200 focus:outline-none focus:border-none text-xs text-gray-500 font-normal rounded
+}
+
+select.suchFilter{
+    @apply  h-4 bg-slate-200 focus:outline-none focus:border-none text-xs text-gray-500 font-normal px-1 py-0 w-20
+}
+
+.tabNew{
+    @apply h-8 px-2 mt-4 mr-2 w-36  flatwhite
+}
+
+.tabNewActive{
+    @apply h-8 px-2 mt-4 mr-2 w-36 rounded-md border border-gray-400 text-sky-900 shadow-inner shadow-gray-400 bg-[#ced50369] font-bold pt-1
+}
+
+.original_ewe_gruen{
+    @apply bg-[#CDD503]
+}
+
+.text-ewe-gruen{
+    @apply text-[#CDD503]
+}
+
+.basketLabel{
+    @apply w-4/12 text-right mr-2
+}
+
+.basketInput{
+    @apply w-8/12 h-6 border border-slate-500 rounded
+}
+
+.basketTextarea{
+    @apply w-8/12 h-28 border border-slate-500 rounded
+}
+
+.basketLieferdatum{
+    @apply w-4/12 h-6 border border-slate-500 rounded
+}
+
+.flatwhite
+{
+    @apply border border-gray-200 rounded-md bg-white shadow-gray-300 shadow-md
+}
+
+.prio_normal{
+    @apply bg-inherit
+}
+
+.prio_mittel{
+    @apply underline
+}
+
+.prio_hoch{
+    @apply font-bold
+}
