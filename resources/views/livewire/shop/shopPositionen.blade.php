@@ -25,7 +25,7 @@
 
                     <tr class="bg-gray-100 border-b border-gray-300">
 
-                        <th class="px-4 py-2 ">Artikel</th>
+                        <th class="px-4 py-2 text-left">Artikel - Beschreibung</th>
                         <th class="px-4 py-2 ">Menge</th>
                         <th class="px-4 py-2 ">Einh.</th>
                         <th class="px-4 py-2  text-right">E-Preise €</th>
@@ -115,10 +115,10 @@
                             <!-- Einheit -->
                             <td class="px-4 py-1 text-center">{{ $position['einheit'] }}</td>
                             <!-- E-Preise -->
-                            <td class="px-4 py-1 text-right">{{ number_format($position['epreis'], 2, ',', '.') }}</td>
+                            <td class="px-4 py-1 text-right">{{  formatPreis($position['epreis']) }}</td>
                             <!-- G-Preise -->
                             <td class="px-4 py-1 text-right">
-                                {{ number_format($position['gpreis'], 2, ',', '.') }}</td>
+                                {{ formatGPreis($position['gpreis']) }}</td>
                             <!-- VV -->
                             <td class="w-auto px-1 py-1 text-center">
                                 @if ($bPositionen[$key]['bestand'] === 0)
@@ -129,8 +129,8 @@
                                         class="h-7 text-[#CDD503]" />
                                 @endif
                             </td>
-                            <td class="px-2 py-2 border-r border-gray-300"><a href="#"
-                                    wire:click="BtnDelete({{ $key }})" class="hover:text-red-500"
+                            <td class="px-2 py-2 "><a href="#"
+                                    wire:click="btnDelete({{ $key }})" class="hover:text-red-500"
                                     title="direkt löschen"> <x-fluentui-delete-28-o class="h-5" /></a></td>
                         </tr>
                     @endforeach
@@ -161,7 +161,7 @@
                         <div class="">
                             <button type="submit"
                                 class="w-52 @if (!$isPosModified) bg-gray-500 @else  bg-sky-600 @endif text-white py-2 rounded-md"
-                                @if (!$isPosModified) disabled @endif">
+                                @if (!$isPosModified) disabled @endif>
 
                                 @if (!$isPosModified)
                                     Keine Änderungen

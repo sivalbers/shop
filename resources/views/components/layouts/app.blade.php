@@ -27,7 +27,7 @@
         </div>
     </div>
 
-    <div class="mt-[88px] min-h-screen bg-gray-100 dark:bg-gray-900 overflow-auto">
+    <div class="mt-[103px] pt-2 min-h-screen bg-gray-100 dark:bg-gray-900 overflow-auto">
             <!-- Page Heading -->
             @if (isset($header))
                 <header class="bg-white dark:bg-gray-800 shadow">

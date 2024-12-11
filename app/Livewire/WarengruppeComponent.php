@@ -5,6 +5,7 @@ namespace App\Livewire;
 use Livewire\WithPagination;
 use Livewire\Component;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 use App\Models\Warengruppe;
 
@@ -33,7 +34,6 @@ class WarengruppeComponent extends Component
         }
         Log::info($abfrage->toSQL());
         $warengruppen = $abfrage->paginate(30);
-
 
         return view('livewire.warengruppe-component', compact('warengruppen'));
     }

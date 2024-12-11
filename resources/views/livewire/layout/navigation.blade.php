@@ -1,8 +1,8 @@
-<nav x-data="{ open: false }" class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700 ">
+<nav x-data="{ open: false }" class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
     <!-- Primary Navigation Menu -->
 
-    <div class="w-11/12 m-auto  ">
-        <div class="flex justify-between h-16">
+    <div class="w-11/12 m-auto">
+        <div class="flex justify-between h-20">
             <div class="flex items-center w-full">
 
                 <!-- Settings Dropdown -->
@@ -47,11 +47,9 @@
                 <div class="flex items-center m-auto">
 
                     <!-- Logo -->
-                    <div class="shrink-0 flex">
+                    <div class="flex shrink sm:min-w-40"> <!-- SM Logo min -->
                         <a href="{{ route('startseite') }}" wire:navigate>
-
                                 <img src="{{ asset('storage/c-1.png') }}">
-
                         </a>
                     </div>
 
@@ -61,7 +59,9 @@
                             {{ __('Startseite') }} <!-- /*  ###########################  */ -->
                         </x-nav-link>
 
+
                         @if (auth()->user() && auth()->user()->isAdmin())
+
                             <!-- Artikel Links -->
                             <x-dropdown align="right" width="48" class="">
                                 <x-slot name="trigger">
@@ -81,7 +81,7 @@
                                 </x-slot>
 
                                 <x-slot name="content">
-                                    <x-dropdown-link :href="route('artikels')" wire:navigate>
+                                    <x-dropdown-link :href="route('artikel')" wire:navigate>
                                         {{ __('Artikel') }} <!-- /*  ###########################  */ -->
                                     </x-dropdown-link>
 
@@ -173,18 +173,16 @@
 
 
             @if (Auth::user())
-                <div class="hidden sm:flex sm:items-center sm:ms-6">
-                    <x-nav-link :href="route('shop',[ 'tab' => 'tab5'] )" :active="request()->routeIs('bestellungen')" wire:navigate>
-                        <x-fluentui-shopping-bag-20-o class="w-8 h-8" />
-                        <div class="text-5xl text-sky-600">{{ $bestellung->anzpositionen }}</div>
-                        @php
-                        /*
-                            $bestenr = session()->get('bestellnr');
-                            <!-- div class="text-xs text-gray-600">({{ $bestellung->nr }}) </div -->
-                            */
-                        @endphp
+                <div class="hidden sm:flex w-[20vh]">
+                    <div class="flex flex-col sm:items-center sm:ms-6">
+                        <x-nav-link :href="route('shop',[ 'tab' => 'tab5'] )" :active="request()->routeIs('bestellungen')" wire:navigate>
+                            <x-fluentui-shopping-bag-20-o class="w-8 h-8" />
+                            <div class="text-5xl text-sky-600">{{ $bestellung->anzpositionen }}</div>
+                        </x-nav-link>
+                        <div class="text-xs text-gray-50 bg-gray-500 px-2">{{ formatGPreis($bestellung->gesamtbetrag) }} €</div>
 
-                    </x-nav-link>
+                    </div>
+
                 </div>
             @endif
 
@@ -211,6 +209,28 @@
             <x-responsive-nav-link :href="route('startseite')" :active="request()->routeIs('startseite')" wire:navigate>
                 {{ __('Startseite') }}
             </x-responsive-nav-link>
+
+
+            <x-responsive-nav-link :href="route('artikel')" :active="request()->routeIs('artikel')" wire:navigate>
+                {{ __('Artikel') }}
+            </x-responsive-nav-link>
+
+            <x-responsive-nav-link :href="route('sortimente')" :active="request()->routeIs('sortimente')" wire:navigate>
+
+                {{ __('Sortimente') }}
+            </x-responsive-nav-link>
+
+            <x-responsive-nav-link :href="route('warengruppen')" :active="request()->routeIs('warengruppen')" wire:navigate>
+                {{ __('Warengruppen') }} <!-- /*  ###########################  */ -->
+            </x-responsive-nav-link>
+
+
+            <x-responsive-nav-link :href="route('shop')" :active="request()->routeIs('shop')" wire:navigate class="border-t border-gray-200 dark:border-gray-600">
+                <x-fluentui-building-shop-16-o class="w-5 h-5 mr-2 float-left" />
+                {{ __('Shop') }} <!-- /*  ###########################  */ -->
+
+            </x-responsive-nav-link>
+
         </div>
         @if (auth()->user())
             <!-- Responsive Settings Options -->

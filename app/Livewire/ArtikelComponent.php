@@ -10,6 +10,7 @@ use App\Models\Artikel;
 use Livewire\Attributes\On;
 use Illuminate\Support\Facades\Log;
 
+
 class ArtikelComponent extends Component
 {
     use WithPagination;
@@ -18,6 +19,7 @@ class ArtikelComponent extends Component
     public $bezFilter = '';
     public $statusFilter = '';
     public $wgFilter = '';
+
 
     public function render()
     {

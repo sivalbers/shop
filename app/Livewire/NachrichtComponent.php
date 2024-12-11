@@ -106,8 +106,9 @@ class NachrichtComponent extends Component
         $this->nachrichtId = $nachricht->id;
         $this->kurztext = $nachricht->kurztext;
         $this->langtext = $nachricht->langtext;
-        $this->von = $nachricht->von;
-        $this->bis = $nachricht->bis;
+        $this->von = optional($nachricht->von)->format('Y-m-d');
+        $this->bis = optional($nachricht->bis)->format('Y-m-d');
+
         $this->links = $nachricht->links;
         $this->prioritaet = $nachricht->prioritaet;
         $this->startseite = $nachricht->startseite === 1 ? true : false ;

@@ -4,9 +4,10 @@ namespace App\Livewire;
 
 use Closure;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 use App\Models\Bestellung;
-use App\Models\Position;
+use App\Models\BestellungPos;
 use App\Models\Anschrift;
 use Livewire\Attributes\On;
 
@@ -48,9 +49,10 @@ class WarenkorbComponent extends Component
         $this->lieferdatum = $this->bestellung->lieferdatum;
     }
 
-    #[On('updateBestellung')]
-    public function update($updatePos = false){
+    #[On('updateWarenkorb')]
+    public function updateWarenkorb($updatePos = false){
 
+        Log::info('Warenkorbkomponent->updateWarenkorb');
 
         $this->bestellung->kundenbestellnr = $this->kundenbestellnr;
         $this->bestellung->kommission = $this->kommission;
@@ -58,14 +60,20 @@ class WarenkorbComponent extends Component
         $this->bestellung->lieferdatum = $this->lieferdatum;
 
         $this->bestellung->save();
-        if ($updatePos){
-            $this->dispatch('updatePosition');
-        }
+
+    }
+
+
+    public function doNullMengenEntfernen(){
+        BestellungPos::where('bestellnr', $this->bestellung->nr)->where('menge', 0)->delete();
+        $this->dispatch('updateNavigation');
+        $this->dispatch('refresh-page');
+
     }
 
 
     public function doEmpty(){
-        Position::where('bestellnr', $this->bestellung->nr)->delete();
+        BestellungPos::where('bestellnr', $this->bestellung->nr)->delete();
         $this->bestellung->kundenbestellnr = '';
         $this->bestellung->kommission = '';
         $this->bestellung->bemerkung = '';

@@ -27,6 +27,18 @@ class Anschrift extends Model
         'art'
     ];
 
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'kundennr' => 'integer',
+        'standard' => 'boolean',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+    ];
+
     // Beziehung zum Benutzer
     public function user()
     {

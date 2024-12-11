@@ -52,10 +52,10 @@ Route::get('/testmain', TestMainComponent::class)
 
 
 Route::middleware([AdminMiddleware::class])->group(function(){
-    Route::get('/artikels', ArtikelComponent::class)->name('artikels')->middleware('auth');
-    Route::get('/sortimente', SortimentComponent::class)->name('sortimente')->middleware('auth');
+    Route::get('/artikels', ArtikelComponent::class)->middleware('auth')->name('artikel');
+    Route::get('/sortimente', SortimentComponent::class)->middleware('auth')->name('sortimente');
     Route::get('/artikel-sortimente', ArtikelSortimentComponent::class)->middleware('auth');
-    Route::get('/warengruppen', WarengruppeComponent::class)->name('warengruppen')->middleware('auth');
+    Route::get('/warengruppen', WarengruppeComponent::class)->middleware('auth')->name('warengruppen');
     Route::get('/bestellungen', BestellungComponent::class)->name('bestellungen');
 
 

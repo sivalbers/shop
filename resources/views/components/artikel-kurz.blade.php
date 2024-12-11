@@ -1,28 +1,48 @@
-<div class="flex flex-row mb-1 w-full">
-    <div class="relative basis-3/6 p-2 border-b border-b-sky-600">
+<div class="flex flex-row w-full hover:bg-[#e3e692] items-center">
+   @php
+       $abstand = 'py-0.5';
+   @endphp
+
+    <div class="basis-4/6 px-1 {{ $abstand }}">
         <span class="text-sm flex flex-row">
+
+
+            <span class="relative group text-gray-300 pr-2 hover:text-yellow-500">
+                <a href="#" wire:click.prevent="showFavoritPosForm('{{ $artikel->artikelnr }}')" class="hover:underline">
+                    @if ($artikel->is_favorit)
+                    <x-fluentui-star-emphasis-20 class="text-yellow-500 w-5" />
+                    @else
+                        <!-- Normaler Zustand -->
+                        <x-fluentui-star-28-o class="w-5 group-hover:hidden" />
+                        <!-- Hover-Zustand -->
+                        <x-fluentui-star-28-o class="w-5 hidden group-hover:block" />
+                    @endif
+                </a>
+            </span>
+
+
             <span class="relative group text-gray-500 pr-2">
                 <x-fluentui-info-12-o class="w-5" />
                 @if (!empty(trim($artikel->langtext)))
-                    <span
-                        class="absolute hidden group-hover:block bg-gray-700 text-white text-xs rounded py-1 px-2 w-64 -mt-8 z-10">
+                    <span class="absolute hidden group-hover:block bg-gray-700 text-white text-xs rounded py-1 px-2 w-80 -mt-8 z-10">
                         {!! $artikel->langtext !!}
                     </span>
                 @endif
             </span>
-            <a href="#" wire:click.prevent="showArtikel('{{ $artikel->artikelnr }}')" class="hover:underline">
-
-
-                <span class="font-bold">{{ $artikel->artikelnr }} - </span>{{ $artikel->bezeichnung }}
-            </a>
+            <div class="w-full">
+                <a href="#" wire:click.prevent="showArtikel('{{ $artikel->artikelnr }}')" class="hover:underline">
+                    <span class="font-bold ">{{ $artikel->artikelnr }} - </span>{{ $artikel->bezeichnung }}
+                </a>
+            </div>
         </span>
     </div>
-    <div class="basis-3/6 px-2 border-b border-b-sky-600">
+    <div class="basis-2/6 px-1 {{ $abstand }}">
         <div class="flex flex-col ml-auto w-full">
             <div class="flex flex-row items-center ml-auto">
                 <div class="flex-grow-0 w-auto">
                     <div class="basis-1 text-red-800 text-sm text-right">
-                        {{ number_format($artikel->vkpreis, 2, ',', '.') }} € / {{ $artikel->einheit }}
+
+                        {{ formatPreis( $artikel->vkpreis) }} € / {{ $artikel->einheit }}
                     </div>
                 </div>
                 <div class="flex-grow-0 w-auto ml-2">
@@ -48,8 +68,5 @@
                 </div>
             </div>
         </div>
-
-
-        
     </div>
 </div>

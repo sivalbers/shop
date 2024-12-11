@@ -1,6 +1,6 @@
 <?php
 
-// app/Http/Controllers/ODataController.php
+
 
 namespace App\Http\Controllers;
 
@@ -10,17 +10,30 @@ use App\Models\Artikel;
 use App\Models\Warengruppe;
 use App\Models\ArtikelSortiment;
 use App\Models\Sortiment;
+use App\Models\Config;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class ODataController extends Controller
 {
     public function importArtikel()
     {
 
-        $url = env('URL_IMPORT_ARTIKEL', "https://sieverding-sandbox.faveo365.com:9248/NSTSUBSCRIPTIONSODATA/ODatav4/Company('Sieverding%20Besitzunternehmen')/ShopItems?tenant=x7069851800471529774");
+
+
+
+        $json = json_decode(Config::kundennrJson('URL_IMPORT', Auth::user()->kundenr), true);
+
+        if (!$json) {
+            return response()->json(['error' => 'Fehler beim Import: >URL_IMPORT< nicht gefunden' ], 500);
+
+        }
+
+        $url = $json['URL_IMPORT_ARTIKEL'];
+
         $username = env('NAV_USER', "testuser");
-        $password = env('NAV_PASSWORD', "Sieverding22!!");
+        $password = env('NAV_PASSWORD', "Sieverding22!");
 
         // Initialisiere den Guzzle-Client
         $client = new Client();
@@ -49,7 +62,7 @@ class ODataController extends Controller
                 $artikel->artikelnr = $item["artikelnr"];
                 $artikel->bezeichnung = $item["bezeichnung"];
                 $artikel->langtext = $item["langtext"];
-                $artikel->status = $item["gesperrt"] ? "gesperrt" : "aktiv";
+                $artikel->gesperrt = $item["gesperrt"] ? true : false ;
                 $artikel->verpackungsmenge = 1;
                 $artikel->einheit = $item["einheit"];
                 $artikel->vkpreis = $item["preis"];
@@ -67,12 +80,17 @@ class ODataController extends Controller
     public function importWarengruppe()
     {
 
+        $json = json_decode(Config::kundennrJson('URL_IMPORT', Auth::user()->kundenr), true);
 
+        if (!$json) {
+            return response()->json(['error' => 'Fehler beim Import: >URL_IMPORT< nicht gefunden' ], 500);
+        }
 
-        $url = env('URL_IMPORT_WG', "https://sieverding-sandbox.faveo365.com:9248/NSTSUBSCRIPTIONSODATA/ODatav4/Company('Sieverding%20Besitzunternehmen')/ShopCategories?tenant=x7069851800471529774");
+        $url = $json['URL_IMPORT_WG'];
 
         $username = env('NAV_USER', "testuser");
-        $password = env('NAV_PASSWORD', "Sieverding22!!");
+        $password = env('NAV_PASSWORD', "Sieverding22!");
+
 
         // Initialisiere den Guzzle-Client
         $client = new Client();
@@ -116,14 +134,17 @@ class ODataController extends Controller
     public function importSortiment()
     {
 
+        $json = json_decode(Config::kundennrJson('URL_IMPORT', Auth::user()->kundenr), true);
 
-        $url = env('URL_IMPORT_SORTIMENT', "https://sieverding-sandbox.faveo365.com:9248/NSTSUBSCRIPTIONSODATA/ODatav4/Company('Sieverding%20Besitzunternehmen')/ShopSortiment?tenant=x7069851800471529774");
+        if (!$json) {
+            return response()->json(['error' => 'Fehler beim Import: >URL_IMPORT< nicht gefunden' ], 500);
+
+        }
+
+        $url = $json['URL_IMPORT_SORTIMENT'];
 
         $username = env('NAV_USER', "testuser");
-        $password = env('NAV_PASSWORD', "Sieverding22!!");
-
-
-
+        $password = env('NAV_PASSWORD', "Sieverding22!");
 
         // Initialisiere den Guzzle-Client
         $client = new Client();

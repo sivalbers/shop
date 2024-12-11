@@ -10,7 +10,6 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
-
     public function isAdmin(){
         return $this->role === 99;
     }
@@ -27,7 +26,8 @@ class User extends Authenticatable
         'password',
         'kundennr',
         'login',
-        'role'
+        'role',
+        'sortiment'
     ];
 
     /**

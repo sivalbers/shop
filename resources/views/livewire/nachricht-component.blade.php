@@ -62,6 +62,7 @@
                     </div>
                     <div class="w-full">
                         <textarea id="links" wire:model="links" class="border rounded p-1 w-full"></textarea>
+                        <div class="text-xs">Link => Beschreibung</div>
                         @error('links')
                             <span class="text-red-500">{{ $message }}</span>
                         @enderror
@@ -156,17 +157,17 @@
                                 <div class="p-2 w-40 text-right text-gray-500">Priorität: </div>
                                 <div class="p-2 w-auto">
                                     @if ($nachricht->prioritaet === 'normal')
-                                        normal
+                                        Normal
                                     @elseif ($nachricht->prioritaet === 'mittel')
-                                        mittel
+                                        Mittel
                                     @else
-                                        hoch
+                                        Hoch
                                     @endif
                                 </div>
                             </div>
                             <div class="flex flex-row w-full">
                                 <div class="p-2 w-40 text-right text-gray-500">Zeitraum: </div>
-                                <div class="p-2 w-auto">{{ $nachricht->von }} - {{ $nachricht->bis }}</div>
+                                <div class="p-2 w-auto">{{ $nachricht->getVonBisStr() }}</div>
                             </div>
                             <div class="flex flex-row w-full">
                                 <div class="p-2 w-40 text-right text-gray-500">Kopfzeile: </div>

@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('status', function (Blueprint $table) {
-            $table->id(); // Primary Key 'id'
+            $table->tinyIncrements('id');
             $table->string('bezeichnung', 30)->default('Bezeichnung'); // Text[30] mit Standardwert 'Bezeichnung'
             $table->timestamps(); // Fügt created_at und updated_at Spalten hinzu
         });

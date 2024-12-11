@@ -5,31 +5,49 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
+
 use App\Models\Anschrift;
+
 
 class Bestellung extends Model
 {
     use HasFactory;
 
-    protected $table = 'bestellung'; // Der Tabellenname ist 'bestellung'
+    protected $table = 'bestellungen'; // Der Tabellenname ist 'bestellung'
 
     protected $primaryKey = 'nr'; // Der Primärschlüssel ist 'nr'
 
     protected $fillable = [
-        'user_id',
         'datum',
         'kundennr',
+        'user_id',
         'rechnungsadresse',
         'lieferadresse',
-        'status',
+        'status_id',
+        'gesamtbetrag',
+        'anzpositionen',
         'kundenbestellnr',
         'kommission',
         'bemerkung',
-        'gesamtbetrag',
         'lieferdatum',
-        'anzpositionen',
+    ];
+
+    protected $casts= [
+        'datum' => 'date',
+        'kundennr' => 'integer',
+        'user_id' => 'integer',
+        'rechnungsadresse' => 'integer',
+        'lieferadresse' => 'integer',
+        'status_id' => 'integer',
+        'gesamtbetrag'  => 'float',
+        'anzpositionen' => 'integer',
+        'lieferdatum' => 'date',
+        'created_at' => 'date',
+        'updated_at'  => 'date',
     ];
 
     public function rechnungsadresse()
@@ -53,7 +71,7 @@ class Bestellung extends Model
         if( $user ){
             $bestellung = Bestellung::where('kundennr', $user->kundennr)
                 ->where('user_id', $user->id)
-                ->where('status', 0)
+                ->where('status_id', 0)
                 ->first();
 
             if (!$bestellung){
@@ -68,7 +86,7 @@ class Bestellung extends Model
                     'datum' => today(),
                     'rechnungsadresse' => $ReAddr,
                     'lieferadresse' => $LfAddr,
-                    'status' => 0,                  // Beispiel für einen Standardstatus (1 = 'offen' o.ä.)
+                    'status_id' => 0,                  // Beispiel für einen Standardstatus (1 = 'offen' o.ä.)
                     'gesamtbetrag' => 0.00,         // Standardwert für Gesamtbetrag (z.B. 0.00)
                 ]);
                 $result = $bestellung ;
@@ -77,22 +95,20 @@ class Bestellung extends Model
                 $result = $bestellung ;
             }
         }
+
         return $result ;
 
     }
 
-    public function doCalc(){
+    public static function doCalc($nr){
 
 
-        // Summe der gpreis-Felder
-        $this->gesamtBetrag = Position::where('bestellnr', $this->nr)->sum('gpreis');
-
-        // Anzahl der Positionen
-        $this->anzpositionen = Position::where('bestellnr', $this->nr)->count('id');
-
-        $this->save();
-
+        DB::select('CALL GetBestellungSummary(?)', [$nr]);
+        return Bestellung::where('nr', $nr)->first();
     }
+
+
+
 
 }
 

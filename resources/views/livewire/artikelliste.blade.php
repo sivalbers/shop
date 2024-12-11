@@ -1,9 +1,7 @@
 <div>
     <div class="w-full text-xs">
         <div class="border border-gray-500 w-4/5 rounded m-auto">
-            <div class=" gap-x-4 gap-y-1 m-4">
 
-            </div>
             <div class="grid grid-cols-8 gap-x-4 gap-y-1 m-4">
                 <div class="bg-slate-300 rounded p-3 font-bold">
                     Artikelnr.

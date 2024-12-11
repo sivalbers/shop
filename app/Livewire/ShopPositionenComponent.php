@@ -8,7 +8,7 @@ use Livewire\Attributes\On;
 
 
 use App\Models\Bestellung;
-use App\Models\Position;
+use App\Models\BestellungPos;
 
 
 
@@ -32,9 +32,9 @@ class ShopPositionenComponent extends Component
     public function loadData(){
         Log::info('ShopPositionComponent.loadData()');
         $this->bestellung = Bestellung::getBasket();
-        $mPositionen = Position::select('artikels.bezeichnung', 'artikels.langtext', 'positionen.*',  'artikels.einheit')->where('bestellnr', $this->bestellung->nr)
+        $mPositionen = BestellungPos::select('artikel.bezeichnung', 'artikel.langtext', 'bestellungen_pos.*',  'artikel.einheit')->where('bestellnr', $this->bestellung->nr)
 
-            ->join('artikels', 'positionen.artikelnr', '=', 'artikels.artikelnr')
+            ->join('artikel', 'bestellungen_pos.artikelnr', '=', 'artikel.artikelnr')
             ->get();
 
         $this->bPositionen = array();
@@ -51,7 +51,7 @@ class ShopPositionenComponent extends Component
                 'gpreis'    => $position->gpreis,
                 'einheit'   => $position->einheit,
                 'steuer'    => $position->steuer,
-                'bestand'   =>  rand(0, 10),
+                'bestand'   => $position->bestand,
             ];
 
         }
@@ -128,7 +128,7 @@ class ShopPositionenComponent extends Component
         $gesamt = 0;
         foreach ($this->bPositionen as $key => $qu) {
             $gesamt = $gesamt + $qu['gpreis'];
-            $this->bPositionen[$key]['menge'] = round($this->bPositionen[$key]['menge']);
+            // $this->bPositionen[$key]['menge'] = $this->bPositionen[$key]['menge'];
         }
         $this->bestellung->gesamtbetrag = round($gesamt,2);
     }
@@ -142,37 +142,51 @@ class ShopPositionenComponent extends Component
     /*Positionen speichern,
         Meldung an Bestellung, diese zu speichern */
     public function BtnSpeichern(){
-        Log::info('In Speichern');
-
+        Log::info('ShopPositionenComponent=>BtnSpeichern()');
+        $gesamt = 0;
         foreach ($this->bPositionen as $key => $qu) {
-            $pos = Position::where ('id', $this->bPositionen[$key]['id'])->first();
+            $pos = BestellungPos::where ('id', $this->bPositionen[$key]['id'])->first();
             if ($pos){
                 $pos->menge = $qu['menge'];
                 $pos->gpreis = round($pos->menge * $pos->epreis, 2);
                 $pos->save();
+                $gesamt = $gesamt + $pos->gpreis ;
             }
         }
-        $this->dispatch('updateBestellung', [ 'updatePos' => true ]);
+        $this->bestellung->gesamtbetrag = round($gesamt,2);
+
+        Log::info('VOR => $this->dispatch(updateWarenkorb');
+
+        $this->dispatch('updateWarenkorb'); // Warenkorbkomponent
+
+        Log::info('VOR => $this->dispatch(updateNavigation');
+        $this->dispatch('updateNavigation');
+
         $this->isPosModified = false ;
         //$this->updateFrontendPage();
     }
 
     /* Position löschen und Kopf neu berechnen */
-    public function BtnDelete($id){
+    public function btnDelete($id){
 
-        Position::where('id', $id)->delete();
+        BestellungPos::where('id', $id)->delete();
+
+        Log::info("btnDelete", [ 'id' => $id]);
 
         unset($this->bPositionen[$id]);
 
         $this->calc();
-        $this->dispatch('updateNavigation');
+        $this->updateFrontendPage();
+        //$this->dispatch('updateNavigation');
+
     }
 
     #[On('doRefreshPositionen')]
     public function doRefresh(){
         $this->bPositionen = array();
         $this->calc();
-        $this->cancelReload();
+        $this->dispatch('updateNavigation');
+
     }
 
 
@@ -182,7 +196,7 @@ class ShopPositionenComponent extends Component
     */
     #[On('updatePosition')]
     public function updateFrontendPage(){
-       $this->dispatch('updateNavigation');
+
        $this->dispatch('refresh-page');
     }
 
