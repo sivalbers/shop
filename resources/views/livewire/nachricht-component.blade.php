@@ -89,9 +89,19 @@
                     <div class="w-32 text-right mr-2">
                         <label for="startseite" class="block font-bold">Kopfzeile:</label>
                     </div>
-                    <div class="w-full">
-                        <input type="checkbox" id="startseite" wire:model="startseite">
+                    <div class="w-full flex flex-row items-center">
+                        <div class="w-8">
+                            <input type="checkbox" id="startseite" wire:model="startseite">
+                        </div>
+
+                        <div class="w-48 text-right mr-2">
+                            <label for="mail" class="block font-bold">In Bestätigungsmail:</label>
+                        </div>
+                        <div class="w-full">
+                            <input type="checkbox" id="mail" wire:model="mail">
+                        </div>
                     </div>
+
                 </div>
 
                 <div class="mb-4 flex flex-row items-center">
@@ -170,13 +180,13 @@
                                 <div class="p-2 w-auto">{{ $nachricht->getVonBisStr() }}</div>
                             </div>
                             <div class="flex flex-row w-full">
-                                <div class="p-2 w-40 text-right text-gray-500">Kopfzeile: </div>
-                                <div class="p-2 w-auto">{{ $nachricht->startseite === 1 ? 'Ja' : 'Nein' }}</div>
+                                <div class="p-2 w-40 text-right text-gray-500">Kopfzeile / In Bestätigungsmail: </div>
+                                <div class="p-2 w-auto">{{ $nachricht->startseite ? 'Ja' : 'Nein' }} / {{ $nachricht->mail ? 'Ja' : 'Nein' }}</div>
                             </div>
 
                             <div class="flex flex-row w-full">
                                 <div class="p-2 w-40 text-right text-gray-500">Mit Login: </div>
-                                <div class="p-2 w-auto">{{ $nachricht->mitlogin === 1 ? 'Ja' : 'Nein' }}</div>
+                                <div class="p-2 w-auto">{{ $nachricht->mitlogin ? 'Ja' : 'Nein' }}</div>
                             </div>
 
 

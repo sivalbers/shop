@@ -142,6 +142,11 @@ class ShopPositionenComponent extends Component
     /*Positionen speichern,
         Meldung an Bestellung, diese zu speichern */
     public function BtnSpeichern(){
+        if (!$this->isPosModified && (count($this->bPositionen) > 0)){
+            $this->dispatch('updateWarenkorb', [ 'doSend' => true ]); // Warenkorbkomponent
+            return ;
+        }
+
         Log::info('ShopPositionenComponent=>BtnSpeichern()');
         $gesamt = 0;
         foreach ($this->bPositionen as $key => $qu) {
@@ -199,5 +204,7 @@ class ShopPositionenComponent extends Component
 
        $this->dispatch('refresh-page');
     }
+
+
 
 }

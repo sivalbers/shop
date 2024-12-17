@@ -21,7 +21,8 @@ class Nachricht extends Model
         'prioritaet',
         'startseite',
         'kundennr',
-        'mitlogin'
+        'mitlogin',
+        'mail'
     ];
 
     // Optional: Füge eine Standardwertfunktion hinzu, falls gewünscht
@@ -34,6 +35,7 @@ class Nachricht extends Model
         'von' => 'date',
         'bis' => 'date',
         'startseite' => 'boolean',
+        'mail' => 'boolean',
         'kundennr' => 'integer',
         'mitlogin' => 'boolean',
         'created_at' => 'datetime',

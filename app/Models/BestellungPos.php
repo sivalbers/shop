@@ -59,6 +59,11 @@ class BestellungPos extends Model
         return BestellungPos::where('bestellnr', $bestellnr)->count();
     }
 
+    public function artikel()
+    {
+        return $this->belongsTo(Artikel::class, 'artikelnr', 'artikelnr' );
+    }
+
 
 
 }

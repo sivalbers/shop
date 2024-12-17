@@ -7,8 +7,11 @@ export default {
         './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
         './storage/framework/views/*.php',
         './resources/views/**/*.blade.php',
+        './resources/views/emails/**/*.blade.php' // Füge dies hier hinzu
     ],
-
+    safelist: [
+        'text-red-500', 'bg-blue-100', 'p-4', 'font-bold' // Übernahme der Klassen für E-Mails
+    ],
     theme: {
         extend: {
             fontFamily: {
@@ -17,13 +20,8 @@ export default {
             boxShadow: {
                 'inner-top': 'inset 0 10px 10px -10px rgba(0, 0, 0, 0.5)',
                 'inner-bottom': 'inset 0 -10px 10px -10px rgba(0, 0, 0, 0.5)',
-              },
+            },
         },
     },
-
     plugins: [forms],
-
-
 };
-
-

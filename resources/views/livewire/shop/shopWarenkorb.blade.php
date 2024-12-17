@@ -7,11 +7,11 @@
             Ihr aktueller Warenkorb</div>
 
         @php
-            $flexclass = 'flex-row md:flex-col lg:flex-row ';
+            $flexclass = 'flex-row md:flex-col lg:flex-row lg:items-center';
             $fldClass = 'md:text-right md:justify-right lg:text-left lg:justify-left';
         @endphp
 
-        <form wire:submit.prevent="update" class="">
+        <form wire:submit.prevent="updateWarenkorb" class="">
             @csrf
             <div class="flex flex-col mt-4 text-sm ">
 
@@ -34,16 +34,6 @@
                     </div>
                 </div>
 
-                <div class="flex {{ $flexclass }} mb-1">
-                    <div class="w-1/3 text-right md:text-left lg:text-right  mr-2">
-                        <label for="lieferdatum">Lieferdatum:</label>
-                    </div>
-                    <div class="w-2/3 md:w-full lg:w-2/3">
-                        <input type="date" wire:model="lieferdatum" id="lieferdatum"
-                            class="basketInput {{ $fldClass }} w-full">
-                    </div>
-                </div>
-
                 <div class="flex  {{ $flexclass }} mb-1">
                     <div class="w-1/3 text-right  md:text-left lg:text-right mr-2">
                         <label for="kommission">Kommission:</label>
@@ -57,12 +47,22 @@
                 <div class="flex {{ $flexclass }} mb-1">
                     <div class="mr-2 w-1/3 md:mr-0 md:w-full lg:mr-2 lg:w-1/3 text-right  md:text-left lg:text-right">
                         <label for="bemerkung">
-                            Bemerkung: (abweichende Lieferadresse bitte hier eingeben.)
+                            Bemerkung:<br> <span class="text-gray-500">(abweichende Lieferadresse bitte hier eingeben.)</span>
                         </label>
                     </div>
                     <div class="w-2/3 md:w-full lg:w-2/3">
 
                         <textarea wire:model="bemerkung" id="bemerkung" class="basketTextarea {{ $fldClass }}  w-full"></textarea>
+                    </div>
+                </div>
+
+                <div class="flex {{ $flexclass }} mb-1">
+                    <div class="w-1/3 text-right md:text-left lg:text-right  mr-2">
+                        <label for="lieferdatum">Lieferdatum:</label>
+                    </div>
+                    <div class="w-2/3 md:w-full lg:w-2/3">
+                        <input type="date" wire:model="lieferdatum" id="lieferdatum"
+                            class="basketInput {{ $fldClass }} w-full">
                     </div>
                 </div>
 
@@ -92,9 +92,6 @@
 
             <button type="submit"
                 class="mt-2 px-4 py-2 bg-sky-600 text-white rounded-md shadow-md shadow-gray-400">Speichern</button>
-
-
-
         </form>
     </div>
 

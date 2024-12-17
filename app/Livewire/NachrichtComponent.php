@@ -18,9 +18,11 @@ class NachrichtComponent extends Component
     public $links;
     public $prioritaet = 'normal'; // Vorgabewert
     public $startseite = false;
+    public $mail = false;
     public $kundennr;
     public $nachrichtId;
     public $mitlogin = false ;
+
 
     public $isModified = false ;
     public $showForm = false ;
@@ -47,6 +49,7 @@ class NachrichtComponent extends Component
         $this->links = '';
         $this->prioritaet = 'normal';
         $this->startseite = false;
+        $this->mail = false;
         $this->kundennr = '';
         $this->nachrichtId = null;
         $this->mitlogin = false ;
@@ -64,6 +67,7 @@ class NachrichtComponent extends Component
             'links' => 'nullable',
             'prioritaet' => 'required|in:normal,mittel,hoch',
             'startseite' => 'boolean',
+            'mail' => 'boolean',
             'mitlogin' => 'boolean',
             'kundennr' => 'nullable|integer',
         ]);
@@ -103,6 +107,8 @@ class NachrichtComponent extends Component
         $this->showForm = true ;
         // Nachricht finden und Felder füllen
         $nachricht = Nachricht::findOrFail($id);
+        // dd($nachricht->mitlogin);
+
         $this->nachrichtId = $nachricht->id;
         $this->kurztext = $nachricht->kurztext;
         $this->langtext = $nachricht->langtext;
@@ -111,8 +117,10 @@ class NachrichtComponent extends Component
 
         $this->links = $nachricht->links;
         $this->prioritaet = $nachricht->prioritaet;
-        $this->startseite = $nachricht->startseite === 1 ? true : false ;
-        $this->mitlogin = $nachricht->mitlogin === 1 ? true : false ;
+        $this->startseite = $nachricht->startseite;
+        $this->mail = $nachricht->mail;
+        $this->mitlogin = $nachricht->mitlogin;
+
 
         $this->kundennr = $nachricht->kundennr;
 

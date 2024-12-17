@@ -23,6 +23,8 @@ use App\Http\Middleware\AdminMiddleware;
 use App\Mail\ExampleMail;
 use Illuminate\Support\Facades\Mail;
 
+use Dotenv\Dotenv;
+
 // Route::view('/', 'startseite');
 Route::get('/', function () {
     return redirect('/startseite');
@@ -75,6 +77,15 @@ Route::post('/punchout', [Punchout::class, 'handlePunchOut']);
 
 
 Route::get('/send-email', function () {
+
+
+
+    // Teste, ob die Datei geladen wird
+    //$dotenv = Dotenv::createImmutable(__DIR__ . '/../');
+    //$dotenv->load();
+
+    //dd($_ENV['MAIL_MAILER'], getenv('MAIL_MAILER'), env('MAIL_MAILER'));
+    dd(env('MAIL_MAILER'));
     $details = [
         'title' => 'Test-E-Mail von Laravel',
         'body' => 'Dies ist ein Test-E-Mail-Versand.'

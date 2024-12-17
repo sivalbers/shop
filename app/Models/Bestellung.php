@@ -50,14 +50,14 @@ class Bestellung extends Model
         'updated_at'  => 'date',
     ];
 
-    public function rechnungsadresse()
+    public function reAdresse()
     {
-        return $this->belongsTo(Anschrift::class, 'id', 'rechnungsadresse');
+        return $this->belongsTo(Anschrift::class, 'rechnungsadresse', 'id');
     }
 
-    public function lieferadresse()
+    public function lfAdresse()
     {
-        return $this->belongsTo(Anschrift::class, 'id', 'lieferadresse' );
+        return $this->belongsTo(Anschrift::class, 'lieferadresse', 'id' );
     }
 
     public function status()
@@ -105,6 +105,11 @@ class Bestellung extends Model
 
         DB::select('CALL GetBestellungSummary(?)', [$nr]);
         return Bestellung::where('nr', $nr)->first();
+    }
+
+    public function lieferDatumStr(){
+        return $this->lieferdatum ? $this->lieferdatum->format('d.m.Y') : '';
+
     }
 
 

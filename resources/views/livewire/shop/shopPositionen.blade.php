@@ -164,7 +164,11 @@
                                 @if (!$isPosModified) disabled @endif>
 
                                 @if (!$isPosModified)
-                                    Keine Änderungen
+                                    @if (count($bPositionen) > 0 )
+                                        Bestellung absenden
+                                    @else
+                                        Keine Änderungen
+                                    @endif
                                 @else
                                     Änderungen speichern
                                 @endif
