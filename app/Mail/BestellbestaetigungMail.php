@@ -54,7 +54,7 @@ class BestellbestaetigungMail extends Mailable
     {
         $mail = Auth()->user()->email;
         return new Envelope(
-            subject: 'Netzmaterial-Online.de - Bestellung Nr.: '.$this->details['bestellung']->nr,
+            subject: 'Bestellung Nr.: '.$this->details['bestellung']->nr,
             to: [  'mail@andreasalbers.de', 'andreas.albers@sieverding.de', 'shop@netzmaterial-online.de'],
         );
     }
