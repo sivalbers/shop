@@ -73,7 +73,7 @@ class BestellbestaetigungMail extends Mailable
     public function build()
     {
 
-        return $this->view('emails.BestellbestaetigungMailHtml')
+        return $this->view('emails.bestellbestaetigungMailHtml')
                     ->text('emails.bestellbestaetigungMailPlaintext')
                     ->with([
                         'order' => $this->details,
