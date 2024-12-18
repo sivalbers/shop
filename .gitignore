@@ -19,3 +19,8 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
+public/css/
+clear-cache.sh
+shop.rar
+vite.config.js
+clear-cache.sh

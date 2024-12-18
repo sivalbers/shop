@@ -1,6 +1,6 @@
 <x-layouts.app>
 
 
-    @livewire('startseitenachrichtencomponent')
+    @livewire('startseite-nachrichten-component')
 </x-layouts.app>
 

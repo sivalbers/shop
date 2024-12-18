@@ -1,4 +1,4 @@
 <div>
-         @livewire('forms.headercomponent')
+         @livewire('forms.header-component')
 
 </div>
