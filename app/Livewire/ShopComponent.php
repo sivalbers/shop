@@ -86,14 +86,29 @@ class ShopComponent extends Component
 
     public function render()
     {
-
+        $startTime = microtime(true);
         if (($this->activeTab === 'tab1' && empty($this->warengruppen)) ||
             ($this->activeTab === 'tab3' && empty($this->favoriten))
            ){
             $this->update();
         }
 
-        return view('livewire.shop.shopmain');
+        $endTime = microtime(true);
+        $duration = ($endTime - $startTime) * 1000;
+
+        Log::info("ShopComponent.render.update " , [ 'duration' => $duration]);
+
+
+
+        $startTime = microtime(true);
+        $view = view('livewire.shop.shopmain');
+        $endTime = microtime(true);
+
+        // Differenz in Millisekunden berechnen
+        $duration = ($endTime - $startTime) * 1000;
+
+        Log::info("ShopComponent.render.view " , [ 'duration' => $duration]);
+        return $view;
     }
 
 
