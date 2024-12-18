@@ -309,14 +309,14 @@
                                 <div class="p-3 mb-4 align-top  flatwhite w-full md:w-1/3">
                                     <div class="text-base font-bold text-sky-600 border-b border-sky-600">
                                         Schnellerfassung</div>
-                                    @livewire('schnellerfassungComponent', ['sortiment' => $sortiment])
+                                    @livewire('schnellerfassung-component', ['sortiment' => $sortiment])
                                 </div>
                             @endif
 
                             @if ($activeTab === 'tab5') <!-- Warenkorb -->
                                 <div class="w-full md:w-1/3">
 
-                                    @livewire('WarenkorbComponent', ['sortiment' => $sortiment])
+                                    @livewire('warenkorb-component', ['sortiment' => $sortiment])
 
                                 </div>
                             @endif
@@ -329,7 +329,7 @@
                                 <div class="flex flex-col h-[calc(100vh-205px)] overflow-hidden" id="tab5">
                                     <!-- Enthält die Komponente -->
                                     <div class="w-full max-h-full p-3 mb-2">
-                                        @livewire('shopartikellistecomponent', ['quantities' => $quantities])
+                                        @livewire('shop-artikelliste-component', ['quantities' => $quantities])
                                     </div>
                                 </div>
                             </div>
@@ -338,7 +338,7 @@
                                 <div class="w-full md:w-2/3 md:ml-2 mb-4 align-top  flatwhite   ">
                                     <div class="flex flex-col h-[calc(100vh-5vh)] overflow-auto">
                                         <div class="w-full max-h-full p-3 mb-2">
-                                            @livewire('ShopPositionenComponent')
+                                            @livewire('shop-positionen-component')
                                         </div>
                                     </div>
                                 </div>
