@@ -87,8 +87,8 @@ class ShopComponent extends Component
     public function render()
     {
 
-        if (($this->activeTab === 'tab1' && isEmpty($this->warengruppen)) ||
-            ($this->activeTab === 'tab3' && isEmpty($this->favoriten))
+        if (($this->activeTab === 'tab1' && empty($this->warengruppen)) ||
+            ($this->activeTab === 'tab3' && empty($this->favoriten))
            ){
             $this->update();
         }
