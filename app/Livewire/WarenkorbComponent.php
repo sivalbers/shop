@@ -78,7 +78,7 @@ class WarenkorbComponent extends Component
                     });
         });
 
-        
+
         return $qu->get();
     }
 
@@ -100,8 +100,6 @@ class WarenkorbComponent extends Component
     $details = [
         'bestellung' => $this->bestellung,
         'nachrichten' => $nachrichten,
-        'title' => 'Willkommen bei Laravel!',
-        'body' => 'Dies ist ein Beispieltext für eine E-Mail.',
         'login' => Auth::user()->login,
     ];
 

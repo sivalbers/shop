@@ -73,3 +73,41 @@ Aktuelle Lagerinformationen:
   @endif
 @endforeach
 @endif
+
+
+
+
+Wilhelm Sieverding e.Kfm.
+Tenstedter Straße 40
+49692 Cappeln
+
+Geschäftsführer: Wilhelm Sieverding
+Registergericht: Amtsgericht Oldenburg
+
+Handelsregisternr: HRA 150097
+USt-Nr. 56/270/06400
+Ust-IdNr.: DE220041793
+
+
+LAGER OLDENBURG:
+Bloher Landstraße 33
+26160 Bad Zwischenahn
+Telefon: 04 41 / 3 61 08 8 -100 oder -101
+Fax: 04 41 / 3 61 08 8 -195
+E-Mail: lageroldenburg@ewe-netz.de
+
+
+LAGER BREMEN:
+Am Gasgraben 4
+28197 Bremen
+Telefon: 04 21 / 3 59 46 46
+Fax: 04 21 / 3 59 47 22
+E-Mail: lagerbremen@ewe-netz.de
+
+
+LAGER BRANDENBURG:
+Ahornallee 8
+16356 Werneuchen
+Telefon: 03 33 98 / 8 99 80
+Fax: 03 33 98 / 89 98 29
+E-Mail: lagerwerneuchen@ewe-netz.de

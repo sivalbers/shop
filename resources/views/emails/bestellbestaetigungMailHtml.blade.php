@@ -4,7 +4,7 @@
     <title>Bestellbestätigung</title>
 
 </head>
-<body>
+<body style="font-family: Arial, Helvetica, sans-serif;">
     <p>Sehr geehrte Damen und Herren,</p>
     <p>vielen Dank für Ihre Bestellung im Online-Shop der Firma Sieverding Besitzunternehmen.</p><br>
 
@@ -197,6 +197,52 @@
         @endforeach
     </table>
     @endif
+
+    <table width="90%" align="center" style="font-size: 0.85em; margin-top: 20px;">
+        <tr>
+            <td width="33%" valign="top" style="margin-right: 10px; border-bottom: 1px solid gray;">
+                Wilhelm Sieverding e.Kfm.<br>
+                Tenstedter Straße 40<br>
+                49692 Cappeln<br>
+                <br>
+            </td>
+            <td width="33%" valign="top"  style="margin-left: 2px; margin-right: 10px; margin-right: 10px; border-bottom: 1px solid gray;">
+                Geschäftsführer: Wilhelm Sieverding<br>
+                Registergericht: Amtsgericht Oldenburg<br>
+            </td>
+            <td width="33%" valign="top"  style="margin-left: 2px; margin-right: 10px; border-bottom: 1px solid gray;">
+                Handelsregisternr: HRA 150097<br>
+                USt-Nr. 56/270/06400<br>
+                Ust-IdNr.: DE220041793<br>
+                <br>
+            </td>
+        </tr>
+        <tr style="border-top: 0px solid gray;">
+            <td width="33%" padding-top="5px" valign="top" style="margin-right: 10px; ">
+                <br>
+                LAGER OLDENBURG:<br>
+Bloher Landstraße 33<br>26160 Bad Zwischenahn<br>Telefon: 04 41 / 3 61 08 8 -100 oder -101 <br>Fax: 04 41 / 3 61 08 8 -195<br>
+E-Mail: lageroldenburg@ewe-netz.de
+            </td>
+            <td width="33%" valign="top"  style="margin-left: 2px; margin-right: 10px; margin-right: 10px; ">
+                <br>
+                LAGER BREMEN:<br>
+                Am Gasgraben 4 - 28197 Bremen<br>Telefon: 04 21 / 3 59 46 46<br>Fax: 04 21 / 3 59 47 22<br>
+                E-Mail: lagerbremen@ewe-netz.de
+            </td>
+            <td width="33%" valign="top"  style="margin-left: 2px; margin-right: 10px">
+                <br>
+                LAGER BRANDENBURG:<br>
+Ahornallee 8 - 16356 Werneuchen<br>Telefon: 03 33 98 / 8 99 80 <br>Fax: 03 33 98 / 89 98 29<br>
+E-Mail: lagerwerneuchen@ewe-netz.de
+            </td>
+
+        </tr>
+    </table>
+
+
     <div style="font-size: 1px;"> <a href="https://netzmaterialonline.de/unsubscribe">unsubscribe</a></div>
+
+
 </body>
 </html>
