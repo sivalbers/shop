@@ -197,6 +197,10 @@
         @endforeach
     </table>
     @endif
+    <br>
+    <hr />
+    <br>
+    <br>
 
     <table width="90%" align="center" style="font-size: 0.85em; margin-top: 20px;">
         <tr>

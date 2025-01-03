@@ -27,7 +27,7 @@ class NavigationComponent extends Component
 
     public function render()
     {
-        Log::info('Navigation->reder()',['bestellnr' => $this->bestellung->nr ]);
+        Log::info('Navigation->render()',['bestellnr' => $this->bestellung->nr ]);
         return view('livewire.layout.navigation');
     }
 
@@ -37,7 +37,7 @@ class NavigationComponent extends Component
     {
         Log::info('NavigationComponent->doUpdate()');
         $this->bestellung = Bestellung::doCalc($this->bestellung->nr);
-        
+
         Log::info('NavigationComponent=>doUpdate', [ 'bestNr' => $this->bestellung->nr, 'anz' => $this->bestellung->anzpositionen, 'Gpreis'=> $this->bestellung->gesamtbetrag]);
 
     }

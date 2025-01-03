@@ -19,15 +19,17 @@ class PunchOut extends Controller
 
         Log::info('data:', [ $data ]);
         // Erstelle eine Beispielantwort
+        /*
         $response = [
             'success' => true,
             'message' => 'PunchOut erfolgreich',
             'redirect_url' => 'http://shop.local/checkout',
         ];
+        */
 
         return response()->json($data);
     }
 
 
-    
+
 }

@@ -81,43 +81,45 @@ class ShopComponent extends Component
             session()->put('activeTab', $tab);
             $this->activeTab = $tab;
         }
-        $this->update();
+        $this->updateQueryWG();
     }
 
     public function render()
     {
-        $startTime = microtime(true);
+        Log::info('...');
+        Log::info('ShopComponent.Render() - Anfang', ['Sortiment' => $this->sortiment, 'activeTab' =>$this->activeTab ]);
+
         if (($this->activeTab === 'tab1' && empty($this->warengruppen)) ||
             ($this->activeTab === 'tab3' && empty($this->favoriten))
            ){
-            $this->update();
+            $startTime = microtime(true);
+            Log::info("ShopComponent.render vor updateQueryWG " , [ ]);
+            $this->updateQueryWG();
+            $endTime = microtime(true);
+            $duration = ($endTime - $startTime) * 1000;
+
+            Log::info("ShopComponent.render " , [ 'duration' => $duration]);
+
         }
 
-        $endTime = microtime(true);
-        $duration = ($endTime - $startTime) * 1000;
-
-        Log::info("ShopComponent.render.update " , [ 'duration' => $duration]);
-
-
+        if (!empty($this->warengruppen)){
+            $this->logWarengruppen($this->warengruppen);
+        }
 
         $startTime = microtime(true);
         $view = view('livewire.shop.shopmain');
         $endTime = microtime(true);
 
-        // Differenz in Millisekunden berechnen
-        $duration = ($endTime - $startTime) * 1000;
+         $duration = ($endTime - $startTime) * 1000;
 
-        Log::info("ShopComponent.render.view " , [ 'duration' => $duration]);
+        Log::info("ShopComponent.render.view Ende " , [ 'duration' => $duration]);
         return $view;
     }
 
 
-    public function update(){
+    public function updateQueryWG(){
         Log::info('ShopComponent.Update()', ['Sortiment' => $this->sortiment, 'activeTab' =>$this->activeTab ]);
-
-
-
-        //$this->activeTab = session()->get('activeTab');
+       //$this->activeTab = session()->get('activeTab');
 
         if ($this->activeTab === 'tab1') {
             $sortimentArray = explode ( ' ', $this->sortiment);
@@ -138,6 +140,7 @@ class ShopComponent extends Component
             Log::warning($query->toRawSql());
 
             $this->warengruppen = $query->get();
+
 
             /*
             Log::info('aktiveWarengruppeBezeichnung', [$this->aktiveWarengruppeBezeichung]);
@@ -160,6 +163,11 @@ class ShopComponent extends Component
         // dd($this->warengruppen);
     }
 
+    function logWarengruppen($warengruppen){
+        foreach ($warengruppen as $wg){
+            Log::info([$wg, 'bez' => $wg->bezeichnung, 'Anz' => $wg->artikel_count ]);
+        }
+    }
     public function updatedSuchText($value){
 
         /*
