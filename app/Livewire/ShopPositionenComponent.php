@@ -142,10 +142,7 @@ class ShopPositionenComponent extends Component
     /*Positionen speichern,
         Meldung an Bestellung, diese zu speichern */
     public function BtnSpeichern(){
-        if (!$this->isPosModified && (count($this->bPositionen) > 0)){
-            $this->dispatch('updateWarenkorb', [ 'doSend' => true ]); // Warenkorbkomponent
-            return ;
-        }
+
 
         Log::info('ShopPositionenComponent=>BtnSpeichern()');
         $gesamt = 0;
@@ -162,13 +159,15 @@ class ShopPositionenComponent extends Component
 
         Log::info('VOR => $this->dispatch(updateWarenkorb');
 
-        $this->dispatch('updateWarenkorb'); // Warenkorbkomponent
-
-        Log::info('VOR => $this->dispatch(updateNavigation');
-        $this->dispatch('updateNavigation');
+        if (!$this->isPosModified && (count($this->bPositionen) > 0)){
+            $this->dispatch('bestellungAbsenden'); // Warenkorbkomponent->bestellungAbsenden();
+        }
+        else {
+            $this->dispatch('updateWarenkorb'); // Warenkorbkomponent->updateWarenkorb();
+        }
 
         $this->isPosModified = false ;
-        //$this->updateFrontendPage();
+
     }
 
     /* Position löschen und Kopf neu berechnen */

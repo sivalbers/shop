@@ -3,8 +3,10 @@
 namespace App\Mail;
 
 use App\Models\BestellungPos;
+use App\Models\Config;
 use Exception;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -53,9 +55,22 @@ class BestellbestaetigungMail extends Mailable
     public function envelope(): Envelope
     {
         $mail = Auth()->user()->email;
+        $bcc = Config::globalString('mail-bcc');
+        $bccArr = explode(';', $bcc);
+
+        $cc = Config::globalString('mail-cc');
+        $ccArr = explode(';', $cc);
+
+
+        $empfaenger = [ $mail ];
+        Log::info(['empfänger' => $empfaenger]);
+        Log::info(['cc' => $ccArr]);
+        Log::info(['bcc' => $bccArr]);
         return new Envelope(
-            subject: 'Bestellung Nr.: '.$this->details['bestellung']->nr,
-            to: [  'mail@andreasalbers.de', 'andreas.albers@sieverding.de', 'shop@netzmaterial-online.de'],
+            subject: 'Bestellbestätigung für Ihre Bestellung Nr.: '.$this->details['bestellung']->nr,
+            to: $empfaenger,
+            bcc: $bccArr,
+            cc: $ccArr,
         );
     }
 

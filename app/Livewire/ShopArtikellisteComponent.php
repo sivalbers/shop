@@ -256,32 +256,6 @@ class ShopArtikellisteComponent extends Component
             $artikelBezArr = explode(' ', $suchBezeichnung);
         }
 
-        // Hauptabfrage
-        /*
-        $q = Artikel::where(function ($query) use ($artikelArr, $artikelBezArr) {
-            // Bedingung: Artikelnummer kann einen der Begriffe enthalten
-            if (!empty($artikelArr)) {
-                $query->where(function ($q) use ($artikelArr) {
-                    foreach ($artikelArr as $part) {
-                        $q->orWhere('artikelnr', 'like', "%{$part}%");
-                    }
-                });
-            }
-
-            // Bedingung: alle Teile der Suchbezeichnung müssen in Bezeichnung oder Langtext vorkommen
-            if (!empty($artikelBezArr)) {
-                foreach ($artikelBezArr as $part) {
-                    $query->where(function ($q) use ($part) {
-                        $q->where('bezeichnung', 'like', "%{$part}%")
-                          ->orWhere('langtext', 'like', "%{$part}%");
-                    });
-                }
-            }
-        })
-        ->whereIn('artikelnr', ArtikelSortiment::whereIn('sortiment', $sortiment)->pluck('artikelnr'))
-        ->take(200);
-        */
-
         $kundennr = Auth::user()->kundennr;
         $userId = Auth::id();
 
@@ -369,15 +343,28 @@ class ShopArtikellisteComponent extends Component
         }
 
         // dd($artikelStr);
+        //Log::info([ 'Artikelliste' => $artikelStr ]);
         $artikelnummern = array_column($artikelArray, 'artikelnummer');
-        $sortimentArray = explode(' & ', $sortiment);
+        $sortimentArray = explode(' ', $sortiment);
 
+        $kundennr = Auth::user()->kundennr;
+        $userId = Auth::id();
 
         $qu = Artikel::join('artikel_sortimente as a_s', 'artikel.artikelnr', '=', 'a_s.artikelnr')
                 ->whereIn('artikel.artikelnr', $artikelnummern)
                 ->whereIn('a_s.sortiment', $sortimentArray)
-                ->select('artikel.*');
+                ->select('artikel.*')
+                ->selectRaw("CASE WHEN EXISTS (
+                    SELECT 1
+                    FROM favoriten_pos f_p
+                    JOIN favoriten f ON f.id = f_p.favoriten_id
 
+                    WHERE f_p.artikelnr = artikel.artikelnr
+                      AND f.kundennr = ?
+                      AND (f.user_id = 0 OR f.user_id = ?)
+                    ) THEN 1 ELSE 0 END AS is_favorit", [$kundennr, $userId]);
+
+        //Log::info($qu->toRawSql());
         $artikellist = $qu->get();
 
         $this->myArtikels = array();
@@ -429,8 +416,8 @@ class ShopArtikellisteComponent extends Component
             ->where('f.id', $favoritId)
             ->whereIn('s.sortiment', $sortimentArray)
             ->where('artikel.gesperrt', '=', false)
-            ->select('artikel.*');
-            //Log::info( 'SQL: ',[ $qu->toRawSql() ]);
+            ->select('artikel.*', \DB::raw('true as is_favorit'));
+        // Log::info( 'SQL-Auswhahl der Favoriten: ',[ $qu->toRawSql() ]);
 
 
         $artikellist = $qu->get();
@@ -505,7 +492,8 @@ class ShopArtikellisteComponent extends Component
 
                         Log::info('Before Bestellnr, artikelnr, menge, gpreis', [ $bestellung->nr, $data['artikelnr'], $quantities[$artikelnr]['menge'], $data['epreis'], $data['steuer'] ]);
 
-                            $quantities[$artikelnr]['menge'] = 0;
+                        $quantities[$artikelnr]['menge'] = 0;
+                        $this->quantities[$artikelnr]['menge'] = 0;
 
                         Log::info('After Bestellnr, artikelnr, menge, gpreis', [ $bestellung->nr, $data['artikelnr'], $quantities[$artikelnr]['menge'], $data['epreis'], $data['steuer'] ]);
                     }
@@ -517,7 +505,7 @@ class ShopArtikellisteComponent extends Component
 
 
 
-            //dd($quantities); // Zum Debuggen
+            //Log::info($this->quantities);
 
 
             $this->dispatch('updateNavigation');

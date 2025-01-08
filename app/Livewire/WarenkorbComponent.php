@@ -83,8 +83,36 @@ class WarenkorbComponent extends Component
     }
 
 
+    #[On('bestellungAbsenden')]
+    public function bestellungAbsenden(){
+
+        Log::info('Warenkorbkomponent->bestellungAbsenden');
+
+        $this->bestellung->kundenbestellnr = $this->kundenbestellnr;
+        $this->bestellung->kommission = $this->kommission;
+        $this->bestellung->bemerkung = $this->bemerkung;
+        $this->bestellung->lieferdatum = ($this->lieferdatum === '') ? null: $this->lieferdatum;
+        $this->bestellung->status_id = 1;
+        $this->bestellung->save();
+
+        $nachrichten = $this->getNachrichten();
+
+        $details = [
+            'bestellung' => $this->bestellung,
+            'nachrichten' => $nachrichten,
+            'login' => Auth::user()->login,
+        ];
+
+            Mail::send(new BestellbestaetigungMail($details));
+
+        $this->dispatch('ShopComponent_NeueBestellung');
+
+
+    }
+
+
     #[On('updateWarenkorb')]
-    public function updateWarenkorb($doSend = false){
+    public function updateWarenkorb(){
 
         Log::info('Warenkorbkomponent->updateWarenkorb');
 
@@ -93,19 +121,6 @@ class WarenkorbComponent extends Component
         $this->bestellung->bemerkung = $this->bemerkung;
         $this->bestellung->lieferdatum = ($this->lieferdatum === '') ? null: $this->lieferdatum;
         $this->bestellung->save();
-
-
-        $nachrichten = $this->getNachrichten();
-
-    $details = [
-        'bestellung' => $this->bestellung,
-        'nachrichten' => $nachrichten,
-        'login' => Auth::user()->login,
-    ];
-
-
-    // Mail::to($mail)->to("mail@andreasalbers.de")->send(new BestellbestaetigungMail($details));
-    Mail::send(new BestellbestaetigungMail($details));
     }
 
 

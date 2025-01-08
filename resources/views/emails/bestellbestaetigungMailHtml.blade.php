@@ -6,19 +6,60 @@
 </head>
 <body style="font-family: Arial, Helvetica, sans-serif;">
     <p>Sehr geehrte Damen und Herren,</p>
-    <p>vielen Dank für Ihre Bestellung im Online-Shop der Firma Sieverding Besitzunternehmen.</p><br>
+    <p>vielen Dank für Ihre Bestellung im Online-Shop der Firma Sieverding Besitzunternehmen.</p>
 
     <p>Sobald die Ware versandbereit ist, erhalten Sie den entsprechenden Lieferschein per eMail.</p>
 
-    <p>wir Wünschen Frohe Feiertage und verbleiben</p><br>
-    mit freundlichen Grüßen<br>
+    Mit freundlichen Grüßen<br>
     Sieverding Besitzunternehmen</p>
     @if (count($order['nachrichten']) > 0)
-        <span style="text-decoration: underline;"><a href="#nachrichten">>> Bitte beachten Sie auch unsere aktuellen Informationen am Ende dieser Mail! << </a></span>
+        <span style="text-decoration: underline; font-size: x-small; "><a href="#nachrichten">>> Bitte beachten Sie auch unsere aktuellen Informationen am Ende dieser Mail! << </a></span>
     @endif
     <br><br>
 
-
+    <table style=" width: 800px; ">
+        <tr>
+            <td colspan="2">
+                <div style="font-weight: bold; font-size: large;">Informationen zur Bestellung:</div>  <!-- ##### Überschrift ##### -->
+            </td>
+        </tr>
+        <tr>
+            <td>Shop-Bestellnummer:</td>
+            <td>{{ $order['bestellung']->nr }}</td>
+        </tr>
+        <tr>
+            <td>Kunden-Nummer:</td>
+            <td>{{ $order['bestellung']->kundennr }}</td>
+        </tr>
+        <tr>
+            <td>Shop-Login:</td>
+            <td>{{ $order['login'] }}</td>
+        </tr>
+        <tr>
+            <td>
+                @if ($order['bestellung']->rechnungsadresse === $order['bestellung']->lieferadresse)
+                    <div>Rechnungs- und Lieferadresse <br>(falls Lieferung vereinbart ist)</div>
+                @else
+                    <div>Rechnungsadresse:</div>
+                    <div>Lieferadresse:</div>
+                @endif
+            </td>
+            <td>
+                @if ($order['bestellung']->rechnungsadresse === $order['bestellung']->lieferadresse)
+                    <div>{{ $order['bestellung']->reAdresse->firma1 }} - {{ $order['bestellung']->reAdresse->strasse }} - {{ $order['bestellung']->reAdresse->plz }} {{ $order['bestellung']->reAdresse->stadt }}</div>
+                @else
+                    <div>{{ $order['bestellung']->reAdresse->firma1 }} - {{ $order['bestellung']->reAdresse->strasse }} - {{ $order['bestellung']->reAdresse->plz }} {{ $order['bestellung']->reAdresse->stadt }}</div>
+                    <div>{{ $order['bestellung']->lfAdresse->firma1 }} - {{ $order['bestellung']->lfAdresse->strasse }} - {{ $order['bestellung']->lfAdresse->plz }} {{ $order['bestellung']->lfAdresse->stadt }}</div>
+                @endif
+            </td>
+        </tr>
+        <tr>
+            <td>Zahlungsbedingung:</td>
+            <td>Nach Erhalt auf Rechnung ohne Skonto.</td>
+        </tr>
+    </table>
+    <br>
+    <br>
 
     <div style="font-weight: bold; font-size: large;">Ihre bestellten Artikel:</div><br>   <!-- ##### Überschrift ##### -->
     <table style=" width: 800px; ">
@@ -58,7 +99,7 @@
 
         <tr>
             <td>
-                Kundenbestellnr.:
+                Kundenbestellnummer:
             </td>
             <td>
                 @if ($order['bestellung']->kundenbestellnr) {{ $order['bestellung']->kundenbestellnr }} @else Keine Angabe @endif
@@ -97,47 +138,6 @@
                 &nbsp;
             </td>
         </tr>
-        <tr>
-            <td colspan="2">
-                <div style="font-weight: bold; font-size: large;">Informationen zur Bestellung:</div>  <!-- ##### Überschrift ##### -->
-            </td>
-        </tr>
-
-        <tr>
-            <td>
-                @if ($order['bestellung']->rechnungsadresse === $order['bestellung']->lieferadresse)
-                    <div>Rechnungs- und Lieferadresse (falls Lieferung vereinbart ist)</div>
-                @else
-                    <div>Rechnungsadresse:</div>
-                    <div>Lieferadresse:</div>
-                @endif
-            </td>
-            <td>
-                @if ($order['bestellung']->rechnungsadresse === $order['bestellung']->lieferadresse)
-                    <div>{{ $order['bestellung']->reAdresse->firma1 }} - {{ $order['bestellung']->reAdresse->strasse }} - {{ $order['bestellung']->reAdresse->plz }} {{ $order['bestellung']->reAdresse->stadt }}</div>
-                @else
-                    <div>{{ $order['bestellung']->reAdresse->firma1 }} - {{ $order['bestellung']->reAdresse->strasse }} - {{ $order['bestellung']->reAdresse->plz }} {{ $order['bestellung']->reAdresse->stadt }}</div>
-                    <div>{{ $order['bestellung']->lfAdresse->firma1 }} - {{ $order['bestellung']->lfAdresse->strasse }} - {{ $order['bestellung']->lfAdresse->plz }} {{ $order['bestellung']->lfAdresse->stadt }}</div>
-                @endif
-            </td>
-        </tr>
-        <tr>
-            <td>Shop-Bestellnr.:</td>
-            <td>{{ $order['bestellung']->nr }}</td>
-        </tr>
-        <tr>
-            <td>Kunden-Nr.:</td>
-            <td>{{ $order['bestellung']->kundennr }}</td>
-        </tr>
-        <tr>
-            <td>Shop-Login:</td>
-            <td>{{ $order['login'] }}</td>
-        </tr>
-        <tr>
-            <td>Zahlungsbedingung:</td>
-            <td>Nach Erhalt auf Rechnung ohne Skonto.</td>
-        </tr>
-
 
     </table>
 

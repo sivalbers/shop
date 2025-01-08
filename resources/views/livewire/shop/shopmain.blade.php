@@ -6,6 +6,7 @@
         showForm: @entangle('showForm'),
         showFavoritForm: @entangle('showFavoritForm'),
         zeigeFavoritPosForm: @entangle('zeigeFavoritPosForm'),
+        zeigeMessage: @entangle('zeigeMessage'),
     }"
         x-on:click.self="showForm = false; showFavoritForm = false; zeigeFavoritPosForm = false; "
         x-on:keydown.escape.window="showForm = false; showFavoritForm = false; zeigeFavoritPosForm = false;">
@@ -95,18 +96,18 @@
                                                     <li
                                                         class="pl-2 hover:underline  hover:bg-[#e3e692] hover:text-sky-600">
                                                         <a href="#"
-                                                            wire:click.prevent="clickWarengruppe('{{ $wg->wgnr }}', '{{ $sortiment }}')"
+                                                            wire:click.prevent="clickWarengruppe('{{ $wg['wgnr'] }}', '{{ $sortiment }}')"
                                                             class=" flex items-center justify-between group">
 
                                                             <span
-                                                                @if ($aktiveWarengruppe == $wg->wgnr) class="text-xl md:text-3xl font-bold text-sky-600 truncate ..."
+                                                                @if ($aktiveWarengruppe == $wg['wgnr']) class="text-xl md:text-3xl font-bold text-sky-600 truncate ..."
                                                           @else
                                                             class="hover:text-sky-600 transition-colors duration-200 truncate ..." @endif>
-                                                                {{ $wg->bezeichnung }}
+                                                                {{ $wg['bezeichnung'] }}
                                                             </span>
 
 
-                                                            <span class="text-gray-500 text-sm">({{ $wg->artikel_count }})</span>
+                                                            <span class="text-gray-500 text-sm">({{ $wg['artikel_count'] }})</span>
                                                         </a>
                                                     </li>
                                                 @endforeach
@@ -349,6 +350,8 @@
                 </div>
             </div>
         </div>
+
+        <x-my-message />
 
 
         <x-my-favoritposform :mArtikel="$mArtikel" :favoriten="$favoriten" :aktiveFavorites="$aktiveFavorites" />

@@ -35,7 +35,8 @@ class NavigationComponent extends Component
     #[On('updateNavigation')]
     public function doUpdate()
     {
-        Log::info('NavigationComponent->doUpdate()');
+        $this->bestellung = Bestellung::getBasket();
+        Log::info('NavigationComponent->doUpdate()',['Bestellnr' => $this->bestellung->nr]);
         $this->bestellung = Bestellung::doCalc($this->bestellung->nr);
 
         Log::info('NavigationComponent=>doUpdate', [ 'bestNr' => $this->bestellung->nr, 'anz' => $this->bestellung->anzpositionen, 'Gpreis'=> $this->bestellung->gesamtbetrag]);

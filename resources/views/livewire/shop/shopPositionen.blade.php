@@ -106,12 +106,6 @@
                                 @enderror
                             </td>
 
-
-
-
-
-
-
                             <!-- Einheit -->
                             <td class="px-4 py-1 text-center">{{ $position['einheit'] }}</td>
                             <!-- E-Preise -->
@@ -150,18 +144,24 @@
 
                             @if ($isPosModified)
                                 <button type="button" wire:click="BtnCancel"
-                                    class="w-52  bg-[#CDD503] text-white py-2 rounded-md"
+                                    class="w-52  bg-[#CDD503] text-sky-600 py-2 rounded-md"
                                     @if (!$isPosModified) disabled @endif">
 
                                     Abbrechen
                                 </button>
                             @endif
                         </div>
-
+                        @php
+                            $farbe = 'bg-gray-500 text-white';
+                            if (count($bPositionen) > 0){
+                                if ($isPosModified)
+                                    { $farbe = 'bg-sky-600 text-white'; }
+                                else
+                                    { $farbe = 'font-bold bg_ewe_gruen text-sky-600'; }
+                            }
+                        @endphp
                         <div class="">
-                            <button type="submit"
-                                class="w-52 @if (!$isPosModified) bg-gray-500 @else  bg-sky-600 @endif text-white py-2 rounded-md"
-                                @if (!$isPosModified) disabled @endif>
+                            <button type="submit" class="w-52 {{ $farbe }} py-2 rounded-md">
 
                                 @if (!$isPosModified)
                                     @if (count($bPositionen) > 0 )

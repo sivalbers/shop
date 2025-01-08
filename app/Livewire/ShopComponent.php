@@ -40,12 +40,12 @@ class ShopComponent extends Component
     public $showForm;
     public $showFavoritForm;
     public $zeigeFavoritPosForm = false;
+    public $zeigeMessage = false ;
 
     public $artikelnr;
     public $isModified ;
 
     public $countBasket;
-
 
     public $mArtikel = null;
 
@@ -65,7 +65,6 @@ class ShopComponent extends Component
     public $favoriten = [];
 
     public $favoritenIDs = [];
-
 
     public function mount()
     {
@@ -92,18 +91,7 @@ class ShopComponent extends Component
         if (($this->activeTab === 'tab1' && empty($this->warengruppen)) ||
             ($this->activeTab === 'tab3' && empty($this->favoriten))
            ){
-            $startTime = microtime(true);
-            Log::info("ShopComponent.render vor updateQueryWG " , [ ]);
             $this->updateQueryWG();
-            $endTime = microtime(true);
-            $duration = ($endTime - $startTime) * 1000;
-
-            Log::info("ShopComponent.render " , [ 'duration' => $duration]);
-
-        }
-
-        if (!empty($this->warengruppen)){
-            $this->logWarengruppen($this->warengruppen);
         }
 
         $startTime = microtime(true);
@@ -119,7 +107,6 @@ class ShopComponent extends Component
 
     public function updateQueryWG(){
         Log::info('ShopComponent.Update()', ['Sortiment' => $this->sortiment, 'activeTab' =>$this->activeTab ]);
-       //$this->activeTab = session()->get('activeTab');
 
         if ($this->activeTab === 'tab1') {
             $sortimentArray = explode ( ' ', $this->sortiment);
@@ -128,7 +115,6 @@ class ShopComponent extends Component
                 $this->quantities = array();
             }
 
-
             $query = Warengruppe::select('warengruppen.wgnr', 'warengruppen.bezeichnung', DB::raw('COUNT(artikel.artikelnr) AS artikel_count'))
             ->join('artikel', 'warengruppen.wgnr', '=', 'artikel.wgnr')
             ->join('artikel_sortimente', 'artikel.artikelnr', '=', 'artikel_sortimente.artikelnr')
@@ -136,61 +122,41 @@ class ShopComponent extends Component
             ->groupBy('warengruppen.wgnr', 'warengruppen.bezeichnung')
             ->orderBy('warengruppen.bezeichnung');
 
-            Log::info('SQL ANWEISUNG:');
-            Log::warning($query->toRawSql());
+            //Log::info('SQL ANWEISUNG:');
+            //Log::warning($query->toRawSql());
 
-            $this->warengruppen = $query->get();
+            //$this->warengruppen = $query->get();
 
+            $results = $query->get();
 
-            /*
-            Log::info('aktiveWarengruppeBezeichnung', [$this->aktiveWarengruppeBezeichung]);
-                if ($this->aktiveWarengruppeBezeichung === '' ){
-                if (count($this->warengruppen) > 0) {
-                    Log::info(' count: ', [count($this->warengruppen)]);
-                    $this->aktiveWarengruppeBezeichung = $this->warengruppen[0]->bezeichnung ;
-                    $this->dispatch('showArtikelWG', $this->warengruppen[0]->wgnr, Auth::user()->sortiment);
-                }
-            }
-                */
+            $this->warengruppen = [];
+
+            $results->each(function($item) use (&$wg) {
+                $this->warengruppen[] = [
+                    'wgnr' => $item->wgnr,
+                    'bezeichnung' => $item->bezeichnung,
+                    'artikel_count' => $item->artikel_count,
+                ];
+            });
+
         }
-        else
-        if ($this->activeTab === 'tab3') {
-
+        elseif ($this->activeTab === 'tab3') {
             $this->favoriten = Favorit::cFavoriten();
-
-        }
-        // Log::info('Render - Warengruppe: ', [$this->aktiveWarengruppe]);
-        // dd($this->warengruppen);
-    }
-
-    function logWarengruppen($warengruppen){
-        foreach ($warengruppen as $wg){
-            Log::info([$wg, 'bez' => $wg->bezeichnung, 'Anz' => $wg->artikel_count ]);
         }
     }
+
+
     public function updatedSuchText($value){
-
-        /*
-        Log::info('updatedSuchText', [$value,[$this->suchText]]);
-        if (strlen($this->suchText) >= 3) {
-            Log::info('Suche Startet');
-
-
-            $sortiment = explode( ' ', Auth::user()->sortiment);
-            $this->dispatch('showArtikelsuche', $this->suchText, $sortiment);
-        }
-            */
-
     }
 
     public function updateSuche(){
 
         if ($this->suchArtikelnr || $this->suchBezeichnung){
-            Log::info('updateSuche',[ $this->suchArtikelnr, $this->suchBezeichnung]);
+            // Log::info('updateSuche',[ $this->suchArtikelnr, $this->suchBezeichnung]);
             $this->dispatch('showArtikelsuche', $this->suchArtikelnr, $this->suchBezeichnung);
         }
-        else
-            Log::info('updateSuche = null; ',);
+        //else
+          //  Log::info('updateSuche = null; ',);
 
     }
 
@@ -321,5 +287,27 @@ class ShopComponent extends Component
 
     }
 
+    #[On('zeigeMessage')]
+    public function zeigeMessage(){
+        $this->zeigeMessage = true ;
+    }
+
+
+    #[On('ShopComponent_NeueBestellung')]
+
+    public function shopComponent_NeueBestellung(){
+
+
+        $bestellung = Bestellung::getBasket();
+        $this->activeTab = 'tab1';
+
+        if ($bestellung){
+            session()->put('bestellnr', $bestellung->nr);
+            session()->put('activeTab', 'tab1');
+        }
+
+        $this->dispatch('updateNavigation');
+        $this->dispatch('zeigeMessage');
+    }
 
 }
