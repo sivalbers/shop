@@ -78,7 +78,7 @@ class Favorit extends Model
     }
 
     public static function favoritenStr(){
-        return 'favoriten_' . Auth::user()->kundennr;
+        return 'favoriten_' . Auth::user()->kundennr . ' '.Auth::user()->id;
     }
 
     protected static function boot()
