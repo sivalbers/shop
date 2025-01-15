@@ -1,39 +1,47 @@
-<div>
-    <div class="w-full text-xs">
-        <div class="w-full m-auto">
-            <!-- Grid Header -->
-            <div class="grid grid-cols-6 gap-1 m-4">
-                <div class="bg-slate-300 p-2 font-bold text-center">Lfd.-Nr.</div>
-                <div class="bg-slate-300 p-2 font-bold text-center">Artikelnr.</div>
-                <div class="bg-slate-300 p-2 font-bold text-right">Menge</div>
-                <div class="bg-slate-300 p-2 font-bold text-right">E-Preis</div>
-                <div class="bg-slate-300 p-2 font-bold text-right">G-Preis</div>
-                <div class="bg-slate-300 p-2 font-bold text-right">Steuer</div>
-            </div>
+<div class="flatwhite p-2 mb-2 ml-0 lg:ml-2">
 
-            <!-- Grid Rows -->
-            @if (!empty($positionen))
-                <div class="grid grid-cols-6 gap-1 m-4">
-                    @php
-                        $lfdNr = 0;
-                    @endphp
-                    @foreach ($positionen as $position)
-                        @php
-                            $lfdNr++;
-                        @endphp
-                        <div class=" text-right">{{ $lfdNr }}</div>
-                        <div class=" text-center">{{ $position->artikelnr }}</div>
-                        <div class=" text-right">{{ number_format($position->menge, 0, ',', '.') }}</div>
-                        <div class=" text-right">{{ number_format($position->epreis, 2, ',', '.') }} €</div>
-                        <div class=" text-right">{{ number_format($position->gpreis, 2, ',', '.') }} €</div>
-                        <div class=" text-right">{{ $position->steuer }}</div>
-                    @endforeach
-                </div>
-            @else
-                <div class="m-4 text-center">
-                    Keine Positionen verfügbar.
-                </div>
-            @endif
-        </div>
+    @php
+        $s1 = 7;
+        $s3 = 7;
+        $s4 = 7;
+        $s5 = 10;
+        $s6 = 10;
+        $s2 = 100-$s1-$s3-$s4-$s5-$s6
+    @endphp
+    <!-- Grid Header -->
+    <div class="font-bold text-xl text-sky-600">
+        Bestellte Artikel
     </div>
+    <div class="flex flex-row text-sky-600 border-b border-sky-600 font-bold w-full py-0.5">
+        <div class="text-left  w-[10vH] pl-2">Artikelnr.</div>
+        <div class="text-left  w-[50vH]">Bezeichnung</div>
+        <div class="text-right w-[7vH] pr-1">Menge</div>
+        <div class="text-left  w-[5vH]">Einh.</div>
+        <div class="text-right w-[13vH]">E-Preis</div>
+        <div class="text-right w-[15vH] pr-2">G-Preis</div>
+    </div>
+
+    <!-- Grid Rows -->
+
+    @if (!empty($positionen))
+        <div class="flex flex-col">
+
+            @foreach ($positionen as $position)
+                <div class="flex flex-row py-0.5">
+                    <div class=" text-left  w-[10vH] pl-2">{{ $position->artikelnr }}</div>
+                    <div class=" text-left  w-[50vH] truncate">{{ $position->artikel->bezeichnung }}</div>
+                    <div class=" text-right w-[7vH] pr-1">{{ number_format($position->menge, 0, ',', '.') }}</div>
+                    <div class=" text-left  w-[5vH]">{{ $position->artikel->einheit }}</div>
+                    <div class=" text-right w-[13vH]">{{ number_format($position->epreis, 2, ',', '.') }} €</div>
+                    <div class=" text-right w-[15vH] pr-2">{{ number_format($position->gpreis, 2, ',', '.') }} €</div>
+
+                </div>
+            @endforeach
+
+        </div>
+    @else
+        <div class="m-4 text-center">
+            Keine Positionen verfügbar.
+        </div>
+    @endif
 </div>

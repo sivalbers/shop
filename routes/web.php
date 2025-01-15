@@ -13,6 +13,7 @@ use App\Livewire\TestMainComponent;
 use App\Livewire\WarenkorbComponent;
 use App\Livewire\TestMainUnterComponent;
 use App\Livewire\NachrichtComponent;
+use App\Livewire\BestellungListComponent;
 use App\Models\Config;
 
 use App\Http\Controllers\ODataController;
@@ -41,6 +42,11 @@ Route::view('profile', 'profile')
 Route::get('/shop', ShopComponent::class)
     ->middleware('auth')
     ->name('shop');
+/*
+Route::get('/shop', BestellungListComponent::class)
+    ->middleware('auth')
+    ->name('bestellungen');
+*/
 
 
     /*

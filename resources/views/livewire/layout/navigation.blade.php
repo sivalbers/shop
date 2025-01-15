@@ -59,6 +59,15 @@
                             {{ __('Startseite') }} <!-- /*  ###########################  */ -->
                         </x-nav-link>
 
+                        @if (Auth::user())
+                            <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                                <x-nav-link :href="route('bestellungen')" :active="request()->routeIs('bestellungen')" wire:navigate>
+                                    <x-fluentui-building-shop-16-o class="w-5 h-5 mr-2" />
+                                    {{ __('Bestellungen') }} <!-- /*  ###########################  */ -->
+
+                                </x-nav-link>
+                            </div>
+                        @endif
 
                         @if (auth()->user() && auth()->user()->isAdmin())
 

@@ -1,50 +1,143 @@
 <div>
-    <div class="w-full text-xs">
-        <div class="border border-gray-500 w-4/5 rounded m-auto">
 
-            <table class="table-auto w-fullborder">
-                <thead>
-                    <tr class="bg-gray-200">
-                        <th class="px-4 py-2">Nr</th> <!-- Laufende Nummer -->
-                        <th class="px-4 py-2">Datum</th>
-                        <th class="px-4 py-2">Kundennr</th>
-                        <th class="px-4 py-2">Besteller</th>
-                        <th class="px-4 py-2">Rechnungsanschrift</th>
-                        <th class="px-4 py-2">Lieferanschrift</th>
-                        <th class="px-4 py-2">Status</th>
-                        <th class="px-4 py-2">Kundenbestellnr</th>
-                        <th class="px-4 py-2">Kommission</th>
-                        <th class="px-4 py-2">Gesamtbetrag</th>
-                        <th class="px-4 py-2">Lieferdatum</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                    </tr>
-                    @foreach ($bestellungen as $bestellung)
-                        <tr class="cursor-pointer h-2 py-2 {{ $activeBestellung === $bestellung->nr ? 'bg-blue-300' : 'hover:bg-blue-200 ' }}"
-                            wire:click="loadPositionen('{{ $bestellung->nr }}')">
-                            <td class="border px-4">{{ $bestellung->nr }}</td>
-                            <td class="border px-4">{{ $bestellung->datum }}</td>
-                            <td class="border px-41">{{ $bestellung->kundennr }}</td>
-                            <td class="border px-4">{{ $bestellung->besteller }}</td>
-                            <td class="border px-4">{{ $bestellung->rechnungsadresse ?? 'N/A' }}</td>
-                            <td class="border px-4">{{ $bestellung->lieferadresse ?? 'N/A' }}</td>
-                            <td class="border px-4">{{ $bestellung->status_bezeichnung }}</td>
-                            <td class="border px-4">{{ $bestellung->kundenbestellnr }}</td>
-                            <td class="border px-4">{{ $bestellung->kommission }}</td>
-                            <td class="border px-4 text-right">{{ number_format($bestellung->gesamtbetrag, 2, ',', '.') }} €</td>
-                            <td class="border px-4">{{ $bestellung->lieferdatum }}</td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
 
-            <!-- Anzeige der ausgewählten Bestellung -->
-            <div class="text-2xl text-red-500 mt-4 ml-4">Aktive Bestellung: {{ $activeBestellung }}</div>
+            <div class=" w-11/12 text-sm m-auto">
 
-            <!-- Bestellungspositionen anzeigen -->
-            @livewire('bestellung-position-component')
-        </div>
-    </div>
+                <div class="flex flex-col lg:flex-row ">
+
+                    <div class="flex flex-col w-full lg:w-2/5  flatwhite p-2 max-h-48 lg:max-h-none">
+                        <div class="flex flex-row rounded-t-md  text-sky-600 font-bold py-0.5 text-xl w-full">
+                            Bestellungen
+                        </div>
+                        <div class="flex flex-row text-sky-600 font-bold py-0.5 border-b border-sky-600 ">
+                            <div class="w-[18%]">
+                                Nr.
+                            </div>
+                            <div class="w-[25%]">
+                                Datum
+                            </div>
+                            <div class="w-[25%]  -ml-2 lg:ml-1">
+                                Status
+                            </div>
+                            <div class="w-[32%] text-right pr-4 lg:pr-1">
+                                Betrag
+                            </div>
+                        </div>
+                        <div class="overflow-y-scroll lg:overflow-y-visible">
+                            @foreach ($bestellungen as $bestellung)
+                                <a href="#" wire:click="loadPositionen('{{ $bestellung['nr'] }}')">
+                                    <div
+                                        class="flex flex-row @if ($bestellung['nr'] == $activeBestellung['nr']) font-bold text-white bg-sky-600 @endif hover:bg-[#CDD503] py-0.5">
+                                        <div class="w-[18%]">
+                                            {{ $bestellung['nr'] }}
+                                        </div>
+                                        <div class="w-[25%]">
+                                            {{ $bestellung['datum']->format('d.m.Y') }}
+                                        </div>
+                                        <div class="w-[25%]">
+                                            {{ $bestellung['status'] }}
+                                        </div>
+                                        <div class="w-[32%] text-right pr-2">
+                                            {{ number_format($bestellung['gesamtbetrag'], 2, ',', '.') }} €
+                                        </div>
+                                    </div>
+                                </a>
+                            @endforeach
+                        </div>
+                    </div>
+
+
+                    <div class="flex flex-col w-full lg:w-3/5 mt-2 lg:mt-0 ">
+                        <div class=" flatwhite p-2 ml-0 lg:ml-2 mb-2">
+                            <div class="flex flex-col ">
+                                <div class="flex flex-row font-bold text-xl text-sky-600">
+                                    <div class="pr-2">Bestellung: </div>
+                                    <div>{{ $activeBestellung->nr }} </div>
+                                </div>
+                                <div class="flex flex-col ">
+                                    <div class="flex flex-row">
+                                        <div class="flex flex-row w-1/2">
+                                            <div class="font-bold  text-sky-600 w-28">
+                                                Besteller:
+                                            </div>
+                                            <div class="">
+                                                {{ $activeBestellung->user->name }}
+                                            </div>
+                                        </div>
+                                        <div class="flex flex-row w-1/2">
+                                            <div class="font-bold text-sky-600 w-28">
+                                                Kundenbestellnr.:
+                                            </div>
+                                            <div class="">
+                                                {{ $activeBestellung->kundenbestellnr }}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex flex-row">
+                                        <div class="flex flex-row w-1/2">
+                                            <div class="font-bold text-sky-600 w-28">
+                                                Kommission:
+                                            </div>
+                                            <div class="">
+                                                {{ $activeBestellung->kommission }}
+                                            </div>
+                                        </div>
+
+                                        <div class="flex flex-row w-1/2 ">
+                                            <div class="font-bold text-sky-600 w-28">
+                                                Lieferdatum:
+                                            </div>
+                                            <div class="">
+                                                {{ optional($activeBestellung->lieferdatum)->format('d.m.Y') }}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex flex-row">
+                                        <div class="font-bold text-sky-600 w-28">
+                                            Bemerkung:
+                                        </div>
+                                        <div class="truncate" title="{{ $activeBestellung->bemerkung }}">
+                                            {{ $activeBestellung->bemerkung }}
+                                        </div>
+                                    </div>
+
+                                    @if ($activeBestellung->rechnungsadresse === $activeBestellung->lieferadresse)
+                                        <div class="flex flex-row ">
+                                            <div class="font-bold pr-2 text-sky-600 w-28">Rechnungsadr.:</div>
+                                            <div class="truncate">{{ $activeBestellung->reAdresse->firma1 }} -
+                                                {{ $activeBestellung->reAdresse->strasse }} -
+                                                {{ $activeBestellung->reAdresse->plz }}
+                                                {{ $activeBestellung->reAdresse->stadt }}</div>
+                                        </div>
+                                        <div class="flex felx-row">
+                                            <div class="font-bold pr-2 text-sky-600  w-28">Lieferadr.:</div>
+                                            <div class="text-gray-500">( Wie Rechnungsadresse. )</div>
+                                        </div>
+                                    @else
+                                        <div class="flex flex-row">
+                                            <div class="font-bold pr-2 text-sky-600  w-28">Rechnungsadr.:</div>
+                                            <div class="truncate">{{ $activeBestellung->reAdresse->firma1 }} -
+                                                {{ $activeBestellung->reAdresse->strasse }} -
+                                                {{ $activeBestellung->reAdresse->plz }}
+                                                {{ $activeBestellung->reAdresse->stadt }}</div>
+                                        </div>
+                                        <div class="flex flex-row">
+                                            <div class="font-bold pr-2 text-sky-600  w-28">Lieferadr.:</div>
+                                            <div class="truncate">{{ $activeBestellung->lfAdresse->firma1 }} -
+                                                {{ $activeBestellung->lfAdresse->strasse }} -
+                                                {{ $activeBestellung->lfAdresse->plz }}
+                                                {{ $activeBestellung->lfAdresse->stadt }}</div>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+
+                        </div>
+                        @livewire('bestellung-position-component', ['bestellnr' => $activeBestellung->nr])
+                    </div>
+                </div>
+
+            </div>
 </div>

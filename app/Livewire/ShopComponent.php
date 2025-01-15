@@ -213,6 +213,8 @@ class ShopComponent extends Component
             ]
         );
 
+        $this->favoriten = Favorit::cFavoriten(true);
+
         $this->showFavoritForm = false ;
         $this->isModified = false ;
     }
@@ -222,7 +224,7 @@ class ShopComponent extends Component
 
         $this->aktiveFavorites = $id;
 
-        Log::info('selectFavorit', [$id]);
+        //Log::info('selectFavorit', [$id]);
         $this->dispatch('showFavoritMitID', [ 'favoritId' => $id] );
     }
 
@@ -234,6 +236,13 @@ class ShopComponent extends Component
         $this->favoritName = $favorit->name;
         $this->favoritUser = $favorit->user_id;
 
+        $this->showFavoritForm = true ;
+    }
+
+    public function deleteFavorit($id){
+        $this->isModified = true ;
+        FavoritPos::where('favorit_id', $id)->delete();
+        Favorit::where('id', $id)->delete();
         $this->showFavoritForm = true ;
     }
 

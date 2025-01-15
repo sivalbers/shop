@@ -5,7 +5,9 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use App\Models\Bestellung;
+use App\Models\User;
 
 
 
@@ -14,57 +16,81 @@ class BestellungComponent extends Component
 
     public $bestellungen;
     public $selectedBestellung = null;
-    public $activeBestellung = '';
+    public $activeBestellung = null;
+    public $bestellung;
 
     public function mount()
     {
+        Log::info('Bestellcomponent-mount()');
+        $this->loadData();
+    }
 
 
+    public function loadData(){
+        Log::info('Bestellcomponent-loadData()');
+        $user = Auth::user();
 
+        $qu = Bestellung::select(
+            'nr',
+            'datum',
+            'bestellungen.kundennr',
+            'status.bezeichnung as status',
+            'gesamtbetrag',
+            'lieferdatum',
+            'rechnungsadresse.kurzbeschreibung as rechnungsadresse',
+            'lieferadresse.kurzbeschreibung as lieferadresse',
+//            'status.bezeichnung as status_bezeichnung'
+        )
+        ->where('bestellungen.kundennr', $user->kundennr)
+        ->where('status_id', '>', (int)0 )
+        // Join für Rechnungsadresse
+        ->leftJoin('anschriften as rechnungsadresse', 'rechnungsadresse', '=', 'rechnungsadresse.id')
 
+        // Join für Lieferadresse
+        ->leftJoin('anschriften as lieferadresse', 'lieferadresse', '=', 'lieferadresse.id')
+
+        // Join für Status
+        ->leftJoin('status', 'status_id', '=', 'status.id');
+
+        $qu = $qu->orderBy('datum', 'desc');
+
+        // Ergebnis abrufen
+        $data = $qu->get();
+
+        foreach( $data as $item){
+            $this->bestellungen[] = [
+                'nr' => $item->nr,
+                'datum' => $item->datum,
+                'status' => $item->status,
+                'gesamtbetrag' => $item->gesamtbetrag,
+                'rechnungsadresse' => $item->rechnungsadresse,
+                'lieferadresse' => $item->lieferadresse, ];
+        };
+
+        if (empty($this->activeBestellung)){
+            $this->loadPositionen( $this->bestellungen[0]['nr'] );
+        }
     }
 
     public function render()
     {
-        $user = Auth::user();
+        Log::info('Bestellcomponent-render()');
 
-        $qu = Bestellung::select(
-            'bestellung.nr',
-            'bestellung.datum',
-            'bestellung.kundennr',
-            'users.name as besteller',
-            'bestellung.gesamtbetrag',
-            'bestellung.lieferdatum',
-            'rechnungsadresse.kurzbeschreibung as rechnungsadresse',
-            'lieferadresse.kurzbeschreibung as lieferadresse',
-            'status.bezeichnung as status_bezeichnung'
-        )
-        // Join für Rechnungsadresse
-        ->leftJoin('anschriften as rechnungsadresse', 'bestellung.rechnungsadresse', '=', 'rechnungsadresse.id')
-
-        // Join für Lieferadresse
-        ->leftJoin('anschriften as lieferadresse', 'bestellung.lieferadresse', '=', 'lieferadresse.id')
-
-        // Join für Status
-        ->leftJoin('status', 'bestellung.status', '=', 'status.id')
-
-        ->leftJoin('users', 'bestellung.user_id', '=', 'users.id');
-
-        if (!$user->isAdmin()){
-            $qu = $qu->where('bestellung.kundennr', $user->kundennr);
-        }
-
-        $qu = $qu->orderBy('bestellung.datum', 'desc');
-
-        // Ergebnis abrufen
-        $this->bestellungen = $qu->get();
         return view('livewire.bestellung-component');
     }
 
+
     public function loadPositionen($bestellnr)
     {
+        Log::info(['Bestellcomponent-loadPositionen()'=> $bestellnr]);
+
         // Lade die Positionen der Bestellung anhand der Bestellnummer
-        $this->activeBestellung = $bestellnr;
+
+        $this->activeBestellung = Bestellung::where('nr', $bestellnr)->first();
+
+        //$user = User::find($this->activeBestellung->user_id);
+
+        Log::info([ 'Vor-Dispatch-loadPositionen', 'activeBestellung->nr' => $this->activeBestellung->nr ]);
         $this->dispatch('loadPositionen', $bestellnr );
     }
 

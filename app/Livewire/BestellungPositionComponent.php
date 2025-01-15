@@ -4,8 +4,9 @@ namespace App\Livewire;
 
 
 use Livewire\Component;
-use App\Models\Position;
+use App\Models\BestellungPos;
 use Livewire\Attributes\On;
+use Illuminate\Support\Facades\Log;
 
 
 
@@ -15,10 +16,12 @@ class BestellungPositionComponent extends Component
     public $positionen;
     public $bestellnr;
 
-    public function mount()
-
+    public function mount($bestellnr)
     {
-        
+        $this->bestellnr = $bestellnr;
+        $this->loadPositionen($bestellnr);
+
+        Log::info('BestellungPositionComponent-mount()');
 
     }
 
@@ -27,12 +30,13 @@ class BestellungPositionComponent extends Component
     #[On('loadPositionen')]
     public function loadPositionen($bestellnr)
     {
+        Log::info(['BestellungPositionComponent-loadPositionen()'=> $bestellnr]);
         // Lade die Positionen der Bestellung anhand der Bestellnummer
 
         if (!empty($this->bestellnr = $bestellnr))
-            $this->positionen = Position::where('bestellnr', $this->bestellnr)->get();
+            $this->positionen = BestellungPos::where('bestellnr', $this->bestellnr)->get();
         else
-            $this->positionen = Position::where('bestellnr', '')->get();
+            $this->positionen = BestellungPos::where('bestellnr', '')->get();
     }
 
 

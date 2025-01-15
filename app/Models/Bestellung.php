@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 
 use App\Models\Anschrift;
+use App\Models\User;
 
 
 class Bestellung extends Model
@@ -63,6 +64,11 @@ class Bestellung extends Model
     public function status()
     {
         return $this->belongsTo(Status::class, 'id', 'status');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
     public static function getBasket(){

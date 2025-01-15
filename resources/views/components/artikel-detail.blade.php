@@ -17,7 +17,7 @@
                 </a>
             </div>
 
-            <div class="flex flex-row justify-between w-full">
+            <div class="flex flex-row justify-between w-full font-bold">
                 <div class="text-lg">
                     <a href="#" wire:click.prevent="showArtikel('{{ $artikel->artikelnr }}')" class="hover:underline">
                         {{ $artikel->bezeichnung }}
