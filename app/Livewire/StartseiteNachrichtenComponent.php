@@ -30,10 +30,14 @@ class StartseiteNachrichtenComponent extends Component
                           $query->where('mitlogin', true)
                                 ->whereRaw('? = true', [$isAuth]);
                       });
+            })
+            ->where(function ($query) use ($today) {
+                $query->where('bis', '>=', $today)
+                      ->orWhereNull('bis');
             });
 
 
-            $this->nachrichten =$qu->get();
+            $this->nachrichten =$qu->orderBy('updated_at', 'desc')->get();
 
     }
 

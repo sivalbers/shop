@@ -501,10 +501,6 @@ class ShopArtikellisteComponent extends Component
 
             }
 
-            $bestellung->save();
-
-
-
             //Log::info($this->quantities);
 
 

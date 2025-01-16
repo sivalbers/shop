@@ -11,9 +11,9 @@
                 Nachrichten
             </div>
             @foreach ($nachrichten as $nachricht)
-                <div class="flex flex-row m-2 p-3 flatwhite items-center ">
+                <div class="flex flex-row m-2 p-3 flatwhite items-center">
 
-                    <div class="min-w-12  flex justify-center"> <!-- Spalte 1 -->
+                    <div class="min-w-12   flex justify-center "> <!-- Spalte 1 -->
                         @if ($nachricht->prioritaet === 'hoch')
                             <span class="text-red-600"><x-fluentui-important-24 class="h-12" /></span>
                         @elseif ($nachricht->prioritaet === 'mittel')
@@ -23,9 +23,14 @@
                         @endif
                     </div>
 
-                    <div class="flex flex-col"><!-- Spalte 2 -->
-                        <div class="text-xl text-sky-600 font-bold">
-                            {{ $nachricht->kurztext }}
+                    <div class="flex flex-col  w-full"><!-- Spalte 2 -->
+                        <div class="flex flex-row items-center justify-between">
+                            <div class="text-xl text-sky-600 font-bold">
+                                {{ $nachricht->kurztext }}
+                            </div>
+                            <div class="text-xs text-gray-400">
+                                {{ $nachricht->updated_at->format('d.m.Y h:m') }}
+                            </div>
                         </div>
                         <div class="text-base">
                             {{ $nachricht->langtext }}
