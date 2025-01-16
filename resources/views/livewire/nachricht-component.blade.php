@@ -181,14 +181,15 @@
 
 
             @foreach ($nachrichten as $nachricht)
-                <div class="flex flex-row pt-1 border-b hover:bg-[#CDD503]">
+                <div class="hover:bg-[#CDD503]">
+                <div class="flex flex-row pt-1 border-b ">
                     <div class="min-w-6 w-[6%] px-2 border-r flex justify-center">
                         @if ($nachricht->prioritaet === 'hoch')
-                            <span class="text-red-600"><x-fluentui-important-24 class="h-5" /></span>
+                            <span class="text-red-600 "><x-fluentui-important-24 class="h-5  bg-white rounded-md" /></span>
                         @elseif ($nachricht->prioritaet === 'mittel')
-                            <span class="text-ewe-gruen "><x-fluentui-important-24-o class="h-5" /></span>
+                            <span class="text-ewe-gruen  "><x-fluentui-important-24-o class="h-5 bg-white rounded-md" /></span>
                         @else
-                            <span class="text-ewe-gruen ">&nbsp;</span>
+                            <span class="text-ewe-gruen  ">&nbsp;</span>
                         @endif
                     </div>
 
@@ -202,25 +203,25 @@
 
                     <div class="min-w-6 w-[6%] px-2 border-r flex justify-center">
                         @if ($nachricht->startseite === true)
-                            <x-fluentui-square-12 class="h-5" />
+                            <x-fluentui-square-12 class="h-5" title="Wird auf Anmeldeseite angezeigt." />
                         @else
-                            <x-fluentui-square-12-o class="h-5" />
+                            <x-fluentui-square-12-o class="h-5" title="Wird nicht auf Anmeldeseite angezeigt." />
                         @endif
                     </div>
 
                     <div class="min-w-6 w-[6%] px-2 border-r flex justify-center">
                         @if ($nachricht->mail === true)
-                            <x-fluentui-square-12 class="h-5" />
+                            <x-fluentui-square-12 class="h-5" title="Wird mit der Bestellbestätigung versendet."/>
                         @else
-                            <x-fluentui-square-12-o class="h-5" />
+                            <x-fluentui-square-12-o class="h-5" title="Wird nicht mit der Bestellbestätigung versendet."/>
                         @endif
                     </div>
 
                     <div class="min-w-6 w-[6%] px-2 border-r flex justify-center">
                         @if ($nachricht->mitlogin === true)
-                            <x-fluentui-square-12 class="h-5" />
+                            <x-fluentui-square-12 class="h-5" title="Benutzer muss angemeldet sein, um die Nachricht zu sehen." />
                         @else
-                            <x-fluentui-square-12-o class="h-5" />
+                            <x-fluentui-square-12-o class="h-5" title="Benutzer muss nicht angemeldet sein, um die Nachricht zu sehen." />
                         @endif
                     </div>
 
@@ -242,12 +243,11 @@
                     </div>
                 </div>
                 <div class="flex flex-row border-b-2 border-gray-500 mb-4 text-sm ">
-                    <div class="w-1/2 px-2 max-h-14 overflow-y-scroll">
+                    <div class="ml-[6%] w-full px-2 max-h-14 overflow-y-scroll">
                         {{ $nachricht->langtext }}
+                        @if (!empty($nachricht->links)) <br> {{ $nachricht->links }}@endif;
                     </div>
-                    <div class="w-1/2  px-2 ">
-                        {{ $nachricht->links }}
-                    </div>
+                </div>
                 </div>
             @endforeach
 

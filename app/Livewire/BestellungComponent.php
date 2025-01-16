@@ -35,7 +35,7 @@ class BestellungComponent extends Component
             'datum',
             'bestellungen.kundennr',
             'status.bezeichnung as status',
-            'users.name as besteller',
+            'users.login as besteller',
             'gesamtbetrag',
             'lieferdatum',
             'rechnungsadresse.kurzbeschreibung as rechnungsadresse',

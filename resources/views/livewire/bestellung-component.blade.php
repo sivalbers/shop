@@ -5,47 +5,47 @@
 
                 <div class="flex flex-col lg:flex-row ">
 
-                    <div class="flex flex-col w-full lg:w-2/5  flatwhite p-2 max-h-48 lg:max-h-none">
+                    <div class="flex flex-col w-full lg:w-2/5  flatwhite p-2 max-h-48 lg:max-h-none overflow-x-scroll">
                         <div class="flex flex-row rounded-t-md  text-sky-600 font-bold py-0.5 text-xl w-full">
                             Bestellungen
                         </div>
                         <div class="flex flex-row text-sky-600 font-bold py-0.5 border-b border-sky-600 ">
-                            <div class="w-[18%] text-right pr-2 lg:pr-4">
+                            <div class="w-[18%] text-right pr-2 lg:pr-4 min-w-14">
                                 Nr.
                             </div>
-                            <div class="w-[18%]">
+                            <div class="w-[18%] min-w-20 ">
                                 Datum
                             </div>
-                            <div class="w-[18%]  -ml-2 lg:ml-1">
+                            <div class="w-[18%] -ml-2 lg:ml-1 min-w-20 ">
                                 Status
                             </div>
-                            <div class="w-[14%]  -ml-2 lg:ml-1">
+                            <div class="w-[34%] min-w-32 ">
                                 Besteller
                             </div>
-                            <div class="w-[32%] text-right pr-4 lg:pr-1">
+                            <div class="w-[20%] text-right pr-4 lg:pr-1 min-w-24 ">
                                 Betrag
                             </div>
                         </div>
-                        <div class="overflow-y-scroll lg:overflow-y-visible">
+                        <div class="overflow-y-scroll lg:overflow-y-visible ">
                             @foreach ($bestellungen as $bestellung)
                                 <a href="#" wire:click="loadPositionen('{{ $bestellung['nr'] }}')">
-                                    <div  tabindex="0"
+                                    <div  
                                         class="flex flex-row @if ($bestellung['nr'] == $activeBestellung['nr']) font-bold text-white bg-sky-600 @endif
                                          hover:bg-[#CDD503] py-0.5">
-                                        <div class="w-[18%] text-right pr-2 lg:pr-4">
+                                        <div class="w-[18%] text-right pr-2 lg:pr-4 min-w-14 ">
                                             {{ $bestellung['nr'] }}
                                         </div>
-                                        <div class="w-[18%]">
+                                        <div class="w-[18%] min-w-20 ">
                                             {{ $bestellung['datum']->format('d.m.Y') }}
                                         </div>
-                                        <div class="w-[18%]">
+                                        <div class="w-[18%]  min-w-20">
                                             {{ $bestellung['status'] }}
                                         </div>
-                                        <div class="w-[14%]">
+                                        <div class="w-[34%]  min-w-32 ">
                                             {{ $bestellung['besteller'] }}
                                         </div>
 
-                                        <div class="w-[32%] text-right pr-2">
+                                        <div class="w-[20%] text-right pr-2 lg:pr-1 min-w-24 ">
                                             {{ number_format($bestellung['gesamtbetrag'], 2, ',', '.') }} €
                                         </div>
                                     </div>
