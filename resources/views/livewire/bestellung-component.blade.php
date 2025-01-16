@@ -13,11 +13,14 @@
                             <div class="w-[18%] text-right pr-2 lg:pr-4">
                                 Nr.
                             </div>
-                            <div class="w-[25%]">
+                            <div class="w-[18%]">
                                 Datum
                             </div>
-                            <div class="w-[25%]  -ml-2 lg:ml-1">
+                            <div class="w-[18%]  -ml-2 lg:ml-1">
                                 Status
+                            </div>
+                            <div class="w-[14%]  -ml-2 lg:ml-1">
+                                Besteller
                             </div>
                             <div class="w-[32%] text-right pr-4 lg:pr-1">
                                 Betrag
@@ -32,12 +35,16 @@
                                         <div class="w-[18%] text-right pr-2 lg:pr-4">
                                             {{ $bestellung['nr'] }}
                                         </div>
-                                        <div class="w-[25%]">
+                                        <div class="w-[18%]">
                                             {{ $bestellung['datum']->format('d.m.Y') }}
                                         </div>
-                                        <div class="w-[25%]">
+                                        <div class="w-[18%]">
                                             {{ $bestellung['status'] }}
                                         </div>
+                                        <div class="w-[14%]">
+                                            {{ $bestellung['besteller'] }}
+                                        </div>
+
                                         <div class="w-[32%] text-right pr-2">
                                             {{ number_format($bestellung['gesamtbetrag'], 2, ',', '.') }} €
                                         </div>

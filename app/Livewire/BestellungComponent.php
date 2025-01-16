@@ -35,6 +35,7 @@ class BestellungComponent extends Component
             'datum',
             'bestellungen.kundennr',
             'status.bezeichnung as status',
+            'users.name as besteller',
             'gesamtbetrag',
             'lieferdatum',
             'rechnungsadresse.kurzbeschreibung as rechnungsadresse',
@@ -50,7 +51,9 @@ class BestellungComponent extends Component
         ->leftJoin('anschriften as lieferadresse', 'lieferadresse', '=', 'lieferadresse.id')
 
         // Join für Status
-        ->leftJoin('status', 'status_id', '=', 'status.id');
+        ->leftJoin('status', 'status_id', '=', 'status.id')
+
+        ->leftJoin('users', 'user_id', '=', 'users.id');
 
         $qu = $qu->orderBy('datum', 'desc');
 
@@ -62,6 +65,7 @@ class BestellungComponent extends Component
                 'nr' => $item->nr,
                 'datum' => $item->datum,
                 'status' => $item->status,
+                'besteller' => $item->besteller,
                 'gesamtbetrag' => $item->gesamtbetrag,
                 'rechnungsadresse' => $item->rechnungsadresse,
                 'lieferadresse' => $item->lieferadresse, ];
