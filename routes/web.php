@@ -42,6 +42,10 @@ Route::view('profile', 'profile')
 Route::get('/shop', ShopComponent::class)
     ->middleware('auth')
     ->name('shop');
+
+Route::get('/bestellungen', BestellungComponent::class)
+    ->middleware('auth')
+    ->name('bestellungen');
 /*
 Route::get('/shop', BestellungListComponent::class)
     ->middleware('auth')
@@ -64,9 +68,6 @@ Route::middleware([AdminMiddleware::class])->group(function(){
     Route::get('/sortimente', SortimentComponent::class)->middleware('auth')->name('sortimente');
     Route::get('/artikel-sortimente', ArtikelSortimentComponent::class)->middleware('auth');
     Route::get('/warengruppen', WarengruppeComponent::class)->middleware('auth')->name('warengruppen');
-    Route::get('/bestellungen', BestellungComponent::class)->name('bestellungen');
-
-
 
     Route::get('/import-odata/artikel', [ODataController::class, 'importArtikel'])->name('importArtikel');
     Route::get('/import-odata/wg', [ODataController::class, 'importWarengruppe'])->name('importWG');
