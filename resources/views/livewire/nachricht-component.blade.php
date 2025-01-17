@@ -88,11 +88,11 @@
 
                     <div class="mb-4 flex flex-row items-center">
                         <div class="w-32 text-right mr-2">
-                            <label for="startseite" class="block font-bold">Kopfzeile:</label>
+                            <label for="kopfzeile" class="block font-bold">Im Kopf:</label>
                         </div>
                         <div class="w-full flex flex-row items-center">
                             <div class="w-8">
-                                <input type="checkbox" id="startseite" wire:model="startseite">
+                                <input type="checkbox" id="kopfzeile" wire:model="kopfzeile">
                             </div>
 
                             <div class="w-48 text-right mr-2">
@@ -161,16 +161,16 @@
                     Zeitraum
                 </div>
 
-                <div class="w-[6%] px-2 border-r text-cente group">
-                    <span title="Auf Startseite anzeigen.">Auf<br>Starts.</span>
+                <div class="w-[6%] px-2 border-r text-center group">
+                    <span title="In Kopfzeile anzeigen.">Im Kopf</span>
                 </div>
 
                 <div class="w-[6%] px-2 border-r text-center">
-                    <span title="In Bestellbestätigungsmails einfügen.">In<br>Mail.</span>
+                    <span title="In Bestellbestätigungsmails einfügen.">In Mail</span>
                 </div>
 
                 <div class="w-[6%] px-2 border-r text-center">
-                    <span title="Nur angemeldete Benutzer sehen die Nachricht.">Mit<br>Login.</span>
+                    <span title="Nur angemeldete Benutzer sehen die Nachricht.">Mit Login</span>
                 </div>
 
 
@@ -202,10 +202,10 @@
                     </div>
 
                     <div class="min-w-6 w-[6%] px-2 border-r flex justify-center">
-                        @if ($nachricht->startseite === true)
-                            <x-fluentui-square-12 class="h-5" title="Wird auf Anmeldeseite angezeigt." />
+                        @if ($nachricht->kopfzeile === true)
+                            <x-fluentui-square-12 class="h-5" title="Wird im Kopf angezeigt." />
                         @else
-                            <x-fluentui-square-12-o class="h-5" title="Wird nicht auf Anmeldeseite angezeigt." />
+                            <x-fluentui-square-12-o class="h-5" title="Wird nicht im Kopf angezeigt." />
                         @endif
                     </div>
 

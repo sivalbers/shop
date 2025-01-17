@@ -17,7 +17,7 @@ class NachrichtComponent extends Component
     public $bis;
     public $links;
     public $prioritaet = 'normal'; // Vorgabewert
-    public $startseite = false;
+    public $kopfzeile = false;
     public $mail = false;
     public $kundennr;
     public $nachrichtId;
@@ -49,7 +49,7 @@ class NachrichtComponent extends Component
         $this->bis = '';
         $this->links = '';
         $this->prioritaet = 'normal';
-        $this->startseite = false;
+        $this->kopfzeile = false;
         $this->mail = false;
         $this->kundennr = '';
         $this->nachrichtId = null;
@@ -67,7 +67,7 @@ class NachrichtComponent extends Component
             'bis' => 'nullable|date',
             'links' => 'nullable',
             'prioritaet' => 'required|in:normal,mittel,hoch',
-            'startseite' => 'boolean',
+            'kopfzeile' => 'boolean',
             'mail' => 'boolean',
             'mitlogin' => 'boolean',
             'kundennr' => 'nullable|integer',
@@ -118,7 +118,7 @@ class NachrichtComponent extends Component
 
         $this->links = $nachricht->links;
         $this->prioritaet = $nachricht->prioritaet;
-        $this->startseite = $nachricht->startseite;
+        $this->kopfzeile = $nachricht->kopfzeile;
         $this->mail = $nachricht->mail;
         $this->mitlogin = $nachricht->mitlogin;
 

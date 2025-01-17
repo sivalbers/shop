@@ -19,7 +19,7 @@ class Nachricht extends Model
         'bis',
         'links',
         'prioritaet',
-        'startseite',
+        'kopfzeile',
         'kundennr',
         'mitlogin',
         'mail'
@@ -28,13 +28,13 @@ class Nachricht extends Model
     // Optional: Füge eine Standardwertfunktion hinzu, falls gewünscht
     protected $attributes = [
         'prioritaet' => 'normal',
-        'startseite' => false,
+        'kopfzeile' => false,
     ];
 
     protected $casts = [
         'von' => 'date',
         'bis' => 'date',
-        'startseite' => 'boolean',
+        'kopfzeile' => 'boolean',
         'mail' => 'boolean',
         'kundennr' => 'integer',
         'mitlogin' => 'boolean',

@@ -20,14 +20,14 @@ class NavigationComponent extends Component
     public function mount()
     {
 
-        Log::info('Navigation->mount()');
+        // Log::info('Navigation->mount()');
         $this->bestellung = Bestellung::getBasket();
 
     }
 
     public function render()
     {
-        Log::info('Navigation->render()',['bestellnr' => $this->bestellung->nr ]);
+        // Log::info('Navigation->render()',['bestellnr' => $this->bestellung->nr ]);
         return view('livewire.layout.navigation');
     }
 
@@ -36,10 +36,10 @@ class NavigationComponent extends Component
     public function doUpdate()
     {
         $this->bestellung = Bestellung::getBasket();
-        Log::info('NavigationComponent->doUpdate()',['Bestellnr' => $this->bestellung->nr]);
+        // Log::info('NavigationComponent->doUpdate()',['Bestellnr' => $this->bestellung->nr]);
         $this->bestellung = Bestellung::doCalc($this->bestellung->nr);
 
-        Log::info('NavigationComponent=>doUpdate', [ 'bestNr' => $this->bestellung->nr, 'anz' => $this->bestellung->anzpositionen, 'Gpreis'=> $this->bestellung->gesamtbetrag]);
+        // Log::info('NavigationComponent=>doUpdate', [ 'bestNr' => $this->bestellung->nr, 'anz' => $this->bestellung->anzpositionen, 'Gpreis'=> $this->bestellung->gesamtbetrag]);
 
     }
 

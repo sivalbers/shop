@@ -19,7 +19,7 @@ return new class extends Migration
             $table->date('bis')->nullable(); // Enddatum, kann null sein
             $table->text('links')->nullable(); // Langtext für Links, kann null sein
             $table->enum('prioritaet', ['normal', 'mittel', 'hoch'])->default('normal'); // Prioritaet mit Standardwert 'normal'
-            $table->boolean('startseite')->default(true); // Boolean für ja/nein
+            $table->boolean('kopfzeile')->default(true); // Boolean für ja/nein
             $table->integer('kundennr')->unsigned()->nullable(); // Kundennummer, kann null sein
             $table->smallInteger('lagerort')->unsigned()->nullable();
             $table->boolean('mitlogin')->default(false); // Kundennummer, kann null sein

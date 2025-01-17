@@ -41,7 +41,11 @@ class HeaderComponent extends Component
                             ->whereRaw('? = true', [$isAuth]);
                   });
         })
-        ->where('startseite', true)
+        ->where(function ($query) use ($today) {
+            $query->where('bis', '>=', $today)
+                  ->orWhereNull('bis');
+        })
+        ->where('kopfzeile', true)
         ->get();
 
     }
