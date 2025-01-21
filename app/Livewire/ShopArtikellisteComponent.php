@@ -120,6 +120,8 @@ class ShopArtikellisteComponent extends Component
     #[On('showArtikelWG')]
     public function selectWarengruppe($wgnr, $sortiment)
     {
+
+        Log::info('selectWarengruppe', [ 'wgnr' => $wgnr, 'sortiment' => $sortiment ]);
         $startTime = microtime(true);
         session()->put('wgnr', $wgnr);
         session()->put('sortiment', $sortiment);

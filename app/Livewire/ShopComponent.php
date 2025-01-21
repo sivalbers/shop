@@ -138,6 +138,9 @@ class ShopComponent extends Component
                     'artikel_count' => $item->artikel_count,
                 ];
             });
+            $this->aktiveWarengruppe = $this->warengruppen[0];
+            Log::info('dispatch selectWarengruppe', [ 'wgnr' => $this->aktiveWarengruppe->wgnr, 'sortiment' => $this->sortiment ]);
+            $this->dispatch('showArtikelWG', [ 'wgnr' => $this->aktiveWarengruppe->wgnr, 'sortiment' => $this->sortiment ] );
 
         }
         elseif ($this->activeTab === 'tab3') {

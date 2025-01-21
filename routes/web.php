@@ -23,6 +23,10 @@ use App\Http\Middleware\AdminMiddleware;
 
 use App\Mail\ExampleMail;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Log;
+
+use App\Http\Controllers\ApiController;
 
 use Dotenv\Dotenv;
 
@@ -77,6 +81,8 @@ Route::middleware([AdminMiddleware::class])->group(function(){
 
     Route::get('/nachrichten', NachrichtComponent::class)->name('nachrichten');
 
+    Route::view('apitest', 'apitest')->name('apitest');
+
 });
 
 
@@ -84,8 +90,6 @@ Route::post('/punchout', [Punchout::class, 'handlePunchOut']);
 
 
 Route::get('/send-email', function () {
-
-
 
     // Teste, ob die Datei geladen wird
     //$dotenv = Dotenv::createImmutable(__DIR__ . '/../');
@@ -103,11 +107,20 @@ Route::get('/send-email', function () {
     return 'E-Mail wurde gesendet!';
 });
 
+
+// fragt beim Live-Shop an, wegen einer Session-ID
+Route::get('/api/get-session', [ApiController::class, 'getSessionOSGWebshop']);
+Route::get('/api/session', [ApiController::class, 'getSessionId']);
+
+
+
+
 // Route ohne Parameter
 Route::get('/test', function () {
     return "http://shop.local/test";
     //return " >>>". Config::globalString($var);
 });
+
 
 
 
