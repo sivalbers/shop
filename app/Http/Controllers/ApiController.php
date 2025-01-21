@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Log;
 
 use App\Models\ApplicationAuth;
 
@@ -30,7 +31,8 @@ class ApiController extends Controller
     public function getSessionOSGWebshop() {
 
         $headers = Request::header();
-        return json_encode($headers, JSON_PRETTY_PRINT) ;
+        Log::info(json_encode($headers, JSON_PRETTY_PRINT) );
+        return "NO";
 
     }
 
