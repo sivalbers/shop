@@ -30,6 +30,13 @@
                             </x-slot>
 
                             <x-slot name="content">
+                                @if (auth()->user()->isAdmin())
+                                <x-dropdown-link :href="route('apitest')" wire:navigate>
+                                    {{ __('API-Test') }}
+                                </x-dropdown-link>
+                                @endif
+
+
                                 <x-dropdown-link :href="route('profile')" wire:navigate>
                                     {{ __('auth.Profile') }}
                                 </x-dropdown-link>
@@ -76,7 +83,7 @@
                                 <x-slot name="trigger">
                                     <button
                                         class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
-                                        <div>Artikelstamm</div> <!-- /*  ###########################  */ -->
+                                        <div>Stammdaten</div> <!-- /*  ###########################  */ -->
 
                                         <div class="ms-1">
                                             <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
@@ -100,6 +107,10 @@
                                     <x-dropdown-link :href="route('warengruppen')" wire:navigate>
                                         {{ __('Warengruppen') }} <!-- /*  ###########################  */ -->
                                     </x-dropdown-link>
+                                    <hr>
+                                    <x-dropdown-link :href="route('anschriften')" wire:navigate>
+                                        {{ __('Kunden - Anschriften') }} <!-- /*  ###########################  */ -->
+                                    </x-dropdown-link>
                                 </x-slot>
                             </x-dropdown>
 
@@ -122,7 +133,7 @@
 
                                 <x-slot name="content">
                                     <x-dropdown-link :href="route('anschriften')" wire:navigate>
-                                        {{ __('Anschriften') }} <!-- /*  ###########################  */ -->
+                                        {{ __('Kunden - Anschriften') }} <!-- /*  ###########################  */ -->
                                     </x-dropdown-link>
                                 </x-slot>
                             </x-dropdown>

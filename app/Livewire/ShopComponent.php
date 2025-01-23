@@ -139,8 +139,11 @@ class ShopComponent extends Component
                 ];
             });
             $this->aktiveWarengruppe = $this->warengruppen[0];
-            Log::info('dispatch selectWarengruppe', [ 'wgnr' => $this->aktiveWarengruppe->wgnr, 'sortiment' => $this->sortiment ]);
-            $this->dispatch('showArtikelWG', [ 'wgnr' => $this->aktiveWarengruppe->wgnr, 'sortiment' => $this->sortiment ] );
+            if ($this->aktiveWarengruppe){
+                //dd($this->aktiveWarengruppe);
+                Log::info('dispatch selectWarengruppe', [ 'wgnr' => $this->aktiveWarengruppe['wgnr'], 'sortiment' => $this->sortiment ]);
+                $this->dispatch('showArtikelWG', [ 'wgnr' => $this->aktiveWarengruppe['wgnr'], 'sortiment' => $this->sortiment ] );
+            }
 
         }
         elseif ($this->activeTab === 'tab3') {

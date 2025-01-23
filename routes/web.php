@@ -109,7 +109,7 @@ Route::get('/send-email', function () {
 
 
 // fragt beim Live-Shop an, wegen einer Session-ID
-Route::get('/api/session', [ApiController::class, 'getSessionOSGWebshop']);
+Route::get('/api/session', [ApiController::class, 'buildSessionId']);
 Route::get('/api/getsessionid', [ApiController::class, 'getSessionId']);
 
 
