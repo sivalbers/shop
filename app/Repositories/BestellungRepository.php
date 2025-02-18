@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Bestellung;
+use App\Models\ApiLog;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Exception;
@@ -28,16 +29,51 @@ class BestellungRepository
                 'Ocp-Apim-Subscription-Key' => $this->subscriptionKey,
             ])->withBody($xmlString, 'application/xml')->post($this->apiUrl, $xmlString);
 
+
+            $apiLog = null;
+
+            try{
+                $apiLog = ApiLog::create([
+
+                'httpmethod' => 'POST',
+                'pfad' => $this->apiUrl,
+                'key' => $this->subscriptionKey,
+                'session' => '',
+                'token' => $this->customerId,
+                'data' => $xmlString,
+                ]);
+
+            } catch (\Exception $e) {
+                Log::error([ 'Exception ist aufgetreten: ' => $e->getMessage()] );
+            } finally {
+            }
+
+
+
+            $apiLog->update([
+                'response' => json_encode($response->body()),
+            ]);
+
             // Erfolgreiche Antwort prüfen
             if ($response->successful()) {
                 Log::info(['success' => true, 'data' => $response->body()]);
+
+                $bestellung->erpid = $this->getEntityId($response->body());
+                $bestellung->save();
                 return ['success' => true, 'data' => $response->body()];
             }
+
 
             // Fehlerbehandlung
             throw new Exception("ERP API Fehler: " . $response->body());
         } catch (Exception $e) {
             throw new Exception("Fehler beim Senden der Bestellung: " . $e->getMessage());
         }
+    }
+
+    public function getEntityId($jsonString)
+    {
+        $data = json_decode($jsonString, true);
+        return $data['entityId'] ?? 'Kein Wert';
     }
 }

@@ -8,8 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use App\Models\Bestellung;
 use App\Models\User;
-
-
+use App\Repositories\BestellungRepository;
 
 class BestellungComponent extends Component
 {
@@ -40,6 +39,7 @@ class BestellungComponent extends Component
             'users.name as besteller',
             'gesamtbetrag',
             'lieferdatum',
+            'erpid',
             'rechnungsadresse.kurzbeschreibung as rechnungsadresse',
             'lieferadresse.kurzbeschreibung as lieferadresse',
 //            'status.bezeichnung as status_bezeichnung'
@@ -70,7 +70,8 @@ class BestellungComponent extends Component
                 'besteller' => $item->besteller,
                 'gesamtbetrag' => $item->gesamtbetrag,
                 'rechnungsadresse' => $item->rechnungsadresse,
-                'lieferadresse' => $item->lieferadresse, ];
+                'lieferadresse' => $item->lieferadresse,
+                'erpid' => $item->erpid, ];
         };
 
         if (empty($this->activeBestellung) ){
@@ -102,4 +103,10 @@ class BestellungComponent extends Component
         $this->dispatch('loadPositionen', $bestellnr );
     }
 
+
+    public function bestellungErneutSenden($bestellnr){
+        $best = Bestellung::where('nr', $bestellnr)->first();
+        $br = new BestellungRepository();
+        $br->sendToERP($best);
+    }
 }

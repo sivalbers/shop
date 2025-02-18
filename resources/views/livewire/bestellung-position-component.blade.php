@@ -42,7 +42,6 @@
 
     @if (!empty($positionen))
         <div class="flex flex-col">
-
             @foreach ($positionen as $position)
                 <div class="flex flex-row py-0.5">
                     <div class=" text-left  w-[13vH] pl-2">
@@ -57,8 +56,6 @@
 
                 </div>
             @endforeach
-
-
         </div>
     @else
         <div class="m-4 text-center">

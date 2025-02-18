@@ -70,9 +70,12 @@ class User extends Authenticatable
 
     public function standardDebitor()
     {
-        return UserDebitor::where('email', $this->email )
+        $stdDeb = UserDebitor::where('email', $this->email )
             ->where('standard', 1)->first();
-
+        if (empty($stdDeb)){
+            $stdDeb = UserDebitor::where('email', $this->email )->first();
+        }
+        return $stdDeb;
     }
 
     public function debitoren()

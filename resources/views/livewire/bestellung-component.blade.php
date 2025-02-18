@@ -2,9 +2,7 @@
 
 
             <div class=" w-11/12 text-sm m-auto">
-
                 <div class="flex flex-col lg:flex-row ">
-
                     <div class="flex flex-col w-full lg:w-2/5  flatwhite p-2 max-h-48 lg:max-h-none overflow-x-scroll">
                         <div class="flex flex-row rounded-t-md  text-sky-600 font-bold py-0.5 text-xl w-full">
                             Bestellungen
@@ -38,7 +36,7 @@
                                         <div class="w-[18%] min-w-20 ">
                                             {{ $bestellung['datum']->format('d.m.Y') }}
                                         </div>
-                                        <div class="w-[18%]  min-w-20">
+                                        <div class="w-[18%]  min-w-20" title="{{ $bestellung['erpid'] }}">
                                             {{ $bestellung['status'] }}
                                         </div>
                                         <div class="w-[34%]  min-w-32 ">
@@ -58,10 +56,35 @@
                     <div class="flex flex-col w-full lg:w-3/5 mt-2 lg:mt-0 ">
                         <div class=" flatwhite p-2 ml-0 lg:ml-2 mb-2">
                             <div class="flex flex-col ">
-                                <div class="flex flex-row font-bold text-xl text-sky-600">
-                                    <div class="pr-2 w-28">Bestellung </div>
-                                    <div>{{ (!empty($activeBestellung)) ? $activeBestellung->nr : '' }} </div>
+
+                                <div class="flex flex-row">
+                                    <div class="flex flex-row w-1/2 items-center">
+                                        <div class="text-xl font-bold  text-sky-600 w-28">
+                                            Bestellung:
+                                        </div>
+                                        <div class="text-xl font-bold  text-sky-600">
+                                            <div>{{ (!empty($activeBestellung)) ? $activeBestellung->nr : '' }} </div>
+                                        </div>
+                                        @if (Auth::user()->isAdmin())
+                                            @if (!empty($activeBestellung))
+                                                <div class="border border-red-500 bg-red-100 rounded-md mx-2 px-2 shadow-md">
+                                                    <button wire:click="bestellungErneutSenden('{{ $activeBestellung->nr }}')"> Nochmal versenden </button>
+                                                </div>
+                                            @endif
+                                        @endif
+                                    </div>
+                                    <div class="flex flex-row w-1/2">
+                                        @if (Auth::user()->isAdmin())
+                                        <div class="font-bold text-sky-600 w-28">
+                                            Entität ID
+                                        </div>
+                                        <div class="pl-2">
+                                            {{ !empty($activeBestellung->erpid) ? $activeBestellung->erpid : '---' }} (Admin-Info)
+                                        </div>
+                                        @endif
+                                    </div>
                                 </div>
+
                                 <div class="flex flex-col ">
                                     <div class="flex flex-row">
                                         <div class="flex flex-row w-1/2">

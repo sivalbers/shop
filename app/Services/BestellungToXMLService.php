@@ -68,16 +68,16 @@ class BestellungToXMLService
         // Zusatzinfos
         $zusatzinfos = $this->dom->createElement('Zusatzinfos');
         $params->appendChild($zusatzinfos);
-        $zusatzinfos->appendChild($this->createElement('Zusatzinfo1', $best->kommission));
-        $zusatzinfos->appendChild($this->createElement('Zusatzinfo2', $best->kundennr));
-        $zusatzinfos->appendChild($this->createElement('Zusatzinfo3', $best->lieferdatum));
-        $zusatzinfos->appendChild($this->createElement('Zusatzinfo4', $best->kundenbestellnr));
+        $zusatzinfos->appendChild($this->createElement('Zusatzinfo1', $best->kommission)); // Okay
+        $zusatzinfos->appendChild($this->createElement('Zusatzinfo2', $best->kundennr));   // Okay
+        $zusatzinfos->appendChild($this->createElement('Zusatzinfo3', $best->bemerkung));  // OKay
+        $zusatzinfos->appendChild($this->createElement('Zusatzinfo4', $best->kundenbestellnr)); // Okay
         //$zusatzinfos->appendChild($this->createElement('Zusatzinfo5', ''));
         // $zusatzinfos->appendChild($this->createElement('Zusatzinfo6', $data['Zusatzinfo6']));
 
 
         // Bemerkung
-        $params->appendChild($this->createElement('Bemerkung', $best->bemerkung));
+        // $params->appendChild($this->createElement('Bemerkung', $best->bemerkung));
         $params->appendChild($this->createElement('Lieferdatum', $best->lieferdatum->format('d.m.y')));
 
 

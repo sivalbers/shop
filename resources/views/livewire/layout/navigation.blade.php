@@ -40,6 +40,7 @@
                             </x-slot>
 
                             <x-slot name="content">
+                                @if (count($kunden) > 1)
                                 @foreach ($kunden as $kunde)
                                     <x-dropdown-link wire:click="changeDebitor({{ $kunde->nr }})" href="#">
                                         <div class="flex flex-row item-center">
@@ -63,6 +64,7 @@
                                     </x-dropdown-link>
                                 @endforeach
                                 <x-dropdown-hr />
+                                @endif
 
 
                                 @if (auth()->user()->isAdmin())
