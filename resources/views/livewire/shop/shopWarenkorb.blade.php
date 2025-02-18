@@ -95,17 +95,7 @@
         </form>
     </div>
 
-    <div class="p-3 mb-2 flatwhite">
 
-        <div class="text-base font-bold text-sky-600 border-b border-sky-600">Nullmengen entfernen</div>
-
-        <div class="p-4">Mit klick auf "Nullmengen entfernen" werden ohne Rückfrage alle Positionen entfernt, bei denen die Menge im Warenkorb 0 ist.</div>
-
-        <button type="button" wire:click="doNullMengenEntfernen"
-            class="mt-2 px-4 py-2 bg-red-600 text-white rounded-md w-auto flex flex-row items-center shadow-md shadow-gray-400">
-            <x-fluentui-delete-28-o class="h-6 pr-2" />Nullmengen entfernen
-        </button>
-    </div>
 
     <div x-data="{ showEmptyButton: false }" class="p-3 flatwhite">
 

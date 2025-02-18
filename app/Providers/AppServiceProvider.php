@@ -4,7 +4,6 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Blade;
-use Livewire\Livewire;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,7 +22,6 @@ class AppServiceProvider extends ServiceProvider
     {
         Blade::component('livewire.forms.headercomponent', \App\Livewire\Forms\HeaderComponent::class);
         Blade::component('livewire.forms.footercomponent', \App\Livewire\Forms\FooterComponent::class);
-
 
     }
 }

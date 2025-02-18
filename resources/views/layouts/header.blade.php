@@ -4,7 +4,7 @@
             <div class="text-base font-light text-[rgb(0,119,180)]">
 
                 @php
-                    $s = ' ************** JKSDJFK JKFJ SJF JSLF JKSFjJFJFJKJKS DFJK JSFJ SDFJ SJDFJ SDJF JSFDJSLDFJ JLDSJFLJSDFJSDFJLSJFJSFJSLFJSJFJSFL SLDF LSFJSJF **************';
+                    $s = '';
                     if (count($nachrichten) > 0){
                         $s = '+++ ';
                         foreach ($nachrichten as $key => $nachricht) {

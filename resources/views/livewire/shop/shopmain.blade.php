@@ -96,13 +96,15 @@
                                                     <li
                                                         class="pl-2 hover:underline  hover:bg-[#e3e692] hover:text-sky-600">
                                                         <a href="#"
-                                                            wire:click.prevent="clickWarengruppe('{{ $wg['wgnr'] }}', '{{ $sortiment }}')"
+                                                            wire:click.prevent="clickWarengruppe('{{ $wg['wgnr'] }}')"
                                                             class=" flex items-center justify-between group">
 
                                                             <span
-                                                                @if ($aktiveWarengruppe == $wg['wgnr']) class="text-xl md:text-3xl font-bold text-sky-600 truncate ..."
-                                                          @else
-                                                            class="hover:text-sky-600 transition-colors duration-200 truncate ..." @endif>
+                                                                @if ($aktiveWarengruppe == $wg['wgnr'])
+                                                                    class="text-xl md:text-3xl font-bold text-sky-600 truncate ..."
+                                                                @else
+                                                                    class="hover:text-sky-600 transition-colors duration-200 truncate ..."
+                                                                @endif>
                                                                 {{ $wg['bezeichnung'] }}
                                                             </span>
 
@@ -330,7 +332,9 @@
                                 <div class="flex flex-col h-[calc(100vh-205px)] overflow-hidden" id="tab5">
                                     <!-- Enthält die Komponente -->
                                     <div class="w-full max-h-full p-3 mb-2">
+
                                         @livewire('shop-artikelliste-component', ['quantities' => $quantities])
+
                                     </div>
                                 </div>
                             </div>
@@ -410,7 +414,7 @@
                             &nbsp;
                         </div>
                         <div class="w-4/6">
-                            <button type="submit" class="py-2 px-4 border border-gray-400 bg_ewe_gruen rounded-md">
+                            <button type="submit" class="py-2 px-4 border border-gray-400 bg-ewe-gruen rounded-md">
 
                                 @if ($this->isModified)
                                     Ändern

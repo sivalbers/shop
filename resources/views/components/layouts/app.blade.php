@@ -15,19 +15,17 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans antialiased">
-
-
-    <!-- Fixiere den Header oben -->
-    <div class="fixed top-0 left-0 w-full z-50">
-        <x-zheader />
-        <!-- Navigation bleibt oben fixiert -->
-        <div class="bg-white shadow ">
-            @livewire('NavigationComponent')
+    <body class="font-sans antialiased flex flex-col h-screen">
+        <!-- Fixiere den Header oben -->
+        <div class="top-0 left-0 w-full z-50">
+            <x-zheader />
+            <!-- Navigation bleibt oben fixiert -->
+            <div class="bg-white shadow ">
+                @livewire('NavigationComponent')
+            </div>
         </div>
-    </div>
 
-    <div class="mt-[103px] pt-2 min-h-screen bg-gray-100 dark:bg-gray-900 overflow-auto">
+        <div class="flex-1 flex flex-col py-2 bg-gray-100 dark:bg-gray-900 overflow-auto">
             <!-- Page Heading -->
             @if (isset($header))
                 <header class="bg-white dark:bg-gray-800 shadow">
@@ -40,7 +38,7 @@
             @endif
 
             <!-- Page Content -->
-            <main>
+            <main class="flex-1 min-h-0 overflow-auto">
                 {{ $slot }}
             </main>
         </div>

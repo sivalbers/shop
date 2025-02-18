@@ -8,10 +8,12 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use App\Helpers\AuthHelper;
 
 
 use App\Models\Anschrift;
 use App\Models\User;
+use App\Models\BestellungPos;
 
 
 class Bestellung extends Model
@@ -71,11 +73,23 @@ class Bestellung extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
+    public function positionen(){
+        return $this->hasMany(BestellungPos::class, 'bestellnr', 'nr');
+    }
+
     public static function getBasket(){
         $result = null;
-        $user = Auth::user();
-        if( $user ){
-            $bestellung = Bestellung::where('kundennr', $user->kundennr)
+        if( Auth::user() ){
+            $user = Auth::user();
+            $kundennr = Session()->get('debitornr');
+            if (!$kundennr){
+                AuthHelper::logoutUser();
+
+                return redirect('/login')->with('message', 'Sie wurden erfolgreich abgemeldet.');
+
+            }
+
+            $bestellung = Bestellung::where('kundennr', $kundennr)
                 ->where('user_id', $user->id)
                 ->where('status_id', 0)
                 ->first();
@@ -83,12 +97,12 @@ class Bestellung extends Model
             if (!$bestellung){
 
 
-                $LfAddr = Anschrift::Lieferadresse($user->kundennr);
+                $LfAddr = Anschrift::Lieferadresse($kundennr);
 
-                $ReAddr = Anschrift::Rechnungsadresse($user->kundennr);
+                $ReAddr = Anschrift::Rechnungsadresse($kundennr);
                 $bestellung = Bestellung::create([
                     'user_id' => $user->id,         // User-ID des angemeldeten Benutzers
-                    'kundennr' => $user->kundennr,  // Kundennummer des angemeldeten Benutzers
+                    'kundennr' => $kundennr,  // Kundennummer des angemeldeten Benutzers
                     'datum' => today(),
                     'rechnungsadresse' => $ReAddr,
                     'lieferadresse' => $LfAddr,

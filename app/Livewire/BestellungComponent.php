@@ -28,21 +28,23 @@ class BestellungComponent extends Component
 
     public function loadData(){
         Log::info('Bestellcomponent-loadData()');
-        $user = Auth::user();
+
+        $kundennr = Session()->get('debitornr');
+
 
         $qu = Bestellung::select(
             'nr',
             'datum',
             'bestellungen.kundennr',
             'status.bezeichnung as status',
-            'users.login as besteller',
+            'users.name as besteller',
             'gesamtbetrag',
             'lieferdatum',
             'rechnungsadresse.kurzbeschreibung as rechnungsadresse',
             'lieferadresse.kurzbeschreibung as lieferadresse',
 //            'status.bezeichnung as status_bezeichnung'
         )
-        ->where('bestellungen.kundennr', $user->kundennr)
+        ->where('bestellungen.kundennr', $kundennr)
         ->where('status_id', '>', (int)0 )
         // Join für Rechnungsadresse
         ->leftJoin('anschriften as rechnungsadresse', 'rechnungsadresse', '=', 'rechnungsadresse.id')
@@ -59,7 +61,7 @@ class BestellungComponent extends Component
 
         // Ergebnis abrufen
         $data = $qu->get();
-
+        $this->bestellungen = [];
         foreach( $data as $item){
             $this->bestellungen[] = [
                 'nr' => $item->nr,
@@ -71,8 +73,10 @@ class BestellungComponent extends Component
                 'lieferadresse' => $item->lieferadresse, ];
         };
 
-        if (empty($this->activeBestellung)){
-            $this->loadPositionen( $this->bestellungen[0]['nr'] );
+        if (empty($this->activeBestellung) ){
+            if (count($this->bestellungen)>0) {
+                $this->loadPositionen( $this->bestellungen[0]['nr'] );
+            }
         }
     }
 

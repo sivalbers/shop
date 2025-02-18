@@ -1,21 +1,31 @@
 <nav x-data="{ open: false }" class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
     <!-- Primary Navigation Menu -->
 
-    <div class="w-11/12 m-auto">
-        <div class="flex justify-between h-20">
-            <div class="flex items-center w-full">
+    <div class="w-full m-auto flex flex-row items-center ">
+        <div class="w-1/12 flex justify-end">
+
+                <div class="flex flex-row items-center min-w-12 border rounded-full p-2  {{ \App\Helpers\SortimentHelper::getBGColorClass($sortiment) }} text-white">
+                    <x-fluentui-box-16-o class="w-7 pr-1" />
+                    <!-- x-fluentui-person-32-o class="w-7 " / -->
+                    <div>{{ $sortiment }}</div>
+                </div>
+
+        </div>
+        <div class="w-11/12 flex justify-between h-20">
+            <div class="flex justify-between w-full">
 
                 <!-- Settings Dropdown -->
                 @if (Auth::user())
-                    <div class="hidden sm:flex sm:items-center">
-                        <x-dropdown align="left" width="48">
+                    <div class="hidden sm:flex sm:items-center min-w-48 max-w-56">
+                        <x-dropdown align="left" >
                             <x-slot name="trigger">
                                 <button
                                     class="inline-flex items-center pr-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
-                                    <x-fluentui-person-32-o class="w-7"/>
-                                    <div x-data="{{ json_encode(['name' => auth()->user()->name, 'kundennr' => auth()->user()->kundennr]) }}" x-text="name +' | ' + kundennr"
-                                        x-on:profile-updated.window="name = $event.detail.name, kundennr = $event.detail.kundennr "
-                                        class="pl-2">
+
+                                    <div x-data="{{ json_encode([ 'navText' => $navText ]) }}"
+                                        x-html="navText"
+                                        x-on:profile-updated.window="navText = $event.detail.navText"
+                                        class="pl-2 text-left">
                                     </div>
 
                                     <div class="ms-1">
@@ -30,10 +40,48 @@
                             </x-slot>
 
                             <x-slot name="content">
+                                @foreach ($kunden as $kunde)
+                                    <x-dropdown-link wire:click="changeDebitor({{ $kunde->nr }})" href="#">
+                                        <div class="flex flex-row item-center">
+                                            @if ($kunde->nr === $this->debitornr )
+                                                <div class="text-ewe-gruen pr-2"> <x-fluentui-checkbox-checked-24 class='h-5' /> </div>
+                                            @else
+                                                <div class="text-gray-300 pr-2"> <x-fluentui-checkbox-checked-24-o class='h-5' /> </div>
+                                            @endif
+                                            <div class="pr-1">{{ $kunde->nr}} - {{ $kunde->name }} - </div>
+                                            @php
+                                                $fontColor = 'text-'.strtolower($kunde->sortiment);
+                                            @endphp
+
+                                            <div class="{{ \App\Helpers\SortimentHelper::getColorClass($kunde->sortiment) }} pr-1">
+                                                <x-fluentui-checkbox-indeterminate-16-o class="h-5" />
+                                            </div>
+
+                                            <div>{{ $kunde->sortiment }}</div>
+
+                                        </div>
+                                    </x-dropdown-link>
+                                @endforeach
+                                <x-dropdown-hr />
+
+
                                 @if (auth()->user()->isAdmin())
-                                <x-dropdown-link :href="route('apitest')" wire:navigate>
-                                    {{ __('API-Test') }}
-                                </x-dropdown-link>
+
+
+                                    <x-dropdown-link :href="route('apitest')" wire:navigate class="bg-red-50">
+                                        {{ __('API-Test') }}
+                                    </x-dropdown-link>
+
+                                    <x-dropdown-link :href="route('apilog')" wire:navigate class="bg-red-50">
+                                        {{ __('API-Log') }}
+                                    </x-dropdown-link>
+
+                                    <x-dropdown-link :href="route('logs')" wire:navigate class="bg-red-50">
+                                        {{ __('Log-Datei') }}
+                                    </x-dropdown-link>
+
+                                    <x-dropdown-hr />
+
                                 @endif
 
 
@@ -51,17 +99,16 @@
                         </x-dropdown>
                     </div>
                 @endif
-                <div class="flex items-center m-auto">
+                <div class="flex items-center m-auto w-full justify-between">
+                    <!-- img src="{{ asset('storage/c-1.png') }}" -->
 
                     <!-- Logo -->
-                    <div class="flex shrink sm:min-w-40"> <!-- SM Logo min -->
-                        <a href="{{ route('startseite') }}" wire:navigate>
-                                <img src="{{ asset('storage/c-1.png') }}">
-                        </a>
+                    <div class="flex shrink sm:min-w-40 min-w-28"> <!-- SM Logo min -->
+                        <x-ewe-logo class="w-full" />
                     </div>
 
                     <!-- Navigation Links -->
-                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex ">
                         <x-nav-link :href="route('startseite')" :active="request()->routeIs('startseite')" wire:navigate>
                             {{ __('Startseite') }} <!-- /*  ###########################  */ -->
                         </x-nav-link>
@@ -113,12 +160,12 @@
                                     </x-dropdown-link>
                                 </x-slot>
                             </x-dropdown>
-
+<!--
                             <x-dropdown align="right" width="48" class="">
                                 <x-slot name="trigger">
                                     <button
                                         class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
-                                        <div>Kunden</div> <!-- /*  ###########################  */ -->
+                                        <div>Kunden</div>
 
                                         <div class="ms-1">
                                             <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
@@ -133,11 +180,11 @@
 
                                 <x-slot name="content">
                                     <x-dropdown-link :href="route('anschriften')" wire:navigate>
-                                        {{ __('Kunden - Anschriften') }} <!-- /*  ###########################  */ -->
+                                        {{ __('Kunden - Anschriften') }}
                                     </x-dropdown-link>
                                 </x-slot>
                             </x-dropdown>
-
+                        -->
 
                             <x-dropdown align="right" width="48">
                                 <x-slot name="trigger">
@@ -276,4 +323,9 @@
             </div>
         @endif
     </div>
+    <script>
+        window.addEventListener('page-reload', () => {
+            window.location.reload();
+        });
+    </script>
 </nav>

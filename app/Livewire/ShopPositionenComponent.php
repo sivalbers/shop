@@ -146,14 +146,30 @@ class ShopPositionenComponent extends Component
 
         Log::info('ShopPositionenComponent=>BtnSpeichern()');
         $gesamt = 0;
+        $haveToUpdate = false ;
         foreach ($this->bPositionen as $key => $qu) {
             $pos = BestellungPos::where ('id', $this->bPositionen[$key]['id'])->first();
             if ($pos){
-                $pos->menge = $qu['menge'];
-                $pos->gpreis = round($pos->menge * $pos->epreis, 2);
-                $pos->save();
-                $gesamt = $gesamt + $pos->gpreis ;
+                if ($qu['menge'] > 0){
+                    $pos->menge = $qu['menge'];
+                    $pos->gpreis = round($pos->menge * $pos->epreis, 2);
+                    $pos->save();
+                    $gesamt = $gesamt + $pos->gpreis ;
+                }
+                else
+                {
+                    $pos->delete();
+                    $haveToUpdate = true ;
+                }
             }
+
+        }
+        if ($haveToUpdate){
+            $this->bPositionen = array_filter($this->bPositionen, function ($qu) {
+                return $qu['menge'] != 0;
+            });
+
+
         }
         $this->bestellung->gesamtbetrag = round($gesamt,2);
 
@@ -163,7 +179,9 @@ class ShopPositionenComponent extends Component
             $this->dispatch('bestellungAbsenden'); // Warenkorbkomponent->bestellungAbsenden();
         }
         else {
+            Log::info('updateWarenkorb');
             $this->dispatch('updateWarenkorb'); // Warenkorbkomponent->updateWarenkorb();
+            $this->dispatch('updateNavigation');
         }
 
         $this->isPosModified = false ;

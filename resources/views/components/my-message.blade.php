@@ -20,7 +20,7 @@
                     </div>
                 </div>
                 <div class="text-right  w-1/6">
-                    <button x-on:click="zeigeMessage = false" class="py-2 px-4 border border-gray-400 bg_ewe_gruen rounded-md">
+                    <button x-on:click="zeigeMessage = false" class="py-2 px-4 border border-gray-400 bg-ewe-gruen rounded-md">
                         Schliessen
                     </button>
                 </div>

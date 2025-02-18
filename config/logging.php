@@ -129,4 +129,8 @@ return [
 
     ],
 
+    'artikel_sortiment_repository_log_level'    => env('ARTIKEL_SORTIMENT_REPOSITORY_LOG_LEVEL', 'info'),
+    'artikel_repository_log_level'              => env('ARTIKEL_REPOSITORY_LOG_LEVEL', 'info'),
+    'user_repository_log_level'              => env('USER_REPOSITORY_LOG_LEVEL', 'info'),
+
 ];

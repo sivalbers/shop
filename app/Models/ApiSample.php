@@ -13,7 +13,9 @@ class ApiSample extends Model
     protected $fillable = [
         'bezeichnung',
         'url',
+        'httpmethod',
         'data',
+        'status',
     ];
 
     // Gebe an, dass das Feld `data` JSON-kodiert ist

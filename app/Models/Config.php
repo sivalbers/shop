@@ -81,26 +81,26 @@ class Config extends Model
 
     public static function kundennrString($option)
     {
-        $kundennr = Auth::user()->kundennr;
+        $kundennr = Session()->get('debitornr');
         return self::getConfigData($option, $kundennr);
     }
 
     public static function kundennrJson($option, $kundennr)
     {
-        $kundennr = Auth::user()->kundennr;
+        $kundennr = Session()->get('debitornr');
         return self::getConfigData($option, $kundennr, null, 'json');
     }
 
     public static function userString($option)
     {
-        $kundennr = Auth::User()->kundennr;
+        $kundennr = Session()->get('debitornr');
         $userId = Auth::User()->id;
         return self::getConfigData($option, $kundennr, $userId);
     }
 
     public static function userJson($option)
     {
-        $kundennr = Auth::User()->kundennr;
+        $kundennr = Session()->get('debitornr');
         $userId = Auth::User()->id;
         return self::getConfigData($option, $kundennr, $userId, 'json');
     }
@@ -161,19 +161,19 @@ class Config extends Model
 
     public static function setKundennrString($option, $value)
     {
-        $kundennr = Auth::User()->kundennr;
+        $kundennr = Session()->get('debitornr');
         return self::setConfigData($option, $kundennr, null, $value);
     }
 
     public static function setKundennrJson($option, $json_data)
     {
-        $kundennr = Auth::User()->kundennr;
+        $kundennr = Session()->get('debitornr');
         return self::setConfigData($option, $kundennr, null, null, $json_data);
     }
 
     public static function setUserString($option, $value)
     {
-        $kundennr = Auth::User()->kundennr;
+        $kundennr = Session()->get('debitornr');
         $userId = Auth::User()->id;
 
         return self::setConfigData($option, $kundennr, $userId, $value);
@@ -181,7 +181,7 @@ class Config extends Model
 
     public static function setUserJson($option, $json_data)
     {
-        $kundennr = Auth::User()->kundennr;
+        $kundennr = Session()->get('debitornr');
         $userId = Auth::User()->id;
         return self::setConfigData($option, $kundennr, $userId, null, $json_data);
     }

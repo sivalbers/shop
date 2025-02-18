@@ -15,6 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->validateCsrfTokens(except: [
             '/punchout',
+            '/api/*',
         ]);
       //  $middleware->append(AdminMiddleware::class); => Middleware wird immer aufgerufen
     })

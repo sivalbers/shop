@@ -20,8 +20,14 @@ new #[Layout('layouts.guest')] class extends Component
         // We will send the password reset link to this user. Once we have attempted
         // to send the link, we will examine the response then see the message we
         // need to show to the user. Finally, we'll send out a proper response.
+        /*
         $status = Password::sendResetLink(
             $this->only('email')
+        );
+        */
+        session()->flash('status', 'Bitte warten ...');
+        $status = Password::broker()->sendResetLink(
+            $this->only('email') // Die E-Mail-Adresse des Benutzers
         );
 
         if ($status != Password::RESET_LINK_SENT) {
@@ -47,7 +53,7 @@ new #[Layout('layouts.guest')] class extends Component
     <form wire:submit="sendPasswordResetLink">
         <!-- Email Address -->
         <div>
-            <x-input-label for="email" :value="__('Email')" />
+            <x-input-label for="email" :value="__('auth.Email')" />
             <x-text-input wire:model="email" id="email" class="block mt-1 w-full" type="email" name="email" required autofocus />
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>

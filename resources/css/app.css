@@ -22,7 +22,7 @@ select.suchFilter{
     @apply bg-[#CDD503]
 }
 
-.bg_ewe_gruen{
+.bg-ewe-gruen{
     @apply bg-[#CDD503]
 }
 
@@ -61,9 +61,29 @@ select.suchFilter{
 }
 
 .prio_mittel{
-    @apply underline
+    @apply font-bold
 }
 
 .prio_hoch{
-    @apply font-bold
+    @apply font-bold text-red-500
+}
+
+.text-ewe{
+    @apply text-ewe-gruen
+}
+
+.text-oowv{
+    @apply text-blue-500
+}
+
+.text-tk{
+    @apply text-pink-500
+}
+
+.text-be{
+    @apply text-orange-500
+}
+
+.text-wn{
+    @apply text-green-500
 }

@@ -9,6 +9,7 @@
         "codeat3/blade-fluentui-system-icons": "^1.33",
         "guzzlehttp/guzzle": "^7.9",
         "laravel/framework": "^11.9",
+        "laravel/telescope": "^5.5",
         "laravel/tinker": "^2.9",
         "livewire/livewire": "^3.5",
         "livewire/volt": "^1.0",
@@ -20,7 +21,6 @@
         "laravel/breeze": "^2.1",
         "laravel/pint": "^1.13",
         "laravel/sail": "^1.26",
-        "laravel/telescope": "^5.2",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.0",
         "phpunit/phpunit": "^11.0.1"
@@ -33,8 +33,9 @@
         },
         "files": [
             "app/Helpers/FormatHelper.php",
-            "app/Helpers/LogHelper.php"
-
+            "app/Helpers/LogHelper.php",
+            "app/Helpers/AuthHelper.php",
+            "app/Helpers/SortimentHelper.php"
         ]
 
     },

@@ -39,6 +39,8 @@ class BestellungPositionComponent extends Component
             $this->positionen = BestellungPos::where('bestellnr', $this->bestellnr)->get();
         else
             $this->positionen = BestellungPos::where('bestellnr', '')->get();
+        $this->markiertePositionen = [];
+        $this->markiereAlle = false ;
     }
 
     public function render()

@@ -70,17 +70,22 @@ class ShopComponent extends Component
     {
         debugLog(0, 'ShopComponent.mount()');
         $this->showFavoritForm = false;
-
         $this->zeigeFavoritPosForm = false;
         $this->suchArtikelnr = '';
         $this->suchBezeichnung = '';
-        $this->sortiment = Auth::user()->sortiment;
+
+        $this->sortiment = $this->session_get('mount', 'sortiment');
+        $this->aktiveWarengruppe = $this->session_get('mount()', session()->get('debitornr').'.aktiveWarengruppe');
+        $this->aktiveFavorites = $this->session_get('mount()', session()->get('debitornr').'.aktiveFavorites');
+
         $tab = request()->query('tab', '');
-        if ($tab != ''){
-            session()->put('activeTab', $tab);
+        Log::info([ 'ShopComponent->mount() Request', 'tab' => $tab, 'activeTab' => $this->activeTab] );
+        if (!empty($tab)){
+            $this->session_put('mount()', 'activeTab', $tab);
             $this->activeTab = $tab;
         }
-        $this->updateQueryWG();
+
+        $this->updateQuery();
     }
 
     public function render()
@@ -91,7 +96,7 @@ class ShopComponent extends Component
         if (($this->activeTab === 'tab1' && empty($this->warengruppen)) ||
             ($this->activeTab === 'tab3' && empty($this->favoriten))
            ){
-            $this->updateQueryWG();
+            $this->updateQuery();
         }
 
         $startTime = microtime(true);
@@ -105,8 +110,9 @@ class ShopComponent extends Component
     }
 
 
-    public function updateQueryWG(){
-        Log::info('ShopComponent.Update()', ['Sortiment' => $this->sortiment, 'activeTab' =>$this->activeTab ]);
+    public function updateQuery(){
+
+        Log::info('ShopComponent.updateQuery()', ['Sortiment' => $this->sortiment, 'activeTab' =>$this->activeTab ]);
 
         if ($this->activeTab === 'tab1') {
             $sortimentArray = explode ( ' ', $this->sortiment);
@@ -138,11 +144,17 @@ class ShopComponent extends Component
                     'artikel_count' => $item->artikel_count,
                 ];
             });
-            $this->aktiveWarengruppe = $this->warengruppen[0];
+            if (empty($this->aktiveWarengruppe)){
+                Log::info(['Aktive Warengruppe ist null ' => $this->aktiveWarengruppe ]);
+                $this->aktiveWarengruppe = $this->warengruppen[0]['wgnr'];
+            }
+
             if ($this->aktiveWarengruppe){
-                //dd($this->aktiveWarengruppe);
-                Log::info('dispatch selectWarengruppe', [ 'wgnr' => $this->aktiveWarengruppe['wgnr'], 'sortiment' => $this->sortiment ]);
-                $this->dispatch('showArtikelWG', [ 'wgnr' => $this->aktiveWarengruppe['wgnr'], 'sortiment' => $this->sortiment ] );
+                Log::info('dispatch selectWarengruppe', [ $this->aktiveWarengruppe]);
+                if (is_array($this->aktiveWarengruppe)){
+                    dd($this->aktiveWarengruppe);
+                }
+                $this->dispatch('showArtikelWG', $this->aktiveWarengruppe );
             }
 
         }
@@ -166,16 +178,22 @@ class ShopComponent extends Component
 
     }
 
-    public function clickWarengruppe($wg, $sortiment){
+    public function clickWarengruppe($wg){
 
         $this->aktiveWarengruppe = $wg;
-        Log::info('Clickwarengruppe: ', ['$wg' => $this->aktiveWarengruppe, '$sortiment' => $sortiment]);
+        $this->session_put('clickWarengruppe', session()->get('debitornr').'.aktiveWarengruppe', $this->aktiveWarengruppe);
 
+        Log::info('Clickwarengruppe: ', ['$wg' => $this->aktiveWarengruppe]);
         $mWg = Warengruppe::where('wgnr', $wg)->first();
         $this->aktiveWarengruppeBezeichung = $mWg->bezeichnung;
 
+        Log::info('vor Dispatch => showArtikelWG');
+        if (is_array($wg)){
+            dd($wg);
+        }
 
-        $this->dispatch('showArtikelWG', $wg, $sortiment);
+        $this->dispatch('showArtikelWG', $wg );
+        Log::info('nach Dispatch => showArtikelWG');
     }
 
     #[On('showArtikel')]
@@ -187,9 +205,23 @@ class ShopComponent extends Component
     }
 
     public function changeTab($tab){
+
+        $oldTab = $this->activeTab;
+
         $this->activeTab = $tab;
-        session()->put('activeTab', $tab);
-        debugLog(1, 'ChangeTab - activeTab', [session()->get('activeTab')]);
+        $this->session_put('changeTab', 'activeTab', $tab);
+
+        if ($tab === 'tab1'){
+            $this->aktiveWarengruppe = $this->session_get('changeTab', session()->get('debitornr').'.aktiveWarengruppe');
+        }
+
+        if ($tab === 'tab3'){
+            $this->aktiveFavorites = $this->session_get('changeTab()', session()->get('debitornr').'.aktiveFavorites');
+        }
+
+        if ($oldTab !== $this->activeTab){
+            $this->updateQuery();
+        }
 
     }
 
@@ -214,10 +246,11 @@ class ShopComponent extends Component
             ['id' => $this->favoritId], // Suchkriterien: Wenn `id` existiert, wird der Datensatz aktualisiert.
             [
                 'name' => $this->favoritName,
-                'kundennr' => Auth::user()->kundennr,
+                'kundennr' => Session()->get('debitornr'),
                 'user_id' => $favoritUserID
             ]
         );
+        
 
         $this->favoriten = Favorit::cFavoriten(true);
 
@@ -229,6 +262,8 @@ class ShopComponent extends Component
     public function selectFavorit($id){
 
         $this->aktiveFavorites = $id;
+        $this->session_put('selectFavorit', session()->get('debitornr').'.aktiveFavorites', $this->aktiveFavorites);
+
 
         //Log::info('selectFavorit', [$id]);
         $this->dispatch('showFavoritMitID', [ 'favoritId' => $id] );
@@ -317,12 +352,26 @@ class ShopComponent extends Component
         $this->activeTab = 'tab1';
 
         if ($bestellung){
-            session()->put('bestellnr', $bestellung->nr);
-            session()->put('activeTab', 'tab1');
+
+            $this->session_put('shopComponent_NeueBestellung', 'bestellnr', $bestellung->nr );
+            $this->session_put('shopComponent_NeueBestellung', 'activeTab', 'tab1' );
         }
 
         $this->dispatch('updateNavigation');
         $this->dispatch('zeigeMessage');
     }
+
+    public function session_put($func, $name, $value){
+        Log::info([$func => 'session()->put(', $name => $value] );
+        session()->put($name, $value);
+    }
+
+    public function session_get($func, $name){
+
+        $value = session()->get($name);
+        Log::info([$func => 'session()->get(', $name => $value] );
+        return $value ;
+    }
+
 
 }

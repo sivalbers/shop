@@ -2,6 +2,12 @@
 
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Log;
+
+use App\Http\Controllers\ApiController;
+
 use App\Livewire\ArtikelComponent;
 use App\Livewire\SortimentComponent;
 use App\Livewire\ArtikelSortimentComponent;
@@ -10,27 +16,22 @@ use App\Livewire\ShopComponent;
 use App\Livewire\AnschriftComponent;
 use App\Livewire\BestellungComponent;
 use App\Livewire\TestMainComponent;
-use App\Livewire\WarenkorbComponent;
-use App\Livewire\TestMainUnterComponent;
 use App\Livewire\NachrichtComponent;
-use App\Livewire\BestellungListComponent;
+use App\Livewire\ApiLogComponent;
+
 use App\Models\Config;
 
 use App\Http\Controllers\ODataController;
 use App\Http\Controllers\Punchout;
 
 use App\Http\Middleware\AdminMiddleware;
+use App\Http\Middleware\ApiLogMiddleware;
 
 use App\Mail\ExampleMail;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Request;
-use Illuminate\Support\Facades\Log;
 
-use App\Http\Controllers\ApiController;
+// use Dotenv\Dotenv;
 
-use Dotenv\Dotenv;
 
-// Route::view('/', 'startseite');
 Route::get('/', function () {
     return redirect('/startseite');
 });
@@ -72,6 +73,7 @@ Route::middleware([AdminMiddleware::class])->group(function(){
     Route::get('/sortimente', SortimentComponent::class)->middleware('auth')->name('sortimente');
     Route::get('/artikel-sortimente', ArtikelSortimentComponent::class)->middleware('auth');
     Route::get('/warengruppen', WarengruppeComponent::class)->middleware('auth')->name('warengruppen');
+    Route::get('/apilog', ApiLogComponent::class)->middleware('auth')->name('apilog');
 
     Route::get('/import-odata/artikel', [ODataController::class, 'importArtikel'])->name('importArtikel');
     Route::get('/import-odata/wg', [ODataController::class, 'importWarengruppe'])->name('importWG');
@@ -81,7 +83,11 @@ Route::middleware([AdminMiddleware::class])->group(function(){
 
     Route::get('/nachrichten', NachrichtComponent::class)->name('nachrichten');
 
-    Route::view('apitest', 'apitest')->name('apitest');
+    Route::view('/apitest', 'apitest')->name('apitest');
+
+    Route::get('/logs', function() {
+        return view('logs');
+    })->name('logs');
 
 });
 
@@ -89,6 +95,7 @@ Route::middleware([AdminMiddleware::class])->group(function(){
 Route::post('/punchout', [Punchout::class, 'handlePunchOut']);
 
 
+/*
 Route::get('/send-email', function () {
 
     // Teste, ob die Datei geladen wird
@@ -96,7 +103,7 @@ Route::get('/send-email', function () {
     //$dotenv->load();
 
     //dd($_ENV['MAIL_MAILER'], getenv('MAIL_MAILER'), env('MAIL_MAILER'));
-    dd(env('MAIL_MAILER'));
+
     $details = [
         'title' => 'Test-E-Mail von Laravel',
         'body' => 'Dies ist ein Test-E-Mail-Versand.'
@@ -106,11 +113,22 @@ Route::get('/send-email', function () {
 
     return 'E-Mail wurde gesendet!';
 });
-
+*/
 
 // fragt beim Live-Shop an, wegen einer Session-ID
-Route::get('/api/session', [ApiController::class, 'buildSessionId']);
-Route::get('/api/getsessionid', [ApiController::class, 'getSessionId']);
+
+Route::middleware([ApiLogMiddleware::class])->group(function () {
+    Route::get('/api/{url}', [ApiController::class, 'verarbeiteApiUrlGet']);
+    Route::post('/api/{url}', [ApiController::class, 'verarbeiteApiUrlPost']);
+    Route::patch('/api/{url}', [ApiController::class, 'verarbeiteApiUrlPatch']);
+    Route::delete('/api/{url}', [ApiController::class, 'verarbeiteApiUrlDelete']);
+
+    Route::get('/api/{url}/{id}', [ApiController::class, 'verarbeiteApiUrlGet']);
+    Route::post('/api/{url}/{id}', [ApiController::class, 'verarbeiteApiUrlPost']);
+    Route::patch('/api/{url}/{id}', [ApiController::class, 'verarbeiteApiUrlPatch']);
+    Route::delete('/api/{url}/{id}', [ApiController::class, 'verarbeiteApiUrlDelete']);
+});
+
 
 
 

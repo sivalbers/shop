@@ -2,10 +2,12 @@
 
 use App\Livewire\Forms\LoginForm;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
 use App\Models\Bestellung;
 use App\Models\Position;
+use App\Helpers\AuthHelper;
 
 new #[Layout('layouts.guest')] class extends Component
 {
@@ -16,20 +18,15 @@ new #[Layout('layouts.guest')] class extends Component
      */
     public function login(): void
     {
+
         $this->validate();
 
         $this->form->authenticate();
 
         Session::regenerate();
         if (auth()->user()){
-            $bestellung = Bestellung::getBasket();
-            if ($bestellung){
-                session()->put('bestellnr', $bestellung->nr);
-                Log::info("Bestellummer", [session()->get('bestellnr')]);
-            }
-            else {
-                dd("FEHLER: Kein Warenkorb erstellt!");
-            }
+            $user_debitor = auth()->user()->standardDebitor();
+            AuthHelper::AfterLogin($user_debitor);
         }
 
         $this->redirectIntended(default: route('startseite', absolute: false), navigate: true);
@@ -44,10 +41,10 @@ new #[Layout('layouts.guest')] class extends Component
     <form wire:submit="login">
         <!-- Email Address -->
         <div>
-            <x-input-label for="login" :value="__('auth.Login')" />
-            <x-text-input wire:model="form.login" id="login" class="block mt-1 w-full" type="text" name="login" required autofocus autocomplete="username" />
+            <x-input-label for="email" :value="__('auth.email')" />
+            <x-text-input wire:model="form.email" id="email" class="block mt-1 w-full" type="text" name="email" required autofocus autocomplete="email" />
 
-            <x-input-error :messages="$errors->get('form.login')" class="mt-2" />
+            <x-input-error :messages="$errors->get('form.email')" class="mt-2" />
         </div>
 
         <!-- Password -->

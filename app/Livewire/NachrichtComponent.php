@@ -34,9 +34,6 @@ class NachrichtComponent extends Component
         //$this->nachrichten = Nachricht::all();
         //$this->nachrichten = Nachricht::orderby('von', 'asc')->get();
         $this->nachrichten = Nachricht::orderBy('updated_at', 'desc')->get();
-        foreach ($this->nachrichten as $nachricht){
-            Log::info('mount() mitLogin',[ $nachricht->id, $nachricht->mitlogin ]);
-        }
     }
 
     public function resetInputFields()

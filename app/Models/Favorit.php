@@ -78,7 +78,7 @@ class Favorit extends Model
     }
 
     public static function favoritenStr(){
-        return 'favoriten_' . Auth::user()->kundennr . ' '.Auth::user()->id;
+        return 'favoriten_' . Session()->get('debitornr') . ' '.Auth::user()->id;
     }
 
     protected static function boot()
@@ -109,19 +109,19 @@ class Favorit extends Model
         if ($cRefresh === true || !Cache::has(Favorit::favoritenStr()))
         {
             /*
-            $favoriten = Favorit::where('kundennr', Auth::user()->kundennr)->get(['id', 'name', 'user_id'])
+            $favoriten = Favorit::where('kundennr', Session()->get('debitornr'))->get(['id', 'name', 'user_id'])
                 ->keyBy('id')
                 ->toArray();
             */
             $userID = Auth::id(); // Die Benutzer-ID des aktuell angemeldeten Nutzers
-            $kundennr = Auth::user()->kundennr; // Kundennummer des angemeldeten Nutzers
+            $kundennr = session()->get('debitornr'); // Kundennummer des angemeldeten Nutzers
             $fav = Favorit::where('kundennr', $kundennr)
                 ->where(function ($query) use ($userID) {
                     $query->where('user_id', 0)
                           ->orWhere('user_id', $userID);
                 });
 
-            // Log::info([ 'favoriten' => $fav->toRawSql()]);
+            Log::info([ 'favoriten' => $fav->toRawSql()]);
 
             $favoriten = $fav->get(['id', 'name', 'user_id'])
                 ->keyBy('id')

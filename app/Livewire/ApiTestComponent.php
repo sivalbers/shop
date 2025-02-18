@@ -7,6 +7,7 @@ use Illuminate\Contracts\View\View;
 use Livewire\Component;
 use App\Models\ApplicationAuth;
 use App\Models\ApiSample;
+use App\Http\Controllers\ApiController;
 
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Request;
@@ -26,20 +27,21 @@ class ApiTestComponent extends Component
     public $apiSamples;
     public $apiSampleId;
     public $apiSampleBezeichnung;
+    public $apiSampleHttpMethod;
     public $apiSampleUrl;
     public $apiSampleData;
+    public $apiSampleStatus;
 
-
-
-    public $aufruf;
+    public $testAufruf;
     public $testApiKey;
     public $testApiKeyHash;
     public $testSessionId;
     public $token;
-
+    public $testHttpMethod;
 
     public $testUrl;
     public $testResult;
+    public $testRequest;
 
     public $statusMessage;
 
@@ -48,9 +50,7 @@ class ApiTestComponent extends Component
     public $showApiSampleEdit;
     public $apiSampleEdit = false ;
 
-    /**
-     * Create a new component instance.
-     */
+
     public function mount() {
         $this->showApiEdit = false;
         $this->showApiSampleEdit = false;
@@ -58,17 +58,18 @@ class ApiTestComponent extends Component
         $this->clear();
         $this->update();
     }
+
     function update(){
 
         $this->ApplicationAuth = ApplicationAuth::get();
-        $this->apiSamples = ApiSample::get();
+        $this->updateSamples();
     }
 
-    /**
-     * Get the view / contents that represent the component.
-     */
-    public function render(): View|Closure|string
-    {
+    function updateSamples(){
+        $this->apiSamples = ApiSample::orderBy('bezeichnung')->get();
+    }
+
+    public function render(): View|Closure|string {
         return view('livewire.apitest');
     }
 
@@ -126,7 +127,7 @@ class ApiTestComponent extends Component
         $this->sessionexpiry = null;
         $this->status = null;
 
-        $this->aufruf = '/session' ;
+        $this->testAufruf = '/session' ;
         $this->testApiKey = null;
         $this->token = null;
 
@@ -134,16 +135,24 @@ class ApiTestComponent extends Component
         $this->statusMessage = '';
     }
 
-
     function generateToken(string $path, string $key): string {
-        return hash_hmac('sha256', $path, $key);
+
+        if ($key && $path){
+            return hash_hmac('sha256', $path, $key);
+        }
+        else
+        return 'key-error';
     }
 
     function generateAPIKey(string $key): string {
-        return $hashedKey = hash('sha256', $key);
+        if ($key){
+            return $hashedKey = hash('sha256', $key);
+        }
+        else
+        return 'key-error';
     }
 
-    public function funcTestUrl(){
+    public function btnTestStartNEU(){
         try {
             $this->testSessionId = '';
             $this->statusMessage = 'Abfrage wird gestartet.';
@@ -170,7 +179,7 @@ class ApiTestComponent extends Component
 
             Log::info(['headers' => $headers] );
             // API-Request mit Laravel HTTP-Client
-            $response = Http::withHeaders($headers)->get($this->testUrl . $this->aufruf);
+            $response = Http::withHeaders($headers)->get($this->testUrl . $this->testAufruf);
             Log::info(['response' => $response] );
 
             // Überprüfung des HTTP-Statuscodes
@@ -206,13 +215,147 @@ class ApiTestComponent extends Component
         $this->update();
     }
 
+    public function btnGetSessionId(){
+        Log::info('ApiTestComponent->btnGetSessionId() - Anfang');
+        $this->testSessionId = '';
+        if (!$this->testApiKey){
+            $this->statusMessage = 'Kein API-Key festgelegt. ';
+            return;
+        }
+        $error = '';
+
+        $this->testSessionId = ApiController::sessionIdAbrufen($this->testApiKey, $this->testUrl, $error);
+        Log::info([
+            'SessionId' => $this->testSessionId,
+            'Error' => $error
+            ]);
+        if ($error === ''){
+            ApiController::saveSessionId($this->testApiKey, $this->testSessionId);
+        }
+
+        /*
+        API-Key     => wird ohne hash gespeichert, wird mit Hash Übertragen als apiKeyHash
+        Session-ID  => wird inkl Hash gespeichert
+        */
+
+        if ($this->testSessionId){
+            $this->ApplicationAuth = ApplicationAuth::get();
+        }
+    }
+
+    public function btnTestStart(){
+        try {
+            Log::info('ApiTestComponent->btnTestStart() - Anfang ***************************************************************************************');
+            Log::info('*********************************************************************************************************************************');
+            Log::info('*********************************************************************************************************************************');
+            Log::info('*********************************************************************************************************************************');
+            Log::info('*********************************************************************************************************************************');
+            Log::info('*********************************************************************************************************************************');
+            Log::info('*********************************************************************************************************************************');
+            Log::info('*********************************************************************************************************************************');
+            Log::info('*********************************************************************************************************************************');
+            Log::info('*********************************************************************************************************************************');
+            Log::info('*********************************************************************************************************************************');
+            Log::info('*********************************************************************************************************************************');
+            Log::info('*********************************************************************************************************************************');
+
+
+            if (!$this->testSessionId){
+
+                $this->btnGetSessionId();
+
+            }
+
+            if (!$this->testSessionId){
+
+                return;
+            }
+
+            $this->statusMessage = 'Abfrage wird gestartet.';
+
+            $this->testApiKeyHash = $this->generateAPIKey($this->testApiKey);
+            $this->token = $this->generateToken($this->testAufruf, $this->testApiKey);
+
+            /*
+            Log::info([
+                'ApiTestComponent->Token Erzeugt ' => $this->token,
+                'aufruf' => $this->testAufruf,
+                'testApiKey' => $this->testApiKey ] );
+            */
+            // Überprüfen, ob die nötigen Werte vorhanden sind
+            if (empty($this->testApiKeyHash) || empty($this->token) || empty($this->testUrl)) {
+                $this->statusMessage = 'Fehler: API-Key, Token oder URL fehlt.';
+                return;
+            }
+
+            // Header für den Request
+            $headers = [
+                'X-SESSION' => $this->testSessionId,
+                'X-TOKEN' => $this->token,
+            ];
+            // Log::info(['testSessionId' => $this->testSessionId]);
+
+            $data = json_decode($this->testRequest, true);
+
+            if ($this->testHttpMethod === 'GET') {
+                $response = Http::withHeaders($headers)->get($this->testUrl . $this->testAufruf);
+            } elseif ($this->testHttpMethod === 'POST') {
+                Log::info('POST');
+                // Sende die POST-Anfrage mit JSON-Daten im Body
+                $response = Http::withHeaders($headers)->post(
+                    $this->testUrl . $this->testAufruf,
+                    $data // JSON-Daten direkt im Body
+                );
+            } elseif ($this->testHttpMethod === 'PATCH') {
+                // JSON-Daten aus der Testanfrage decodieren
+                Log::info('PATCH');
+
+                // Sende die POST-Anfrage mit JSON-Daten im Body
+                $response = Http::withHeaders($headers)->patch(
+                    $this->testUrl . $this->testAufruf,
+                    $data // JSON-Daten direkt im Body
+                );
+            } elseif ($this->testHttpMethod === 'DELETE') {
+                // JSON-Daten aus der Testanfrage decodieren
+                Log::info('delete');
+                // Sende die POST-Anfrage mit JSON-Daten im Body
+                $response = Http::withHeaders($headers)->delete(
+                    $this->testUrl . $this->testAufruf );
+            }
+
+            // Überprüfung des HTTP-Statuscodes
+            if ($response->successful()) {
+                $data = $response->json();
+                $this->testResult = json_encode($data, JSON_PRETTY_PRINT);
+            } else {
+                $this->testResult = 'Fehler: HTTP-Statuscode ' . $response->status();
+                $this->statusMessage = 'Die Anfrage war nicht erfolgreich.';
+            }
+        } catch (\Illuminate\Http\Client\RequestException $e) {
+            // Fehler beim Senden der Anfrage (z. B. Timeout)
+            $this->testResult = 'Fehler bei der HTTP-Anfrage: ' . $e->getMessage();
+            $this->statusMessage = 'Abfrage fehlgeschlagen.';
+        } catch (\Exception $e) {
+            // Generische Fehlerbehandlung
+            $this->testResult = 'Ein unerwarteter Fehler ist aufgetreten: ' . $e->getMessage();
+            $this->statusMessage = 'Abfrage fehlgeschlagen.';
+        } finally {
+            // Immer ausgeführter Block
+            if (empty($this->statusMessage)) {
+                $this->statusMessage = 'Abfrage inaktiv.';
+            }
+        }
+        $this->update();
+    }
 
     public function editSample($id){
         $sample = ApiSample::where('id', $id)->first();
         $this->apiSampleId = $sample->id ;
         $this->apiSampleBezeichnung = $sample->bezeichnung ;
+        $this->apiSampleHttpMethod = $sample->httpmethod;
         $this->apiSampleUrl = $sample->url ;
         $this->apiSampleData = $sample->data ;
+        $this->apiSampleStatus = $sample->status;
         $this->apiSampleEdit = true ;
         $this->showApiSampleEdit = true ;
     }
@@ -220,8 +363,10 @@ class ApiTestComponent extends Component
     public function neuSample(){
         $this->apiSampleId = '';
         $this->apiSampleBezeichnung = '' ;
+        $this->apiSampleHttpMethod = 'POST';
         $this->apiSampleUrl = '' ;
         $this->apiSampleData = '' ;
+        $this->apiSampleStatus = '';
         $this->apiSampleEdit = false ;
         $this->showApiSampleEdit = true ;
 
@@ -231,30 +376,38 @@ class ApiTestComponent extends Component
         if ($this->apiSampleId !== ''){
             $sample = ApiSample::where('id', $this->apiSampleId)->first();
             $sample->bezeichnung = $this->apiSampleBezeichnung;
+            $sample->httpmethod = $this->apiSampleHttpMethod;
             $sample->url = $this->apiSampleUrl;
             $sample->data = $this->apiSampleData;
+            $sample->status = $this->apiSampleStatus;
             $sample->save();
         }
         else{
             ApiSample::create([
                 'bezeichnung' => $this->apiSampleBezeichnung,
+                'httpmethod' => $this->apiSampleHttpMethod,
                 'url' => $this->apiSampleUrl,
-                'data' => $this->apiSampleData
+                'data' => $this->apiSampleData,
+                'status' => $this->apiSampleStatus,
             ]);
         }
         $this->showApiSampleEdit = false ;
-        $this->apiSamples = ApiSample::get();
+        $this->updateSamples();
     }
 
     public function deleteSample(){
         $sample = ApiSample::where('id', $this->apiSampleId)->first();
         $sample->delete();
         $this->showApiSampleEdit = false ;
-        $this->apiSamples = ApiSample::get();
-
+        $this->updateSamples();
     }
 
+    public function btnBuildToken(){
 
+        $this->token = $this->generateToken($this->testAufruf, $this->testApiKey);
+        // Log::info([ 'BuildToken', 'Aufruf' => $this->testAufruf, 'apiKey' => $this->testApiKey, 'token' => $this->token]);
+        $this->testApiKeyHash = $this->generateAPIKey($this->testApiKey);
+    }
 
     public function setTestApiKey($value){
 
@@ -265,10 +418,19 @@ class ApiTestComponent extends Component
         $this->testUrl = $value;
     }
 
-
     public function setTestSessionId($value){
         $this->testSessionId = $value;
     }
 
+    public function setTestUrl($value){
+        $this->testUrl = $value;
+    }
 
+    public function btnSetTestAufruf($id){
+        $sample = ApiSample::findOrFail($id);
+        $this->testHttpMethod = $sample->httpmethod;
+        $this->testAufruf = $sample->url;
+        $this->testRequest = $sample->data;
+        $this->testResult = '';
+    }
 }

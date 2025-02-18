@@ -7,8 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class ArtikelSortiment extends Model
 {
     protected $table = 'artikel_sortimente';
-    protected $primaryKey = ['artikelnr', 'sortiment'];  // Composite primary key
-    public $incrementing = false;
+    // protected $primaryKey = ['artikelnr', 'sortiment'];  // Composite primary key
+    protected $primaryKey = 'id';
+    //public $incrementing = false;
     public $timestamps = false;
 
     protected $fillable = [
@@ -25,4 +26,6 @@ class ArtikelSortiment extends Model
     {
         return $this->belongsTo(Sortiment::class, 'sortiment', 'bezeichnung');
     }
+
+
 }

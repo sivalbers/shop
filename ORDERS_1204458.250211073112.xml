@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Documents>
+  <Interchange>
+    <ILN_Sender>SCPM100</ILN_Sender>
+    <ILN_Empfaenger>0000350923</ILN_Empfaenger>
+    <Datum>20250211</Datum>
+    <Zeit>0725</Zeit>
+    <Datenaustauschreferenz>20250211072544</Datenaustauschreferenz>
+    <Testkennzeichen/>
+    <Version>4.5</Version>
+    <Transaktion>
+      <NachrichtenReferenz>1</NachrichtenReferenz>
+      <Nachrichtentyp>ORDERS</Nachrichtentyp>
+      <NachrichtentypVersion>D</NachrichtentypVersion>
+      <NachrichtentypRelease>96A</NachrichtentypRelease>
+      <VerwaltendeOrganisation>UN</VerwaltendeOrganisation>
+      <ZustaendigeOrganisation>EAN008</ZustaendigeOrganisation>
+      <ArtDerTransaktion>220</ArtDerTransaktion>
+      <Belegnummer>8000421730</Belegnummer>
+      <Belegdatum>20250211</Belegdatum>
+      <Referenzen>
+        <KundenReferenz>1003711603</KundenReferenz>
+      </Referenzen>
+      <Termine>
+        <LieferdatumErwartetes>20250216</LieferdatumErwartetes>
+      </Termine>
+      <Adresse>
+        <Art>BY</Art>
+        <ILN/>
+        <PLZ/>
+        <Ort/>
+        <Land/>
+        <VomPartnerVergebeneNummer/>
+        <EigeneNummerDesPartners>21020</EigeneNummerDesPartners>
+        <Ansprechpartner>Einkauf allgemein</Ansprechpartner>
+        <Telefonnummer>044148081928</Telefonnummer>
+        <Telefaxnummer>+49 441 4805-4695</Telefaxnummer>
+      </Adresse>
+      <Adresse>
+        <Art>IV</Art>
+        <ILN/>
+        <PLZ/>
+        <Ort/>
+        <Land/>
+        <VomPartnerVergebeneNummer/>
+        <EigeneNummerDesPartners>21011</EigeneNummerDesPartners>
+        <Ansprechpartner>Einkauf allgemein</Ansprechpartner>
+        <Telefonnummer>044148081928</Telefonnummer>
+        <Telefaxnummer>+49 441 4805-4695</Telefaxnummer>
+      </Adresse>
+      <Adresse>
+        <Art>SU</Art>
+        <ILN/>
+        <PLZ/>
+        <Ort/>
+        <Land/>
+        <VomPartnerVergebeneNummer/>
+        <EigeneNummerDesPartners>0000350923</EigeneNummerDesPartners>
+        <Ansprechpartner/>
+        <Telefonnummer/>
+        <Telefaxnummer/>
+      </Adresse>
+      <Adresse>
+        <Art>DP</Art>
+        <ILN/>
+        <Name1>NT E/TK Bremervörde</Name1>
+        <PLZ/>
+        <Ort/>
+        <Land/>
+        <VomPartnerVergebeneNummer/>
+        <EigeneNummerDesPartners>21020</EigeneNummerDesPartners>
+        <Ansprechpartner/>
+        <Telefonnummer/>
+        <Telefaxnummer/>
+        <Email>Stefanie.Singer@ewe-netz.de</Email>
+      </Adresse>
+      <Monetaeres>
+        <Waehrung>EUR</Waehrung>
+      </Monetaeres>
+      <Position>
+        <Positionsnummer>1</Positionsnummer>
+        <EAN/>
+        <ArtikelnummerLieferant>95004911</ArtikelnummerLieferant>
+        <ArtikelnummerKunde>000000000095004911</ArtikelnummerKunde>
+        <Artikelbezeichnung1>NSP St.-Wandler EKSO73 250</Artikelbezeichnung1>
+        <BerechneteMenge>3.000</BerechneteMenge>
+        <NettoStueckpreis>73.37</NettoStueckpreis>
+        <Mengeneinheit>PCE</Mengeneinheit>
+        <Termine>
+          <LieferdatumErwartetes>20250216</LieferdatumErwartetes>
+        </Termine>
+        <Text>
+          <Textzuordnung>PUR</Textzuordnung>
+          <Textinhalt>NSP St.-Wandler EKSO73 250|5250/5A Aufsteck NSP Stromwandler Typ: EKSO 73Kern 1: I1: 250A, I2: 5ABemessungsleistung: 5 VAKlasse: 0,5S FS5I-Therm: 60XInFrequenz: 50 HzErweiteter Temperaturbereich -25 bis +55°CMit Fußbefestigung, Befestigungsschrauben </Textinhalt>
+        </Text>
+      </Position>
+      <Position>
+        <Positionsnummer>2</Positionsnummer>
+        <EAN/>
+        <ArtikelnummerLieferant>95004910</ArtikelnummerLieferant>
+        <ArtikelnummerKunde>000000000095004910</ArtikelnummerKunde>
+        <Artikelbezeichnung1>NSP St.-Wandler EKSO73 100</Artikelbezeichnung1>
+        <BerechneteMenge>3.000</BerechneteMenge>
+        <NettoStueckpreis>90.36</NettoStueckpreis>
+        <Mengeneinheit>PCE</Mengeneinheit>
+        <Termine>
+          <LieferdatumErwartetes>20250216</LieferdatumErwartetes>
+        </Termine>
+        <Text>
+          <Textzuordnung>PUR</Textzuordnung>
+          <Textinhalt>NSP St.-Wandler EKSO73 100|5100/5A Aufsteck NSP Stromwandler Typ: EKSO 73Kern 1: I1: 100A, I2: 5ABemessungsleistung: 2,5 VAKlasse: 0,5S FS5I-Therm: 60XInFrequenz: 50 HzErweiteter Temperaturbereich -25 bis +55°CMit Fußbefestigung, Befestigungsschraube</Textinhalt>
+        </Text>
+      </Position>
+    </Transaktion>
+  </Interchange>
+</Documents>

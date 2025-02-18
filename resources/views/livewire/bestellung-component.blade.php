@@ -29,7 +29,7 @@
                         <div class="overflow-y-scroll lg:overflow-y-visible ">
                             @foreach ($bestellungen as $bestellung)
                                 <a href="#" wire:click="loadPositionen('{{ $bestellung['nr'] }}')">
-                                    <div  
+                                    <div
                                         class="flex flex-row @if ($bestellung['nr'] == $activeBestellung['nr']) font-bold text-white bg-sky-600 @endif
                                          hover:bg-[#CDD503] py-0.5">
                                         <div class="w-[18%] text-right pr-2 lg:pr-4 min-w-14 ">
@@ -60,7 +60,7 @@
                             <div class="flex flex-col ">
                                 <div class="flex flex-row font-bold text-xl text-sky-600">
                                     <div class="pr-2 w-28">Bestellung </div>
-                                    <div>{{ $activeBestellung->nr }} </div>
+                                    <div>{{ (!empty($activeBestellung)) ? $activeBestellung->nr : '' }} </div>
                                 </div>
                                 <div class="flex flex-col ">
                                     <div class="flex flex-row">
@@ -106,44 +106,48 @@
                                         <div class="font-bold text-sky-600 w-28">
                                             Bemerkung:
                                         </div>
-                                        <div class="truncate" title="{{ $activeBestellung->bemerkung }}">
+                                        <div class="truncate" title="{{ !empty($activeBestellung->bemerkung) ? $activeBestellung->bemerkung : '' }}">
                                             {{  !empty($activeBestellung->bemerkung) ? $activeBestellung->bemerkung : '---' }}
                                         </div>
                                     </div>
 
-                                    @if ($activeBestellung->rechnungsadresse === $activeBestellung->lieferadresse)
-                                        <div class="flex flex-row ">
-                                            <div class="font-bold pr-2 text-sky-600 w-28">Rechnungsadr.:</div>
-                                            <div class="truncate">{{ $activeBestellung->reAdresse->firma1 }} -
-                                                {{ $activeBestellung->reAdresse->strasse }} -
-                                                {{ $activeBestellung->reAdresse->plz }}
-                                                {{ $activeBestellung->reAdresse->stadt }}</div>
-                                        </div>
-                                        <div class="flex felx-row">
-                                            <div class="font-bold pr-2 text-sky-600  w-28">Lieferadr.:</div>
-                                            <div class="text-gray-500">( Wie Rechnungsadresse. )</div>
-                                        </div>
-                                    @else
-                                        <div class="flex flex-row">
-                                            <div class="font-bold pr-2 text-sky-600  w-28">Rechnungsadr.:</div>
-                                            <div class="truncate">{{ $activeBestellung->reAdresse->firma1 }} -
-                                                {{ $activeBestellung->reAdresse->strasse }} -
-                                                {{ $activeBestellung->reAdresse->plz }}
-                                                {{ $activeBestellung->reAdresse->stadt }}</div>
-                                        </div>
-                                        <div class="flex flex-row">
-                                            <div class="font-bold pr-2 text-sky-600  w-28">Lieferadr.:</div>
-                                            <div class="truncate">{{ $activeBestellung->lfAdresse->firma1 }} -
-                                                {{ $activeBestellung->lfAdresse->strasse }} -
-                                                {{ $activeBestellung->lfAdresse->plz }}
-                                                {{ $activeBestellung->lfAdresse->stadt }}</div>
-                                        </div>
+                                    @if (!empty($activeBestellung))
+                                        @if ($activeBestellung->rechnungsadresse === $activeBestellung->lieferadresse)
+                                            <div class="flex flex-row ">
+                                                <div class="font-bold pr-2 text-sky-600 w-28">Rechnungsadr.:</div>
+                                                <div class="truncate">{{ $activeBestellung->reAdresse->firma1 }} -
+                                                    {{ $activeBestellung->reAdresse->strasse }} -
+                                                    {{ $activeBestellung->reAdresse->plz }}
+                                                    {{ $activeBestellung->reAdresse->stadt }}</div>
+                                            </div>
+                                            <div class="flex felx-row">
+                                                <div class="font-bold pr-2 text-sky-600  w-28">Lieferadr.:</div>
+                                                <div class="text-gray-500">( Wie Rechnungsadresse. )</div>
+                                            </div>
+                                        @else
+                                            <div class="flex flex-row">
+                                                <div class="font-bold pr-2 text-sky-600  w-28">Rechnungsadr.:</div>
+                                                <div class="truncate">{{ $activeBestellung->reAdresse->firma1 }} -
+                                                    {{ $activeBestellung->reAdresse->strasse }} -
+                                                    {{ $activeBestellung->reAdresse->plz }}
+                                                    {{ $activeBestellung->reAdresse->stadt }}</div>
+                                            </div>
+                                            <div class="flex flex-row">
+                                                <div class="font-bold pr-2 text-sky-600  w-28">Lieferadr.:</div>
+                                                <div class="truncate">{{ $activeBestellung->lfAdresse->firma1 }} -
+                                                    {{ $activeBestellung->lfAdresse->strasse }} -
+                                                    {{ $activeBestellung->lfAdresse->plz }}
+                                                    {{ $activeBestellung->lfAdresse->stadt }}</div>
+                                            </div>
+                                        @endif
                                     @endif
                                 </div>
                             </div>
 
                         </div>
-                        @livewire('bestellung-position-component', ['bestellnr' => $activeBestellung->nr])
+                        @if (!empty($activeBestellung))
+                            @livewire('bestellung-position-component', ['bestellnr' => $activeBestellung->nr])
+                        @endif
                     </div>
                 </div>
             </div>

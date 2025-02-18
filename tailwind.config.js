@@ -7,7 +7,8 @@ export default {
         './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
         './storage/framework/views/*.php',
         './resources/views/**/*.blade.php',
-        './resources/views/emails/**/*.blade.php' // Füge dies hier hinzu
+        './resources/views/emails/**/*.blade.php',
+        './app/Helpers/*.php'
     ],
     safelist: [
         'text-red-500', 'bg-blue-100', 'p-4', 'font-bold' // Übernahme der Klassen für E-Mails

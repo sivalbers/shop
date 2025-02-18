@@ -55,7 +55,6 @@ class ShopArtikellisteComponent extends Component
     public $artikel = null ;
 
     private $lastWgNr;
-    private $lastSortiment;
     private $lastSuchArtikelNr;
     private $lastSuchBezeichnung;
 
@@ -68,7 +67,7 @@ class ShopArtikellisteComponent extends Component
         $this->listKurz =  Config::userString(self::CONFIG_LISTKURZ) === 'true';
         $this->myArtikels = collect();
 
-        Log::info('renderShopArtikellisteComponent');
+        Log::info('ShopArtikellisteComponent.mount()');
         $this->favoriten = Favorit::cFavoriten();
 
         $this->updateSelection();
@@ -76,12 +75,28 @@ class ShopArtikellisteComponent extends Component
 
     #[On('renderShopArtikellisteComponent')]
     public function updateSelection(){
+
+        $tab = session()->get('activeTab');
+        if ( $tab === 'tab1'){
+            $this->selectedTab = Tab::arWG;
+        }
+        elseif ($tab === 'tab2'){
+            $this->selectedTab = Tab::arSuche;
+        }
+        elseif ($tab === 'tab3'){
+            $this->selectedTab = Tab::arFavoriten;
+        }
+        elseif ($tab === 'tab4'){
+            $this->selectedTab = Tab::arSchnellerfassung;
+        }
+
+        Log::info(['In ShopArtikellistComponent', 'selectedTab' => $this->selectedTab]);
+
         switch ($this->selectedTab){
             case Tab::arWG:
                 $this->lastWgNr = session()->get('wgnr');
-                $this->lastSortiment = session()->get('sortiment');
-                Log::info('Tab::arWG', ['lastWgNr' => $this->lastWgNr, 'lastSortiment' => $this->lastSortiment]);
-                $this->selectWarengruppe($this->lastWgNr, $this->lastSortiment);
+                Log::info('Tab::arWG', ['lastWgNr' => $this->lastWgNr ]);
+                $this->selectWarengruppe($this->lastWgNr);
                 break;
             case Tab::arSuche:
                 $this->lastSuchArtikelNr = session()->get('suchArtikelNr');
@@ -89,6 +104,7 @@ class ShopArtikellisteComponent extends Component
                 $this->showArtikelSuch($this->lastSuchArtikelNr, $this->lastSuchBezeichnung);
                 break;
             case Tab::arFavoriten:
+                $this->showFavoritMitID(session()->get('aktiveFavorites'));
                 break;
             case Tab::arSchnellerfassung:
                 break;
@@ -118,15 +134,18 @@ class ShopArtikellisteComponent extends Component
     }
 
     #[On('showArtikelWG')]
-    public function selectWarengruppe($wgnr, $sortiment)
+    public function selectWarengruppe($wgnr)
     {
+        if (is_array($wgnr) && count($wgnr) > 0){
+            $wgnr = $wgnr[0];
+        }
 
+        $sortiment = session()->get('sortiment');
         Log::info('selectWarengruppe', [ 'wgnr' => $wgnr, 'sortiment' => $sortiment ]);
         $startTime = microtime(true);
         session()->put('wgnr', $wgnr);
-        session()->put('sortiment', $sortiment);
+
         $this->lastWgNr = $wgnr;
-        $this->lastSortiment = $sortiment;
 
         if ($wgnr) {
 
@@ -140,7 +159,7 @@ class ShopArtikellisteComponent extends Component
                 $this->selectedWarengruppeBezeichung = $warengruppe->bezeichnung;
             }
 
-            $kundennr = Auth::user()->kundennr;
+            $kundennr = Session()->get('debitornr');
             $user_id = Auth::id();
 
             $inClause = implode(',', array_fill(0, count($sortimentArray), '?'));
@@ -175,7 +194,7 @@ class ShopArtikellisteComponent extends Component
             $params = array_merge([$kundennr, $user_id, $wgnr], $sortimentArray);
             //Log::info('Params: ', $params);
             //AND (f.user_id = 0 or f.user_id = ?)
-            //dd($params);
+            // dd($params);
             //Log::info("SQL Query: " . $SQLquery);
             //Log::info("Parameters: ", $params);
             $this->myArtikels = DB::select($SQLquery, $params);
@@ -258,7 +277,7 @@ class ShopArtikellisteComponent extends Component
             $artikelBezArr = explode(' ', $suchBezeichnung);
         }
 
-        $kundennr = Auth::user()->kundennr;
+        $kundennr = Session()->get('debitornr');
         $userId = Auth::id();
 
 
@@ -349,7 +368,7 @@ class ShopArtikellisteComponent extends Component
         $artikelnummern = array_column($artikelArray, 'artikelnummer');
         $sortimentArray = explode(' ', $sortiment);
 
-        $kundennr = Auth::user()->kundennr;
+        $kundennr = Session()->get('debitornr');
         $userId = Auth::id();
 
         $qu = Artikel::join('artikel_sortimente as a_s', 'artikel.artikelnr', '=', 'a_s.artikelnr')

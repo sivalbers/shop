@@ -157,7 +157,7 @@
                                 if ($isPosModified)
                                     { $farbe = 'bg-sky-600 text-white'; }
                                 else
-                                    { $farbe = 'font-bold bg_ewe_gruen text-sky-600'; }
+                                    { $farbe = 'font-bold bg-ewe-gruen text-sky-600'; }
                             }
                         @endphp
                         <div class="">

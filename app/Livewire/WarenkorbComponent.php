@@ -13,9 +13,10 @@ use App\Models\BestellungPos;
 use App\Models\Anschrift;
 use App\Models\Nachricht;
 use Livewire\Attributes\On;
-
-
+use App\Jobs\SendBestellungToErp;
 use App\Mail\BestellbestaetigungMail;
+
+use App\Repositories\BestellungRepository;
 
 class WarenkorbComponent extends Component
 {
@@ -86,6 +87,7 @@ class WarenkorbComponent extends Component
     #[On('bestellungAbsenden')]
     public function bestellungAbsenden(){
 
+
         Log::info('Warenkorbkomponent->bestellungAbsenden');
 
         $this->bestellung->kundenbestellnr = $this->kundenbestellnr;
@@ -95,6 +97,25 @@ class WarenkorbComponent extends Component
         $this->bestellung->status_id = 1;
         $this->bestellung->save();
 
+        /*
+        $best = new BestellungRepository();
+        $best->sendToERP($this->bestellung);
+
+        return;
+        */
+
+
+        Log::info('Warenkorbkomponent->bestellungAbsenden');
+
+        $this->bestellung->kundenbestellnr = $this->kundenbestellnr;
+        $this->bestellung->kommission = $this->kommission;
+        $this->bestellung->bemerkung = $this->bemerkung;
+        $this->bestellung->lieferdatum = ($this->lieferdatum === '') ? null: $this->lieferdatum;
+        $this->bestellung->status_id = 1;
+        $this->bestellung->save();
+
+        SendBestellungToErp::dispatch($this->bestellung); // Bestellung in warteschlange zum übertragen an faveo
+
         $nachrichten = $this->getNachrichten();
 
         $details = [
@@ -103,10 +124,10 @@ class WarenkorbComponent extends Component
             'login' => Auth::user()->login,
         ];
 
-            Mail::send(new BestellbestaetigungMail($details));
+
+        Mail::send(new BestellbestaetigungMail($details));
 
         $this->dispatch('ShopComponent_NeueBestellung');
-
 
     }
 
@@ -121,6 +142,7 @@ class WarenkorbComponent extends Component
         $this->bestellung->bemerkung = $this->bemerkung;
         $this->bestellung->lieferdatum = ($this->lieferdatum === '') ? null: $this->lieferdatum;
         $this->bestellung->save();
+
     }
 
 

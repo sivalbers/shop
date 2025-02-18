@@ -9,5 +9,5 @@ return [
     'Impressum' => 'imprint.validation',
     'unique' => 'Feldinhalt ist nicht eindeutig.',
     'confirmed' => 'Passwortbestätigung ist ungleich.',
-    'min.string' => 'Textlänge ist zu kurz.'
+    'min.string' => 'Textlänge ist zu kurz.',
 ];

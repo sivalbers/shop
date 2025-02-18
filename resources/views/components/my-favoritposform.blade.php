@@ -61,7 +61,7 @@
                         </div>
                         <div class=" ">
                             <button type="submit"
-                                class="py-1 px-4 border border-gray-400 bg_ewe_gruen rounded-md">Speichern</button>
+                                class="py-1 px-4 border border-gray-400 bg-ewe-gruen rounded-md">Speichern</button>
                         </div>
                     </div>
 

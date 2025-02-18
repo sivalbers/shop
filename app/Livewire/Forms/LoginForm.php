@@ -4,6 +4,7 @@ namespace App\Livewire\Forms;
 
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -12,11 +13,8 @@ use Livewire\Form;
 
 class LoginForm extends Form
 {
-    //#[Validate('required|string|email')]
-    //public string $email = '';
-
-    #[Validate('required|string')]
-    public string $login = '';
+    #[Validate('required|string|email')]
+    public string $email = '';
 
     #[Validate('required|string')]
     public string $password = '';
@@ -34,8 +32,8 @@ class LoginForm extends Form
 
         $this->ensureIsNotRateLimited();
 
-        // if (! Auth::attempt($this->only(['email', 'password']), $this->remember)) {
-        if (! Auth::attempt($this->only(['login', 'password']), $this->remember)) {
+        if (!Auth::attempt($this->only(['email', 'password']), $this->remember)) {
+
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
@@ -73,7 +71,7 @@ class LoginForm extends Form
      */
     protected function throttleKey(): string
     {
-        //return Str::transliterate(Str::lower($this->email).'|'.request()->ip());
-        return Str::transliterate(Str::lower($this->login).'|'.request()->ip());
+        return Str::transliterate(Str::lower($this->email).'|'.request()->ip());
+
     }
 }
