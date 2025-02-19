@@ -19,15 +19,15 @@ select.suchFilter{
 }
 
 .original_ewe_gruen{
+    @apply bg-[#ced503]
+}
+
+.bg-ewe-xgruen{
     @apply bg-[#CDD503]
 }
 
-.bg-ewe-gruen{
-    @apply bg-[#CDD503]
-}
 
-
-.text-ewe-gruen{
+.text-ewe-xgruen{
     @apply text-[#CDD503]
 }
 

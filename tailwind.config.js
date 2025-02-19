@@ -22,6 +22,10 @@ export default {
                 'inner-top': 'inset 0 10px 10px -10px rgba(0, 0, 0, 0.5)',
                 'inner-bottom': 'inset 0 -10px 10px -10px rgba(0, 0, 0, 0.5)',
             },
+            colors: {
+                'ewe-gruen': '#CDD503', // Deine genaue Farbdefinition
+                'ewe-ltgruen': '#e3e692', // Deine genaue Farbdefinition
+            },
         },
     },
     plugins: [forms],
