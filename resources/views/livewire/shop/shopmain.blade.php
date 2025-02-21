@@ -283,9 +283,11 @@
                                                         </div>
                                                         <div class="w-full">
                                                             <span
-                                                                @if ($aktiveFavorites === $favorit['id']) class="text-xl md:text-3xl font-bold text-sky-600"
-                                                        @else
-                                                            class="" @endif>
+                                                                @if ($aktiveFavorites == $favorit['id'])
+                                                                    class="text-xl md:text-3xl font-bold text-sky-600"
+                                                                @else
+                                                                    class=""
+                                                                @endif>
                                                                 {{ $favorit['name'] }}
                                                             </span>
                                                         </div>
@@ -429,16 +431,21 @@
             </form>
         </x-my-favoritform>
 
-        <x-my-form class="z-10">
+        <x-my-form class="max-h-[70vh] z-50 overflow-scroll">
 
-            <form>
+            <form class="">
                 @csrf
 
                 @if ($mArtikel && $mArtikel->artikelnr)
-                    <div>
-                        <div class="text-lg text-sky-600 border-b-2 border-sky-600">Artikel:
+                    <div class="flex flex-row items-center justify-between border-b-2 border-sky-600">
+                        <div class="text-lg text-sky-600 ">Artikel:
                             {{ $mArtikel->artikelnr }}
                             - {{ $mArtikel->bezeichnung }} </div>
+                        <div>
+                            <button @click="showForm = false;">
+                            <x-fluentui-dismiss-square-20-o class="h-6" />
+                            </button>
+                        </div>
                     </div>
                     <div class="flex flex-row mb-4  w-full">
 

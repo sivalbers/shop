@@ -27,7 +27,7 @@ class ShopArtikelsucheComponent extends Component
     }
 
     public function search($suchText, $sortimentArray){
-        $sortiment = explode( ' ', Auth::user()->sortiment);
+        $sortiment = explode( ' ', session()->get('sortiment'));
         $this->dispatch('showArtikelSuche', $this->suchtText, $sortiment);
 
         return Artikel::where(function ($query) use ($suchText) {

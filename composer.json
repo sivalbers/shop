@@ -35,7 +35,8 @@
             "app/Helpers/FormatHelper.php",
             "app/Helpers/LogHelper.php",
             "app/Helpers/AuthHelper.php",
-            "app/Helpers/SortimentHelper.php"
+            "app/Helpers/SortimentHelper.php",
+            "app/Helpers/ConfigHelper.php"
         ]
 
     },

@@ -4,12 +4,12 @@
     @endphp
     <!-- Nachrichtenübersicht -->
     <div class="w-[95%] lg:sticky lg:top-[3px] lg:w-[22%] mx-auto flatwhite z-40 shadow-md  p-2">
-        <div class="text-sky-600 text-xl border-b border-sky-600 font-bold">
+        <div class="text-sky-600 text-xl border-b border-sky-600 font-bold py-1">
             Nachrichtenübersicht
         </div>
         @foreach ($nachrichten as $nachricht)
             <a href="#nachricht{{ $nachricht->id }}" class="">
-                <div class="flex flex-row text-sm border-b hover:bg-ewe-ltgruen">
+                <div class="flex flex-row text-sm border-b hover:bg-ewe-ltgruen py-1">
                     <div class="flex justify-center">
                         @if ($nachricht->prioritaet === 'hoch')
                             <span class="text-red-600"><x-fluentui-important-24 class="h-5" /></span>

@@ -94,8 +94,8 @@ class ShopArtikellisteComponent extends Component
 
         switch ($this->selectedTab){
             case Tab::arWG:
-                $this->lastWgNr = session()->get('wgnr');
-                Log::info('Tab::arWG', ['lastWgNr' => $this->lastWgNr ]);
+                $this->lastWgNr = configGet('aktiveWarengruppe');
+                Log::info('ShopArtikellisteComponent => updateSelection => Tab::arWG', ['lastWgNr' => $this->lastWgNr ]);
                 $this->selectWarengruppe($this->lastWgNr);
                 break;
             case Tab::arSuche:
@@ -104,7 +104,7 @@ class ShopArtikellisteComponent extends Component
                 $this->showArtikelSuch($this->lastSuchArtikelNr, $this->lastSuchBezeichnung);
                 break;
             case Tab::arFavoriten:
-                $this->showFavoritMitID(session()->get('aktiveFavorites'));
+                $this->showFavoritMitID( configGet('aktiveFavorites'));
                 break;
             case Tab::arSchnellerfassung:
                 break;
@@ -264,7 +264,7 @@ class ShopArtikellisteComponent extends Component
         $this->lastSuchBezeichnung = $suchBezeichnung;
         $this->selectedTab = Tab::arSuche;
 
-        $sortiment = explode(' ', Auth::user()->sortiment);
+        $sortiment = explode(' ', session()->get('sortiment'));
 
         $artikelArr = [];
         $artikelBezArr = [];
@@ -428,7 +428,7 @@ class ShopArtikellisteComponent extends Component
         $this->selectedTab = Tab::arFavoriten;
         $this->quantities = array();
 
-        $sortimentArray = explode(' ', Auth::user()->sortiment);
+        $sortimentArray = explode(' ', session()->get('sortiment'));
 
         $qu = Artikel::query()
             ->join('favoriten_pos as p', 'p.artikelnr', '=', 'artikel.artikelnr')
@@ -438,7 +438,7 @@ class ShopArtikellisteComponent extends Component
             ->whereIn('s.sortiment', $sortimentArray)
             ->where('artikel.gesperrt', '=', false)
             ->select('artikel.*', \DB::raw('true as is_favorit'));
-        // Log::info( 'SQL-Auswhahl der Favoriten: ',[ $qu->toRawSql() ]);
+         Log::info( 'SQL-Auswhahl der Favoriten: ',[ $qu->toRawSql() ]);
 
 
         $artikellist = $qu->get();

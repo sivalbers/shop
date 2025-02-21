@@ -68,18 +68,23 @@ class ShopComponent extends Component
 
     public function mount()
     {
-        debugLog(0, 'ShopComponent.mount()');
+        debugLog(0, 'X ShopComponent.mount()');
         $this->showFavoritForm = false;
         $this->zeigeFavoritPosForm = false;
         $this->suchArtikelnr = '';
         $this->suchBezeichnung = '';
 
         $this->sortiment = $this->session_get('mount', 'sortiment');
-        $this->aktiveWarengruppe = $this->session_get('mount()', session()->get('debitornr').'.aktiveWarengruppe');
-        $this->aktiveFavorites = $this->session_get('mount()', session()->get('debitornr').'.aktiveFavorites');
+
+        $this->aktiveWarengruppe = configGet('aktiveWarengruppe' );
+
+        Log::info([ 'ShopComponent => mount() => (1) aktiveWarengruppe', '>'. $this->aktiveWarengruppe .'<']);
+
+        $this->aktiveFavorites = configGet('aktiveFavorites');
+        
 
         $tab = request()->query('tab', '');
-        Log::info([ 'ShopComponent->mount() Request', 'tab' => $tab, 'activeTab' => $this->activeTab] );
+
         if (!empty($tab)){
             $this->session_put('mount()', 'activeTab', $tab);
             $this->activeTab = $tab;
@@ -112,6 +117,10 @@ class ShopComponent extends Component
 
     public function updateQuery(){
 
+        Log::info('*');
+        Log::info('*');
+        Log::info('*');
+        Log::info('*');
         Log::info('ShopComponent.updateQuery()', ['Sortiment' => $this->sortiment, 'activeTab' =>$this->activeTab ]);
 
         if ($this->activeTab === 'tab1') {
@@ -144,9 +153,12 @@ class ShopComponent extends Component
                     'artikel_count' => $item->artikel_count,
                 ];
             });
-            if (empty($this->aktiveWarengruppe)){
-                Log::info(['Aktive Warengruppe ist null ' => $this->aktiveWarengruppe ]);
+            Log::info(['(0) Aktive Warengruppe' => $this->aktiveWarengruppe ]);
+            if (empty($this->aktiveWarengruppe) || $this->aktiveWarengruppe === ''){
+                Log::info(['(1) Aktive Warengruppe ist null ' => $this->aktiveWarengruppe ]);
                 $this->aktiveWarengruppe = $this->warengruppen[0]['wgnr'];
+                configSet('aktiveWarengruppe', $this->aktiveWarengruppe);
+                Log::info(['(2) Aktive Warengruppe ist jetzt: ' => $this->aktiveWarengruppe ]);
             }
 
             if ($this->aktiveWarengruppe){
@@ -154,6 +166,7 @@ class ShopComponent extends Component
                 if (is_array($this->aktiveWarengruppe)){
                     dd($this->aktiveWarengruppe);
                 }
+                Log::info('showArtikelWG');
                 $this->dispatch('showArtikelWG', $this->aktiveWarengruppe );
             }
 
@@ -181,9 +194,13 @@ class ShopComponent extends Component
     public function clickWarengruppe($wg){
 
         $this->aktiveWarengruppe = $wg;
-        $this->session_put('clickWarengruppe', session()->get('debitornr').'.aktiveWarengruppe', $this->aktiveWarengruppe);
+        // $this->session_put('clickWarengruppe', session()->get('debitornr').'.aktiveWarengruppe', $this->aktiveWarengruppe);
+        configSet('aktiveWarengruppe', $this->aktiveWarengruppe);
 
         Log::info('Clickwarengruppe: ', ['$wg' => $this->aktiveWarengruppe]);
+
+        $xxWG = configGet('aktiveWarengruppe');
+        Log::info('session AktiveWarengruppe: ', ['$xxWG' => $xxWG]);
         $mWg = Warengruppe::where('wgnr', $wg)->first();
         $this->aktiveWarengruppeBezeichung = $mWg->bezeichnung;
 
@@ -212,11 +229,11 @@ class ShopComponent extends Component
         $this->session_put('changeTab', 'activeTab', $tab);
 
         if ($tab === 'tab1'){
-            $this->aktiveWarengruppe = $this->session_get('changeTab', session()->get('debitornr').'.aktiveWarengruppe');
+            $this->aktiveWarengruppe = configGet('aktiveWarengruppe');
         }
 
         if ($tab === 'tab3'){
-            $this->aktiveFavorites = $this->session_get('changeTab()', session()->get('debitornr').'.aktiveFavorites');
+            $this->aktiveFavorites = configGet('aktiveFavorites');
         }
 
         if ($oldTab !== $this->activeTab){
@@ -250,7 +267,7 @@ class ShopComponent extends Component
                 'user_id' => $favoritUserID
             ]
         );
-        
+
 
         $this->favoriten = Favorit::cFavoriten(true);
 
@@ -262,7 +279,7 @@ class ShopComponent extends Component
     public function selectFavorit($id){
 
         $this->aktiveFavorites = $id;
-        $this->session_put('selectFavorit', session()->get('debitornr').'.aktiveFavorites', $this->aktiveFavorites);
+        configSet('aktiveFavorites', $this->aktiveFavorites);
 
 
         //Log::info('selectFavorit', [$id]);
