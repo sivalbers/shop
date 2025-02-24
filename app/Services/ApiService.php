@@ -101,7 +101,7 @@ class ApiService
                         'request' => [ 'status' => 'error'],
                         'response' => [ 'result' => '',
                         'errors' => ['Fehler bei der Benutzeranlage'] ] ];
-                        
+
                     return response()->json($response, 401);
 
                   }
@@ -115,8 +115,20 @@ class ApiService
     public function handlePatchRequest($url, Request $request, $id = null)
     {
         switch ($url) {
-            case 'products':
-                return $this->artikelRepository->update($request->id, $request->all());
+            case 'products': {
+                $result = $this->artikelRepository->update($request->id, $request->all());
+
+                $response = [
+                    'Version' => 1.7,
+                    'request' => [
+                          'status' => ($result === true) ? 'warning' : 'error'
+                        ],
+                  'response' => [
+                      'result' => null,
+                      'errors' => [[]]
+                    ]
+                  ];
+            }
             case 'categories':
                 return $this->warengruppeRepository->update($request->id, $request->all());
             case 'users':
