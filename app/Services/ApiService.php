@@ -116,7 +116,7 @@ class ApiService
     {
         switch ($url) {
             case 'products': {
-                
+
                 $result = $this->artikelRepository->update($id, $request->all());
 
                 $response = [
@@ -129,7 +129,7 @@ class ApiService
                       'errors' => [[]]
                     ]
                   ];
-                return json_encode($response);
+                return $response;
             }
             case 'categories':
                 return $this->warengruppeRepository->update($request->id, $request->all());

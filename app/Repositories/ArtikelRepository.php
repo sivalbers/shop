@@ -167,9 +167,6 @@ class ArtikelRepository
             'sales_unit'         => 'einheit',
             'unspsc'             => 'wgnr',
         ];
-        Log::info('HALLLLLLLLLLO');
-        Log::info($data);
-
         foreach ($mapping as $dataKey => $artikelKey) {
             if (isset($data[$dataKey])) {
                 $artikel->$artikelKey = $data[$dataKey];
