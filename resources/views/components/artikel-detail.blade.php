@@ -36,8 +36,11 @@
 
     <!-- Spalte 2 -->
     <div class="flex flex-col w-2/12 px-2">
-        @if ($artikel->artikelnr=='650000')
-        <x-product-image image="650000.png" size="100" class="" />
+        @php
+            $fn = imageExists($artikel->artikelnr);
+        @endphp
+        @if (!empty($fn))
+        <x-product-image image="{{ $fn }}" size="100" class="" />
         @else
         <x-product-image image="blank.png" size="100" class="" />
         @endif

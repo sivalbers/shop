@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Artikel;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class ArtikelRepository
 {
@@ -166,10 +167,17 @@ class ArtikelRepository
             'packing_quantity'   => 'verpackungsmenge',
             'sales_unit'         => 'einheit',
             'unspsc'             => 'wgnr',
+            'item_image'         => 'IMAGE'
         ];
         foreach ($mapping as $dataKey => $artikelKey) {
             if (isset($data[$dataKey])) {
-                $artikel->$artikelKey = $data[$dataKey];
+                if ($artikelKey != 'IMAGE'){
+                    Log::info(['Artikel->'.$artikelKey => $data[$dataKey]]);
+                    $artikel->$artikelKey = $data[$dataKey];
+                }
+                else {
+                    Log::info(['Image' => $this->storeItemImage($data[$dataKey], $artikel->artikelnr)]);
+                }
             } else {
                 $this->logMessage('warning', "Datenfeld '{$dataKey}' fehlt. ", ['data' => $data]);
             }
@@ -180,6 +188,37 @@ class ArtikelRepository
 
         return $artikel;
 
+    }
+
+
+    function storeItemImage($base64Image, $artikelnr)
+    {
+        // Prüfe, ob ein Bild vorhanden ist
+        if (!$base64Image) {
+            return null;
+        }
+
+        // Extrahiere Dateityp (png oder jpeg) und eigentliche Bilddaten
+        list($format, $base64Data) = explode(':', $base64Image);
+
+        // Definiere den MIME-Typ basierend auf dem Format
+        $mimeType = ($format == 'png') ? 'image/png' : 'image/jpeg';
+        $extension = ($format == 'png') ? 'png' : 'jpg';
+
+        // Base64-Daten dekodieren
+        $imageData = base64_decode($base64Data);
+
+        // Generiere einen einzigartigen Dateinamen
+        $fileName = $artikelnr . '.' . $extension;
+
+        // Speicherort in Laravel (z.B. storage/app/public/items/)
+        $path = "public/products/{$fileName}";
+
+        // Speichere das Bild mit Laravel's Storage-Funktion
+        Storage::put($path, $imageData);
+
+        // Rückgabe des Speicherpfads für die Datenbank
+        return $path;
     }
 
 
