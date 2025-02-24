@@ -83,7 +83,7 @@ class ApiController extends Controller
     }
 
     public function verarbeiteApiUrlPost(Request $request, $url, $id = null ){
-
+        
         if (!$this->checkSession($request, $url, $id)){
             return response(['response' => 'Post-Session-Error'], 401);
         }
@@ -93,7 +93,7 @@ class ApiController extends Controller
     }
 
     public function verarbeiteApiUrlPatch(Request $request, $url, $id = null ){
-Log::info(['id' => $id]);
+
         if (!$this->checkSession($request, $url, $id)){
             return response(['response' => 'Patch-Session-Error'], 401);
         }

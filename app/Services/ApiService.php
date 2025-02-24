@@ -116,7 +116,8 @@ class ApiService
     {
         switch ($url) {
             case 'products': {
-                $result = $this->artikelRepository->update($request->id, $request->all());
+                
+                $result = $this->artikelRepository->update($id, $request->all());
 
                 $response = [
                     'Version' => 1.7,
@@ -128,6 +129,7 @@ class ApiService
                       'errors' => [[]]
                     ]
                   ];
+                return json_encode($response);
             }
             case 'categories':
                 return $this->warengruppeRepository->update($request->id, $request->all());
@@ -142,6 +144,7 @@ class ApiService
     {
         switch ($url) {
             case 'products': {
+                Log::info('vor Delete');
                     if ( $this->artikelRepository->delete($request->id) ){
                         return response('Artikel wurde erfolgreich geloescht', 200);
                     }

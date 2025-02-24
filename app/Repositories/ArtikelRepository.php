@@ -91,9 +91,10 @@ class ArtikelRepository
             return false;
         }
     }
-    
+
     public function update($id, array $data)
     {
+        Log::info([ 'data' => $data]);
         try {
             $artikel = Artikel::findOrFail($id);
 
@@ -127,6 +128,8 @@ class ArtikelRepository
 
     public function delete($id)
     {
+        Log::info(['delete'=> $id]);
+
         try {
             $artikel = Artikel::findOrFail($id);
 
@@ -164,11 +167,9 @@ class ArtikelRepository
             'sales_unit'         => 'einheit',
             'unspsc'             => 'wgnr',
         ];
+        Log::info('HALLLLLLLLLLO');
+        Log::info($data);
 
-
-        Log::info('Encoding detected: ' . mb_detect_encoding($data['item_description'], ['UTF-8', 'ISO-8859-1', 'Windows-1252'], true));
-
-        // Übertragen der Werte, falls vorhanden
         foreach ($mapping as $dataKey => $artikelKey) {
             if (isset($data[$dataKey])) {
                 $artikel->$artikelKey = $data[$dataKey];
