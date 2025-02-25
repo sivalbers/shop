@@ -18,6 +18,8 @@ class ArtikelRepository
     {
         // Lade Log-Level aus der Konfiguration (z. B. aus der .env über logging.php)
         $this->logLevel = config('logging.artikel_repository_log_level', 'error');
+
+        Log::info(['Loglevel' => $this->logLevel]);
     }
 
     public function setLogLevel(string $level): void

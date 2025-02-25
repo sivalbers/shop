@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('config', function (Blueprint $table) {
             $table->id(); // Primärschlüssel 'id', autoincrement
-            $table->string('option', 20)->comment('Option'); // Maximal 20 Zeichen für das Feld 'option'
+            $table->string('option', 80)->comment('Option'); // Maximal 20 Zeichen für das Feld 'option'
             $table->integer('kundennr')->unsigned()->nullable()->comment('Kundennummer');
             $table->integer('userid')->unsigned()->nullable()->comment('User-ID');
             $table->string('value', 100)->nullable()->comment('Value'); // Maximal 100 Zeichen, kann null sein

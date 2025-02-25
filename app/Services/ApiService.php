@@ -75,9 +75,20 @@ class ApiService
     {
         switch ($url) {
             case 'products': {
-                if ( $this->artikelRepository->create($request->all()) ) {
+                $result = $this->artikelRepository->create($request->all());
+                if ( $result ) {
                     $this->artikelSortimentRepository->create($request->all());
-                    return true ;
+                    $response = [
+                        'Version' => 1.7,
+                        'request' => [
+                              'status' => ($result === true) ? 'warning' : 'error'
+                            ],
+                      'response' => [
+                          'result' => null,
+                          'errors' => [[]]
+                        ]
+                      ];
+                    return $response;
                 }
             }
 
