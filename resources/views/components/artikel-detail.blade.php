@@ -37,13 +37,10 @@
     <!-- Spalte 2 -->
     <div class="flex flex-col w-2/12 px-2">
         @php
-            $fn = imageExists($artikel->artikelnr);
+            $bilder = imageExistsAll($artikel->artikelnr);
         @endphp
-        @if (!empty($fn))
-        <x-product-image image="{{ $fn }}" size="100" class="" />
-        @else
-        <x-product-image image="blank.png" size="100" class="" />
-        @endif
+
+        <x-product-image :images="$bilder" size="100" artikelnr="{{ $artikel->artikelnr }}" beschreibung="{{ $artikel->bezeichnung }}" />
     </div>
 
 
