@@ -105,7 +105,7 @@ class ApiService
                                         'errors' => [] ] ];
 
 
-                    return response()->json($response, 200);
+                    return $response;
                   }
                   else {
                     $response = [
@@ -114,7 +114,7 @@ class ApiService
                         'response' => [ 'result' => '',
                         'errors' => ['Fehler bei der Benutzeranlage'] ] ];
 
-                    return response()->json($response, 401);
+                    return $response;
 
                   }
                 }

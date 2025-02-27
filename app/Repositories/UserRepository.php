@@ -108,7 +108,6 @@ class UserRepository
         $user = new User();
         $debitor = new Debitor();
         $userDebitor = new UserDebitor();
-Log::info('updateUserFromData');
         try {
             $this->updateUserFromData($user, $debitor, $userDebitor, $data);
 
