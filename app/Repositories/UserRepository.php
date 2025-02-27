@@ -3,6 +3,8 @@
 namespace App\Repositories;
 
 use App\Models\User;
+use App\Models\Debitor;
+use App\Models\UserDebitor;
 use Exception;
 use Illuminate\Support\Facades\Log;
 
@@ -10,6 +12,8 @@ class UserRepository
 {
 
     private string $logLevel;
+    private Debitor $debitor;
+    private UserDebitor $userDebitor;
 
 
 //#REGION Logging
@@ -44,20 +48,44 @@ class UserRepository
     }
 //#REGIONEND
 
-    protected function validateRec($rec): bool
-    {
+    protected function validateUser($rec): bool{
         // Prüfen, ob `artikelnr` gesetzt und gültig ist
         if (!isset($rec->email) || !is_scalar($rec->email)) {
-            $this->logMessage('warning', 'E-Mail ist ungültig oder fehlt.', ['artikelnr' => $rec->artikelnr]);
-            return false;
-        }
-        if (!isset($rec->kundennr) || !is_scalar($rec->kundennr)) {
-            $this->logMessage('warning', 'Kundennr ist ungültig oder fehlt.', ['artikelnr' => $rec->artikelnr]);
+            $this->logMessage('warning', 'E-Mail ist ungültig oder fehlt.', ['email' => $rec->email]);
             return false;
         }
 
         return true;
     }
+
+    protected function validateUserDebitor($rec): bool{
+        // Prüfen, ob `artikelnr` gesetzt und gültig ist
+        if (!isset($rec->email) || !is_scalar($rec->email)) {
+            $this->logMessage('warning', 'E-Mail ist ungültig oder fehlt.', ['email' => $rec->email]);
+            return false;
+        }
+        if (!isset($rec->debitor_nr) || !is_scalar($rec->debitor_nr)) {
+            $this->logMessage('warning', 'Debitor_nr ist ungültig oder fehlt.', ['debitor_nr' => $rec->debitor_nr]);
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function validateDebitor($rec): bool{
+        // Prüfen, ob `artikelnr` gesetzt und gültig ist
+        if (!isset($rec->nr) || !is_scalar($rec->nr)) {
+            $this->logMessage('warning', 'Nr ist ungültig oder fehlt.', ['nr' => $rec->nr]);
+            return false;
+        }
+        if (!isset($rec->sortiment) || !is_scalar($rec->sortiment)) {
+            $this->logMessage('warning', 'Sortiment ist ungültig oder fehlt.', ['sortiment' => $rec->sortiment]);
+            return false;
+        }
+
+        return true;
+    }
+
 
     public function getById($id)
     {
@@ -78,9 +106,13 @@ class UserRepository
 
     public function create(array $data){
         $user = new User();
-
+        $debitor = new Debitor();
+        $userDebitor = new UserDebitor();
+Log::info('updateUserFromData');
         try {
-            $user = $this->updateUserFromData($user, $data);
+            $this->updateUserFromData($user, $debitor, $userDebitor, $data);
+
+
         } catch (\Throwable $e) {
             // Fehler beim Speichern behandeln
             $this->logMessage('error', 'Create:: Fehler beim konvertieren des Benutzers: ' . $e->getMessage(), ['data' => $data]);
@@ -89,14 +121,50 @@ class UserRepository
 
         try {
             // Validierung des Datensatzes
-            if (!$this->validateRec($user)) {
+            if (!$this->validateUser($user)) {
                 return false;
             }
-
-            if ($user->save()) {
-                $this->logMessage('debug', 'Neue Benutzer-ID: ', ['userId' => $user->id]);
-                return true;
+            if (!$this->validateUserDebitor($userDebitor)) {
+                return false;
             }
+            if (!$this->validateDebitor($debitor)) {
+                return false;
+            }
+            Log::info([ 'Suche nach E-Mail' => $user->email]);
+
+            $found = User::where('email', $user->email)->exists();
+
+            Log::info(['User Found' => $found, 'email' => $user->email]);
+
+            if ($found === false) {
+                $user->save();
+                $this->logMessage('debug', 'Neue Benutzer-ID: ', ['userId' => $user->id]);
+
+            }
+            else{
+                Log::info('Es wurde kein neuer Benutzer angelegt');
+            }
+
+            $found = UserDebitor::where('email', $user->email)->where('debitor_nr', $debitor->nr)->exists();
+            if ($found === false) {
+                $userDebitor->save();
+                $this->logMessage('debug', 'Neue UserDebitor-ID: ', ['userDebitor->id' => $userDebitor->id]);
+            }
+            else{
+                Log::info('Es wurde kein neuer UserDebitor angelegt');
+            }
+
+            $found = Debitor::where('nr', $debitor->nr)->exists();
+            if ($found === false) {
+                $debitor->save();
+                $this->logMessage('debug', 'Neue debitor-ID: ', ['debitor->nr' => $debitor->nr]);
+                return $debitor->nr;
+            }
+            else{
+                Log::info('Es wurde kein neuer Debitor angelegt');
+            }
+
+
 
             // Optional: Loggen, falls Speichern nicht erfolgreich war, ohne Exception
             $this->logMessage('warning', 'Benutzer konnte nicht gespeichert werden.', ['data' => $data]);
@@ -148,38 +216,26 @@ class UserRepository
     }
 
 
-    function updateUserFromData($user, $data) {
+    function updateUserFromData(&$user, &$debitor, &$userDebitor, $data) {
         // Mapping der Spalten von `data` zu `Artikel`
 
         $mapping = [
-            'customer_number'          => 'kundennr',
-            'company'                  => 'name',
-            'username'                 => 'login',
-            'email'                    => 'email',
-            'unlocked_product_ranges'  => 'sortiment',
+            'customer_number'          => 'kundennr', // $debitor->nr, $userDebitor->debitor_nr
+            'company'                  => 'name',     // $debitor->name
+            'email'                    => 'email',    // $user->email, $userDebitor->email
+            'unlocked_product_ranges'  => 'sortiment', // array ["BE", "TK" ] => $debitor->sortiment = "BE TK"
          ];
 
-        // Übertragen der Werte, falls vorhanden
-        foreach ($mapping as $dataKey => $artikelKey) {
-            if (isset($data[$dataKey])) {
-                if (is_scalar($data[$dataKey])){
-                    $user->$artikelKey = $data[$dataKey];
-                }
-                else {
-                    try{
-                    $user->$artikelKey =  implode(' ', $data[$dataKey]);
-                    }
-                    catch (\Throwable $e) {
-                        $this->logMessage('error', "Fehler in Array '{ $data[$dataKey] }' fehlt. ", ['data' => $data[$dataKey]]);
-                    }
-                }
-            } else {
+        $debitor->nr                = $data['customer_number'];
+        $userDebitor->debitor_nr    = $debitor->nr;
 
-                $this->logMessage('warning', "Datenfeld '{$dataKey}' fehlt. ", ['data' => $data]);
-            }
-        }
+        $debitor->name              = $data['company'];
+        $user->name                 = $debitor->name;
+        $user->email                = $data['email'];
+        $userDebitor->email         = $user->email;
+        $debitor->sortiment         = implode(' ', $data['unlocked_product_ranges']);
 
-        return $user;
+        return true;
 
     }
 

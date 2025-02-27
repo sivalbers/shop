@@ -95,12 +95,13 @@ class ApiService
             case 'categories':
                 return $this->warengruppeRepository->create($request->all());
             case 'users': {
-                  $id = $this->userRepository->create($request->all());
-                  if ($id != false){
+                  $debitor = $this->userRepository->create($request->all());
+                  if ($debitor != false){
+
                     $response = [
                         'VERSION' => '1.7',
                         'request' => [ 'status' => 'success'],
-                        'response' => [ 'result' => $id,
+                        'response' => [ 'result' => $debitor,
                                         'errors' => [] ] ];
 
 
