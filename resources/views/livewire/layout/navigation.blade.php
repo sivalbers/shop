@@ -11,7 +11,7 @@
                 </div>
 
         </div>
-        <div class="w-11/12 flex justify-between h-20">
+        <div class="w-11/12 flex justify-between h-20" >
             <div class="flex justify-between w-full">
 
                 <!-- Settings Dropdown -->
@@ -162,31 +162,6 @@
                                     </x-dropdown-link>
                                 </x-slot>
                             </x-dropdown>
-<!--
-                            <x-dropdown align="right" width="48" class="">
-                                <x-slot name="trigger">
-                                    <button
-                                        class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
-                                        <div>Kunden</div>
-
-                                        <div class="ms-1">
-                                            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
-                                                viewBox="0 0 20 20">
-                                                <path fill-rule="evenodd"
-                                                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                                    clip-rule="evenodd" />
-                                            </svg>
-                                        </div>
-                                    </button>
-                                </x-slot>
-
-                                <x-slot name="content">
-                                    <x-dropdown-link :href="route('anschriften')" wire:navigate>
-                                        {{ __('Kunden - Anschriften') }}
-                                    </x-dropdown-link>
-                                </x-slot>
-                            </x-dropdown>
-                        -->
 
                             <x-dropdown align="right" width="48">
                                 <x-slot name="trigger">
@@ -242,17 +217,30 @@
 
 
             @if (Auth::user())
-                <div class="hidden sm:flex w-[20vh]">
+            <div class="hidden sm:flex w-[20vh] flex">
+                <div class="flex flex-row justify-between w-full">
                     <div class="flex flex-col sm:items-center sm:ms-6">
                         <x-nav-link :href="route('shop',[ 'tab' => 'tab5'] )" :active="request()->routeIs('bestellungen')" wire:navigate>
                             <x-fluentui-shopping-bag-20-o class="w-8 h-8" />
                             <div class="text-5xl text-sky-600">{{ $bestellung->anzpositionen }}</div>
                         </x-nav-link>
                         <div class="text-xs text-gray-50 bg-gray-500 px-2">{{ formatGPreis($bestellung->gesamtbetrag) }} €</div>
-
                     </div>
+                    <a href="https://zeugnisse.netzmaterialonline.de" title="Zeugnisarchiv aufrufen" target="_blank"
+                    class="p-2 hover:block hover:text-white hover:bg-ewe-gruen text-ewe-gruen">
+                    <div class=" flex flex-col items-center">
 
+                        <div class="flex items-center mr-4">
+                            <x-fluentui-cloud-archive-24-o class="w-12 " />
+                        </div>
+                        <div class="text-xs ">
+                            Zeugnisarchiv
+                        </div>
+                    </div>
+                </a>
                 </div>
+            </div>
+
             @endif
 
 

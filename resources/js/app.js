@@ -16,5 +16,8 @@ import lightbox2 from 'lightbox2';
 
 lightbox2.option({
     resizeDuration: 200,
-    wrapAround: true
+    wrapAround: true,
+    albumLabel: "Bild %1 von %2",
+    fadeDuration: 300,  // Optional, falls du andere Effekte anpassen willst
+
 });
