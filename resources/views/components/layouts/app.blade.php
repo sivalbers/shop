@@ -44,5 +44,60 @@
         </div>
 
         <x-zfooter />
+        <script>
+            function forceLightboxInitialization() {
+                if (typeof lightbox !== "undefined") {
+                    lightbox.init();
+
+                    // Setze `data-lightbox-initialized`, um doppelte Initialisierungen zu vermeiden
+                    document.querySelectorAll("[data-lightbox]").forEach((el) => {
+                        el.setAttribute("data-lightbox-initialized", "true");
+                    });
+                }
+            }
+
+            document.addEventListener("DOMContentLoaded", function () {
+                setTimeout(forceLightboxInitialization, 100);
+            });
+
+            if (!window.checkLivewire) {
+                window.checkLivewire = setInterval(() => {
+                    if (typeof Livewire !== "undefined") {
+                        clearInterval(window.checkLivewire);
+
+                        document.addEventListener("livewire:load", function () {
+                            setTimeout(forceLightboxInitialization, 100);
+                        });
+
+                        Livewire.hook("message.processed", () => {
+                            setTimeout(forceLightboxInitialization, 100);
+                        });
+                    }
+                }, 200);
+            }
+
+            // Lightbox beim ersten Klick sofort aktivieren
+            document.addEventListener("click", function (event) {
+                let target = event.target.closest("a[data-lightbox]");
+                if (target && !target.hasAttribute("data-lightbox-initialized")) {
+                    forceLightboxInitialization();
+                    event.preventDefault();
+                    setTimeout(() => {
+                        target.click();
+                    }, 100);
+                }
+            });
+        </script>
+
+
+
+
+
+
+
+
+
+
+
     </body>
 </html>

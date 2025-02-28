@@ -6,6 +6,7 @@ use App\Repositories\ArtikelRepository;
 use App\Repositories\WarengruppeRepository;
 use App\Repositories\UserRepository;
 use App\Repositories\ArtikelSortimentRepository;
+use App\Repositories\AnschriftRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -27,16 +28,19 @@ class ApiService
     protected $warengruppeRepository;
     protected $userRepository;
     protected $artikelSortimentRepository;
+    protected $anschriftRepository;
 
     public function __construct(ArtikelRepository $artikelRepository,
         WarengruppeRepository $warengruppeRepository,
         UserRepository $userRepository,
-        ArtikelSortimentRepository $artikelSortimentRepository)
+        ArtikelSortimentRepository $artikelSortimentRepository,
+        AnschriftRepository $anschriftRepository)
     {
         $this->artikelRepository = $artikelRepository;
         $this->warengruppeRepository = $warengruppeRepository;
         $this->userRepository = $userRepository;
         $this->artikelSortimentRepository = $artikelSortimentRepository;
+        $this->anschriftRepository = $anschriftRepository;
     }
 
     public function handleGetRequest($url, Request $request, $id = null)
@@ -118,6 +122,30 @@ class ApiService
 
                   }
                 }
+                case 'address': {
+                    $id = $this->anschriftRepository->create($request->all());
+                    if ($id != false){
+
+                      $response = [
+                          'VERSION' => '1.7',
+                          'request' => [ 'status' => 'success'],
+                          'response' => [ 'result' => $id,
+                                          'errors' => [] ] ];
+
+                      return $response;
+                    }
+                    else {
+                      $response = [
+                          'VERSION' => '1.7',
+                          'request' => [ 'status' => 'error'],
+                          'response' => [ 'result' => '',
+                          'errors' => ['Fehler bei der Anschriften-Anlage'] ] ];
+
+                      return $response;
+
+                    }
+                  }
+
             default:
 
                 return ['error' => 'Unbekannte API-Ressource'];
