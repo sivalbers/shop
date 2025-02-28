@@ -55,14 +55,24 @@ class AnschriftRepository
             return false;
         }
 
-        if (!isset($rec->kurzbeschreibung) || !is_scalar($rec->kurzbeschreibung)) {
-            $this->logMessage('warning', 'kurzbeschreibung ist ungültig oder fehlt.', ['kurzbeschreibung' => $rec->kurzbeschreibung]);
+        if (!isset($rec->strasse) || !is_scalar($rec->strasse)) {
+            $this->logMessage('warning', 'strasse ist ungültig oder fehlt.', ['strasse' => $rec->strasse]);
             return false;
         }
 
 
-        if (!isset($rec->kurzbeschreibung) || !is_scalar($rec->kurzbeschreibung)) {
-            $this->logMessage('warning', 'kurzbeschreibung ist ungültig oder fehlt.', ['kurzbeschreibung' => $rec->kurzbeschreibung]);
+        if (!isset($rec->plz) || !is_scalar($rec->plz)) {
+            $this->logMessage('warning', 'plz ist ungültig oder fehlt.', ['plz' => $rec->plz]);
+            return false;
+        }
+
+        if (!isset($rec->stadt) || !is_scalar($rec->stadt)) {
+            $this->logMessage('warning', 'stadt ist ungültig oder fehlt.', ['stadt' => $rec->stadt]);
+            return false;
+        }
+
+        if (!isset($rec->land) || !is_scalar($rec->land)) {
+            $this->logMessage('warning', 'land ist ungültig oder fehlt.', ['land' => $rec->land]);
             return false;
         }
 
