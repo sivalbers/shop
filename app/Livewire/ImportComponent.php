@@ -6,7 +6,7 @@ use Livewire\Component;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
-use App\http\Controllers\ODataController;
+use App\Http\Controllers\ODataController;
 
 
 class ImportComponent extends Component
