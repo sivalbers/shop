@@ -33,6 +33,8 @@ class ShopArtikellisteComponent extends Component
     use WithPagination;
 
 
+    public $aPositions = [];
+
     public $myArtikels = [];
     public $quantities;
     public $selectedWarengruppe = null;
@@ -134,23 +136,26 @@ class ShopArtikellisteComponent extends Component
     }
 
     #[On('showArtikelWG')]
-    public function selectWarengruppe($wgnr)
-    {
+    public function selectWarengruppe($wgnr){
         if (is_array($wgnr) && count($wgnr) > 0){
             $wgnr = $wgnr[0];
         }
 
         $sortiment = session()->get('sortiment');
-        Log::info('selectWarengruppe', [ 'wgnr' => $wgnr, 'sortiment' => $sortiment ]);
         $startTime = microtime(true);
+
         session()->put('wgnr', $wgnr);
 
         $this->lastWgNr = $wgnr;
+
+        $this->aPositions = array();
 
         if ($wgnr) {
 
             $this->selectedTab = Tab::arWG;
             $this->quantities = array();
+
+            $this->aPositions = array();
 
             $sortimentArray = explode(' ', $sortiment);
 
@@ -192,30 +197,32 @@ class ShopArtikellisteComponent extends Component
             ";
 
             $params = array_merge([$kundennr, $user_id, $wgnr], $sortimentArray);
-            //Log::info('Params: ', $params);
-            //AND (f.user_id = 0 or f.user_id = ?)
-            // dd($params);
-            //Log::info("SQL Query: " . $SQLquery);
-            //Log::info("Parameters: ", $params);
+
+
             $this->myArtikels = DB::select($SQLquery, $params);
 
             // Initialisiere das quantities-Array mit Standardwerten (z.B. 0)
             foreach ($this->myArtikels as $artikel) {
 
-                $this->quantities[(string)$artikel->artikelnr] = [
-                    'menge' => 0,
+                $this->aPositions[] = [
                     'id' => 0,
+                    'menge' => 0,
                     'artikelnr' => $artikel->artikelnr,
-                    'epreis' => $artikel->vkpreis,
+                    'bezeichnung' => $artikel->bezeichnung,
+                    'vkpreis' => $artikel->vkpreis,
+                    'einheit' => $artikel->einheit,
                     'steuer' => $artikel->steuer,
                     'bestand' =>  $artikel->bestand,
-                ];
+                    'langtext' =>  $artikel->langtext,
+                    'is_favorit' => $artikel->is_favorit,
+                ] ;
 
             }
             $this->anzGefunden = count($this->quantities);
 
             $this->selectedWarengruppe = $wgnr;
         } else {
+
             $this->anzGefunden = 0 ;
             $this->selectedWarengruppeBezeichung = '';
             $this->myArtikels = Artikel::join('artikel_sortimente as a_s', 'artikel.artikelnr', '=', 'a_s.artikelnr')
@@ -232,7 +239,17 @@ class ShopArtikellisteComponent extends Component
                     'steuer' => $artikel->steuer,
                     'bestand' =>  $artikel->bestand
                 ];
-
+                $this->aPositions[] = [
+                    'id' => 0,
+                    'menge' => 0,
+                    'artikelnr' => $artikel->artikelnr,
+                    'bezeichnung' => $artikel->bezeichnung,
+                    'vkpreis' => $artikel->vkpreis,
+                    'einheit' => $artikel->einheit,
+                    'steuer' => $artikel->steuer,
+                    'bestand' =>  $artikel->bestand,
+                    'langtext' =>  $artikel->langtext,
+                ] ;
             }
 
             $this->selectedWarengruppe = null;
@@ -253,9 +270,7 @@ class ShopArtikellisteComponent extends Component
 
 
     #[On('showArtikelsuche')]
-
-    public function showArtikelSuch($suchArtikelNr, $suchBezeichnung)
-    {
+    public function showArtikelSuch($suchArtikelNr, $suchBezeichnung){
         Log::info('showArtikelSuch', [$suchArtikelNr, $suchBezeichnung]);
 
         session()->put('suchArtikelNr', $suchArtikelNr);
@@ -314,26 +329,32 @@ class ShopArtikellisteComponent extends Component
         ->whereIn('artikelnr', ArtikelSortiment::whereIn('sortiment', $sortiment)->pluck('artikelnr'))
         ->take(200);
 
-
+       // Log::info(['Query' => $q->toRawSql()]);
 
         // Ergebnis abrufen
         $this->myArtikels = $q->get();
 
-        $this->quantities = [];
+        $this->aPositions = [];
 
         // Mengen-Array für jedes gefundene Artikel
-        foreach ($this->myArtikels as $art) {
-            $this->quantities[(string)$art->artikelnr] = [
-                'menge' => 0,
+        foreach ($this->myArtikels as $artikel) {
+
+            $this->aPositions[] = [
                 'id' => 0,
-                'artikelnr' => $art->artikelnr,
-                'epreis' => $art->vkpreis,
-                'steuer' => $art->steuer,
-                'bestand' => $art->bestand,
-            ];
+                'menge' => 0,
+                'artikelnr' => $artikel->artikelnr,
+                'bezeichnung' => $artikel->bezeichnung,
+                'vkpreis' => $artikel->vkpreis,
+                'einheit' => $artikel->einheit,
+                'steuer' => $artikel->steuer,
+                'bestand' =>  $artikel->bestand,
+                'langtext' =>  $artikel->langtext,
+                'is_favorit' => $artikel->is_favorit,
+            ] ;
+
         }
 
-        $this->anzGefunden = count($this->quantities);
+        $this->anzGefunden = count($this->aPositions);
     }
 
 
@@ -399,21 +420,21 @@ class ShopArtikellisteComponent extends Component
         }
         //dd($this->myArtikels);
 
-        $this->quantities = array();
+        $this->aPositions = [];
 
-        foreach ($this->myArtikels as $art){
-            //Log::info(' ', []);
-            //Log::info('Suche Artikel: ', [$art->artikelnr]);
-            //Log::info('Vorher ', $artikelArray);
-            $this->quantities[(string)$art->artikelnr] = [
-                'menge' => $this->findMengeByArtikelnummer($artikelArray, $art->artikelnr),
+        foreach ($this->myArtikels as $artikel){
+            $this->aPositions[] = [
                 'id' => 0,
-                'artikelnr' => $art->artikelnr,
-                'epreis' => $art->vkpreis,
-                'steuer' => $art->steuer,
-                'bestand' =>  $art->bestand,
-            ];
-            //Log::info('Nachher', $artikelArray);
+                'menge' => $this->findMengeByArtikelnummer($artikelArray, $artikel->artikelnr),
+                'artikelnr' => $artikel->artikelnr,
+                'bezeichnung' => $artikel->bezeichnung,
+                'vkpreis' => $artikel->vkpreis,
+                'einheit' => $artikel->einheit,
+                'steuer' => $artikel->steuer,
+                'bestand' =>  $artikel->bestand,
+                'langtext' =>  $artikel->langtext,
+                'is_favorit' => $artikel->is_favorit,
+            ] ;
 
         }
         //dd($this->quantities);
@@ -421,8 +442,7 @@ class ShopArtikellisteComponent extends Component
     }
 
     #[On('showFavoritMitID')]
-    public function showFavoritMitID($favoritId)
-    {
+    public function showFavoritMitID($favoritId){
 
         Log::info('Angekommen: showFavoritMitID', [$favoritId]);
         $this->selectedTab = Tab::arFavoriten;
@@ -443,25 +463,25 @@ class ShopArtikellisteComponent extends Component
 
         $artikellist = $qu->get();
 
-        $this->myArtikels = array();
+        $this->aPositions = [];
 
-        $this->quantities = array();
+        foreach ($artikellist as $artikel){
 
-        foreach ($artikellist as $art){
-            $this->myArtikels[] = $art;
-
-            $this->quantities[(string)$art->artikelnr] = [
-                'menge' => $art->bestand,
+            $this->aPositions[] = [
                 'id' => 0,
-                'artikelnr' => $art->artikelnr,
-                'epreis' => $art->vkpreis,
-                'steuer' => $art->steuer,
-                'bestand' =>  $art->bestand,
-            ];
-
+                'menge' => 0,
+                'artikelnr' => $artikel->artikelnr,
+                'bezeichnung' => $artikel->bezeichnung,
+                'vkpreis' => $artikel->vkpreis,
+                'einheit' => $artikel->einheit,
+                'steuer' => $artikel->steuer,
+                'bestand' =>  $artikel->bestand,
+                'langtext' =>  $artikel->langtext,
+                'is_favorit' => $artikel->is_favorit,
+            ] ;
 
         }
-        $this->anzGefunden = count($this->quantities);
+        $this->anzGefunden = count($this->aPositions);
     }
 
 
@@ -493,34 +513,66 @@ class ShopArtikellisteComponent extends Component
             $bestellung->datum = now();
             $bestellung->save();
 
+
+
+            //dd($this->aPositions); // Zum Debuggen
+
+            foreach ($this->aPositions as $key => $pos) {
+                if ($pos['menge'] >0) {
+                    Log::info('in Basket ',[ 'menge' => $pos['menge'], 'vkpreis' => $pos['vkpreis'], 'gpreis' => $pos['menge'] * $pos['vkpreis']]);
+                    if ($pos['id'] == 0){
+                        BestellungPos::Create([
+                            'bestellnr' => $bestellung->nr,
+                            'artikelnr' => $pos['artikelnr'],
+                            'menge' => $pos['menge'],
+                            'epreis' => $pos['vkpreis'],
+                            'steuer' => $pos['steuer'],
+                            'sort' => 0,
+                        ]);
+
+                        Log::info('Before Bestellnr, artikelnr, menge, gpreis', [ $bestellung->nr, $pos['artikelnr'], $pos['menge'], $pos['vkpreis'], $pos['steuer'] ]);
+
+                        $this->aPositions[$key]['menge'] = 0;
+
+
+                        Log::info('After Bestellnr, artikelnr, menge, gpreis', [ $bestellung->nr, $pos['artikelnr'], $pos['menge'], $pos['vkpreis'], $pos['steuer'] ]);
+                    }
+                }
+
+            }
+
+
+
+/*
             // Jetzt kannst du direkt auf die Mengen zugreifen
             $quantities = $this->quantities;
             // dd($quantities); // Zum Debuggen
 
             foreach ($quantities as $artikelnr => $data) {
                 if ($data['menge'] >0) {
-                    Log::info('in Basket ',[ 'menge' => $data['menge'], 'epreis' => $data['epreis'], 'gpreis' => $data['menge'] * $data['epreis']]);
+                    Log::info('in Basket ',[ 'menge' => $data['menge'], 'vkpreis' => $data['vkpreis'], 'gpreis' => $data['menge'] * $data['vkpreis']]);
                     if ($data['id'] == 0){
                         $pos = BestellungPos::Create([
                             'bestellnr' => $bestellung->nr,
                             'artikelnr' => $data['artikelnr'],
                             'menge' => $data['menge'],
-                            'epreis' => $data['epreis'],
+                            'epreis' => $data['vkpreis'],
                             //'gpreis' => $data['menge'] * $data['epreis'],
                             'steuer' => $data['steuer'],
                             'sort' => 0,
                         ]);
 
-                        Log::info('Before Bestellnr, artikelnr, menge, gpreis', [ $bestellung->nr, $data['artikelnr'], $quantities[$artikelnr]['menge'], $data['epreis'], $data['steuer'] ]);
+                        Log::info('Before Bestellnr, artikelnr, menge, gpreis', [ $bestellung->nr, $data['artikelnr'], $quantities[$artikelnr]['menge'], $data['vkpreis'], $data['steuer'] ]);
 
                         $quantities[$artikelnr]['menge'] = 0;
                         $this->quantities[$artikelnr]['menge'] = 0;
 
-                        Log::info('After Bestellnr, artikelnr, menge, gpreis', [ $bestellung->nr, $data['artikelnr'], $quantities[$artikelnr]['menge'], $data['epreis'], $data['steuer'] ]);
+                        Log::info('After Bestellnr, artikelnr, menge, gpreis', [ $bestellung->nr, $data['artikelnr'], $quantities[$artikelnr]['menge'], $data['vkpreis'], $data['steuer'] ]);
                     }
                 }
 
             }
+*/
 
             //Log::info($this->quantities);
 

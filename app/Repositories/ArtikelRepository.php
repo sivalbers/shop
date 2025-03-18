@@ -3,6 +3,8 @@
 namespace App\Repositories;
 
 use App\Models\Artikel;
+use App\Models\Warengruppe;
+use App\Models\WgHelper;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
@@ -11,6 +13,7 @@ class ArtikelRepository
 
 
     private string $logLevel;
+    private string $category_id;
 
 
 //#REGION Logging
@@ -63,8 +66,7 @@ class ArtikelRepository
         return Artikel::all();
     }
 
-    public function create(array $data)
-    {
+    public function create(array $data) {
         $artikel = new Artikel();
 
         try {
@@ -82,7 +84,7 @@ class ArtikelRepository
             }
 
             if ($artikel->save()) {
-                return true;
+                return $artikel ;
             }
 
             // Optional: Loggen, falls Speichern nicht erfolgreich war, ohne Exception
@@ -95,8 +97,7 @@ class ArtikelRepository
         }
     }
 
-    public function update($id, array $data)
-    {
+    public function update($id, array $data){
         Log::info([ 'data' => $data]);
         try {
             $artikel = Artikel::findOrFail($id);
@@ -116,7 +117,12 @@ class ArtikelRepository
         }
 
         try {
-            return ($this->validateRec($artikel) && $artikel->save());
+            if ($this->validateRec($artikel) && $artikel->save()){
+                return $artikel;
+            }
+            else{
+                return false;
+            }
 
             // Optional: Loggen, falls Speichern nicht erfolgreich war, ohne Exception
             Log::warning('Artikel konnte nicht gespeichert werden.', ['data' => $data]);
@@ -126,6 +132,34 @@ class ArtikelRepository
             Log::error('Update: Fehler beim Speichern des Artikels: ' . $e->getMessage(), ['data' => $data]);
             return false;
         }
+    }
+
+    private function abhaengigeDatenAendern($artikel){
+        // $this->category_id wird beim Artikel mitgegeben.
+        if (!empty($this->category_id)){
+            // Aus der Warengruppen Hilfsdatei die Warengruppen ID die beim Artikel mitgeliefert wurde laden.
+            $wgHelper = WgHelper::findOrFail($this->category_id); // Felder: id, wgnr, name, sortiment
+
+            if (!empty($artikel->wgnr)){
+                $wg = Warengruppe::where( 'wgnr', $artikel->wgnr)->first();
+                if (empty($wg)){
+                    $wg = Warengruppe::Create([
+                            'wgnr' => $artikel->wgnr,
+                            'bezeichnung' => $wgHelper->name
+                        ]);
+                }
+                else {
+                    $wg->bezeichnung = $wgHelper->name;
+                    $wg->save();
+                }
+            }
+
+        }
+        if (!$artikel->wgnr){
+            $artikel->wgnr = 'null';
+        }
+
+
     }
 
 
@@ -184,9 +218,8 @@ class ArtikelRepository
                 $this->logMessage('warning', "Datenfeld '{$dataKey}' fehlt. ", ['data' => $data]);
             }
         }
-        if (!$artikel->wgnr){
-            $artikel->wgnr = 'null';
-        }
+
+        $this->category_id = $data['category_id'];
 
         return $artikel;
 

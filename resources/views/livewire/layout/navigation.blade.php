@@ -181,6 +181,10 @@
                                 </x-slot>
 
                                 <x-slot name="content">
+                                    <x-dropdown-link :href="route('import')" :active="request()->routeIs('import')" wire:navigate>
+                                        {{ __('Import') }} <!-- /*  ###########################  */ -->
+                                    </x-dropdown-link>
+
                                     <x-dropdown-link :href="route('importArtikel')" :active="request()->routeIs('importArtikel')" wire:navigate>
                                         {{ __('Import Artikel') }} <!-- /*  ###########################  */ -->
                                     </x-dropdown-link>

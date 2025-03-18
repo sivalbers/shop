@@ -7,8 +7,11 @@ use App\Repositories\WarengruppeRepository;
 use App\Repositories\UserRepository;
 use App\Repositories\ArtikelSortimentRepository;
 use App\Repositories\AnschriftRepository;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+
+use App\Services\ArtikelService;
 
 
 use App\Models\Artikel;
@@ -30,21 +33,26 @@ class ApiService
     protected $artikelSortimentRepository;
     protected $anschriftRepository;
 
+    protected $artikelService;
+
     public function __construct(ArtikelRepository $artikelRepository,
         WarengruppeRepository $warengruppeRepository,
         UserRepository $userRepository,
         ArtikelSortimentRepository $artikelSortimentRepository,
-        AnschriftRepository $anschriftRepository)
+        AnschriftRepository $anschriftRepository,
+
+        ArtikelService $artikelService )
     {
         $this->artikelRepository = $artikelRepository;
         $this->warengruppeRepository = $warengruppeRepository;
         $this->userRepository = $userRepository;
         $this->artikelSortimentRepository = $artikelSortimentRepository;
         $this->anschriftRepository = $anschriftRepository;
+
+        $this->artikelService = $artikelService;
     }
 
-    public function handleGetRequest($url, Request $request, $id = null)
-    {
+    public function handleGetRequest($url, Request $request, $id = null) {
         Log::info(['url' => $url, 'id' => $id]);
         switch ($url) {
             case 'artikel':
@@ -75,25 +83,22 @@ class ApiService
         }
     }
 
-    public function handlePostRequest($url, Request $request, $id = null)
-    {
+    public function handlePostRequest($url, Request $request, $id = null){
+
+
         switch ($url) {
             case 'products': {
-                $result = $this->artikelRepository->create($request->all());
-                if ( $result ) {
-                    $this->artikelSortimentRepository->create($request->all());
-                    $response = [
-                        'Version' => 1.7,
-                        'request' => [
-                              'status' => ($result === true) ? 'warning' : 'error'
-                            ],
-                      'response' => [
-                          'result' => null,
-                          'errors' => [[]]
-                        ]
-                      ];
-                    return $response;
+                $result = $this->artikelService->createArtikelMitZuordnungen($request->all());
+                Log::info('Nach $result = $this->artikelService->createArtikelMitZuordnungen($request->all());');
+                try{
+                    Log::info(['$result : ' => $result ]);
+                    return $this->fillResponse($result);
+
+                } catch (\Throwable $e) {
+                    Log::error('FEHELR: '. $e->getMessage());
+                    return false;
                 }
+
             }
 
             case 'categories':
@@ -116,7 +121,7 @@ class ApiService
                         'VERSION' => '1.7',
                         'request' => [ 'status' => 'error'],
                         'response' => [ 'result' => '',
-                        'errors' => ['Fehler bei der Benutzeranlage'] ] ];
+                                        'errors' => ['Fehler bei der Benutzeranlage'] ] ];
 
                     return $response;
 
@@ -139,7 +144,7 @@ class ApiService
                           'VERSION' => '1.7',
                           'request' => [ 'status' => 'error'],
                           'response' => [ 'result' => '',
-                          'errors' => ['Fehler bei der Anschriften-Anlage'] ] ];
+                                            'errors' => ['Fehler bei der Anschriften-Anlage'] ] ];
 
                       return $response;
 
@@ -199,5 +204,43 @@ class ApiService
             default:
                 return ['error' => 'Unbekannte API-Ressource'];
         }
+    }
+
+
+    public function handleDeleteArtikelRequest($url, Request $request, $artikel = null, $id = null)
+    {
+        Log::info([ 'Angekommen in handleDeleteArtikelRequest' , 'URL' => $url ] );
+        switch ($url) {
+            case 'products': {
+                    Log::info(['vor Delete', 'artikel' => $artikel, 'id' => $id ]);
+                    if ( $this->artikelSortimentRepository->delete($artikel, $id) ){
+                        return response('ArtikelSortiment wurde erfolgreich geloescht', 200);
+                    }
+                    else {
+                        return response('ArtikelSortiment konnte nicht geloescht werden.', 500);
+                    }
+                }
+            case 'categories':
+                return $this->warengruppeRepository->delete($request->id);
+            case 'kunden':
+                return $this->userRepository->delete($request->id);
+            default:
+                return ['error' => 'Unbekannte API-Ressource'];
+        }
+    }
+    private function fillResponse($result){
+
+
+        $response = [
+            'Version' => 1.7,
+            'request' => [
+                    'status' => ($result['error'] === false ) ? 'warning' : 'error'
+                ],
+            'response' => [
+                'result' => null,
+                'errors' => !empty($result['errorMessage']) ? [[$result['errorMessage']]] : []
+            ]
+            ];
+        return $response;
     }
 }

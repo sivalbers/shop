@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Log;
 
 use App\Http\Controllers\ApiController;
+use App\Http\Controllers\ImportController;
 
 use App\Livewire\ArtikelComponent;
 use App\Livewire\SortimentComponent;
@@ -18,6 +19,7 @@ use App\Livewire\BestellungComponent;
 use App\Livewire\TestMainComponent;
 use App\Livewire\NachrichtComponent;
 use App\Livewire\ApiLogComponent;
+use App\Livewire\ImportComponent;
 
 use App\Models\Config;
 
@@ -79,15 +81,21 @@ Route::middleware([AdminMiddleware::class])->group(function(){
     Route::get('/import-odata/wg', [ODataController::class, 'importWarengruppe'])->name('importWG');
     Route::get('/import-odata/sortiment', [ODataController::class, 'importSortiment'])->name('importSortiment');
 
+    Route::get('/import/bestellung', [ImportController::class, 'importBestellungenInBestellhistorie'])->name('importBestellung');
+
     Route::get('/anschriften', AnschriftComponent::class)->name('anschriften');
 
     Route::get('/nachrichten', NachrichtComponent::class)->name('nachrichten');
+    Route::get('/import', ImportComponent::class)->name('import');
+
 
     Route::view('/apitest', 'apitest')->name('apitest');
 
     Route::get('/logs', function() {
         return view('logs');
     })->name('logs');
+
+
 
 });
 
@@ -127,6 +135,8 @@ Route::middleware([ApiLogMiddleware::class])->group(function () {
     Route::post('/api/{url}/{id}', [ApiController::class, 'verarbeiteApiUrlPost']);
     Route::patch('/api/{url}/{id}', [ApiController::class, 'verarbeiteApiUrlPatch']);
     Route::delete('/api/{url}/{id}', [ApiController::class, 'verarbeiteApiUrlDelete']);
+
+    Route::delete('/api/{url}/{artikel}/{id}', [ApiController::class, 'verarbeiteApiUrlProductDelete']);
 });
 
 

@@ -81,7 +81,7 @@ class ShopComponent extends Component
         Log::info([ 'ShopComponent => mount() => (1) aktiveWarengruppe', '>'. $this->aktiveWarengruppe .'<']);
 
         $this->aktiveFavorites = configGet('aktiveFavorites');
-        
+
 
         $tab = request()->query('tab', '');
 
@@ -155,18 +155,18 @@ class ShopComponent extends Component
             });
             Log::info(['(0) Aktive Warengruppe' => $this->aktiveWarengruppe ]);
             if (empty($this->aktiveWarengruppe) || $this->aktiveWarengruppe === ''){
-                Log::info(['(1) Aktive Warengruppe ist null ' => $this->aktiveWarengruppe ]);
+                // Log::info(['(1) Aktive Warengruppe ist null ' => $this->aktiveWarengruppe ]);
                 $this->aktiveWarengruppe = $this->warengruppen[0]['wgnr'];
                 configSet('aktiveWarengruppe', $this->aktiveWarengruppe);
-                Log::info(['(2) Aktive Warengruppe ist jetzt: ' => $this->aktiveWarengruppe ]);
+                // Log::info(['(2) Aktive Warengruppe ist jetzt: ' => $this->aktiveWarengruppe ]);
             }
 
             if ($this->aktiveWarengruppe){
-                Log::info('dispatch selectWarengruppe', [ $this->aktiveWarengruppe]);
+                // Log::info('dispatch selectWarengruppe', [ $this->aktiveWarengruppe]);
                 if (is_array($this->aktiveWarengruppe)){
                     dd($this->aktiveWarengruppe);
                 }
-                Log::info('showArtikelWG');
+                // Log::info('showArtikelWG');
                 $this->dispatch('showArtikelWG', $this->aktiveWarengruppe );
             }
 

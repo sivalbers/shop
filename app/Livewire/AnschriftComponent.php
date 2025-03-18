@@ -27,7 +27,8 @@ class AnschriftComponent extends Component
     public $standard = false;
     public $art = 'Lieferadresse';
 
-    public $kurzBezeichnungFilter;
+    public $kundennrFilter;
+    public $kurzbeschreibungFilter;
     public $firma1Filter;
     public $firma2Filter;
     public $firma3Filter;
@@ -50,8 +51,44 @@ class AnschriftComponent extends Component
 
     public function mount()
     {
-        $this->anschriften = Anschrift::get();
+        $this->updateQuery();
+    }
 
+    public function updatedKundennrFilter(){ $this->updateQuery(); }
+    public function updatedkurzbeschreibungFilter(){ $this->updateQuery(); }
+    public function updatedFirma1Filter(){ $this->updateQuery(); }
+    public function updatedFirma2Filter(){ $this->updateQuery(); }
+    public function updatedFirma3Filter(){ $this->updateQuery(); }
+    public function updatedArtFilter(){ $this->updateQuery(); }
+
+    private function updateQuery(){
+
+
+        $query = Anschrift::query();
+
+        // Filter nach Artikelnummer
+        if (!empty($this->kundennrFilter)) {
+            $query->where('kundennr', 'like', '%'.$this->kundennrFilter.'%');
+        }
+
+        if (!empty($this->artFilter)) {
+            $query->where('art', $this->art);
+        }
+
+        if (!empty($this->kurzbeschreibungFilter)) {
+            $query->where('kurzbeschreibung', 'like', '%'.$this->kurzbeschreibungFilter.'%');
+        }
+
+        if (!empty($this->firma1Filter)) {
+            $query->where('firma1', 'like', '%'.$this->firma1Filter.'%');
+        }
+        if (!empty($this->firma2Filter)) {
+            $query->where('firma2', 'like', '%'.$this->firma2Filter.'%');
+        }
+
+
+
+        $this->anschriften = $query->get();
     }
 
     public function save()

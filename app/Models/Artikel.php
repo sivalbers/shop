@@ -14,7 +14,7 @@ class Artikel extends Model
 
     protected $fillable = [
         'artikelnr', 'bezeichnung', 'langtext', 'verpackungsmenge',
-        'einheit', 'vkpreis', 'steuer', 'bestand', 'wgnr', 'gesperrt'
+        'einheit', 'vkpreis', 'steuer', 'bestand', 'wgnr', 'gesperrt', 'update_status'
     ];
 
     protected $casts = [
@@ -25,6 +25,7 @@ class Artikel extends Model
         'gesperrt' => 'boolean',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
+        'update_status' => 'integer'
     ];
 
     public function warengruppe()

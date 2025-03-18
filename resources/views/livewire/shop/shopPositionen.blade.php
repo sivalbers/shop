@@ -91,7 +91,8 @@
                                     <input type="text"
                                            x-model="quantity"
                                            wire:model.lazy="bPositionen.{{ $key }}.menge"
-                                           class="px-1 w-14 text-center border-none outline-none text-xs h-7">
+                                           class="px-1 w-14 text-center border-none outline-none text-xs h-7"
+                                           @focus="$event.target.select()">
 
                                     <!-- Button zum Erhöhen der Menge -->
                                     <button type="button"

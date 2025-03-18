@@ -4,6 +4,7 @@
             <table class="table-auto w-full">
                 <thead>
                     <tr class="bg-slate-300">
+                        <th class="px-2 py-1 text-right">Kundennr.</th>
                         <th class="px-2 py-1 text-center">Std.</th>
                         <th class="px-2 py-1 text-center">Art</th>
                         <th class="px-2 py-1 text-left">Kurzbeschreibung</th>
@@ -15,6 +16,7 @@
                 </thead>
                 <tbody>
                     <tr class="bg-slate-300">
+                        <td class="text-right"><input type="text" wire:model.lazy="kundennrFilter" class="suchFilter w-24" placeholder="(Suche)"></th>
                         <td>&nbsp;</th>
                         <td>
                             <select id="artFilter" wire:model.lazy="artFilter" class="suchFilter w-full">
@@ -33,8 +35,15 @@
 
                     @foreach ($anschriften as $anschrift)
                     <tr class="border-t">
+                        <td class="px-2 py-1 text-right">{{ $anschrift->kundennr }}</td>
                         <td class="px-2 py-1 text-center">@if ($anschrift->standard == 1) J @else &nbsp; @endif</td>
-                        <td class="px-2 py-1 text-center">@if ($anschrift->art == 'Lieferadresse') LF-Adresse @else RE-Adresse @endif</td>
+                        <td class="px-2 py-1 text-center">
+                            @if ($anschrift->art == 'Lieferadresse') LF-Adresse
+                            @elseif($anschrift->art == 'Rechchnungsadresse') RE-Adresse
+                            @else RE + LF
+                            @endif
+
+                        </td>
                         <td class="px-2 py-1">{{ $anschrift->kurzbeschreibung }}</td>
                         <td class="px-2 py-1">{{ $anschrift->firma1 }}</td>
                         <td class="px-2 py-1">{{ $anschrift->firma2 }}</td>

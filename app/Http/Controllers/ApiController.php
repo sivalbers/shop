@@ -83,7 +83,7 @@ class ApiController extends Controller
     }
 
     public function verarbeiteApiUrlPost(Request $request, $url, $id = null ){
-        
+
         if (!$this->checkSession($request, $url, $id)){
             return response(['response' => 'Post-Session-Error'], 401);
         }
@@ -109,6 +109,16 @@ class ApiController extends Controller
         return response()->json($this->apiService->handleDeleteRequest($url, $request, $id));
     }
 
+    public function verarbeiteApiUrlProductDelete(Request $request, $url, $artikel = null, $id = null ){
+
+        if (!$this->checkSessionArtikel($request, $url, $artikel, $id)){
+            return response(['response' => 'Delete-Session-Error'], 401);
+        }
+
+        return response()->json($this->apiService->handleDeleteArtikelRequest($url, $request, $artikel, $id));
+    }
+
+
     public function checkSession($request, $url, $id = null){
 
         // Log::info(["checkSession($url, $id)" ]);
@@ -126,6 +136,42 @@ class ApiController extends Controller
             $uu = '/'.$url;
             if ($id){
                 $uu = $uu .'/'. $id;
+            }
+            // Log::info(['url' => $uu ] );
+            $bToken = $this->getTokenHash($uu, $auth->apikey);
+            // Log::info(['xToken === bToken', 'xToken' => $xToken, 'bToken' => $bToken, 'apiKey' => $auth->apikey ]);
+            if ( $bToken === $xToken){
+                // Log::info('checkSession = true');
+                $okay = true;
+            }
+            // else
+                // Log::info('checkSession = false');
+
+        }
+        else {
+            // Log::info('SessionId = Session gefunden, Auth aus DB gelesen.');
+        }
+
+        return $okay;
+    }
+
+    public function checkSessionArtikel($request, $url, $artikel = null, $id = null){
+
+        // Log::info(["checkSession($url, $id)" ]);
+
+        $okay = false ;
+
+        $xSession = $request->header('X-SESSION');
+
+        $auth = ApplicationAuth::where('sessionid',  $xSession)->first();
+
+        // Log::info([ 'x-session' => $xSession, '$auth-Found' => $auth->apikey, 'expiers ' => $auth->sessionexpiry->format('h:m:s'),  Carbon::now()->format('h:m:s')]);
+
+        if ($auth && Carbon::parse($auth->sessionexpiry)->isAfter(Carbon::now())) {
+            $xToken = $request->header('x-token');
+            $uu = '/'.$url;
+            if ($id){
+                $uu = $uu .'/'. $artikel .'/'. $id;
             }
             // Log::info(['url' => $uu ] );
             $bToken = $this->getTokenHash($uu, $auth->apikey);

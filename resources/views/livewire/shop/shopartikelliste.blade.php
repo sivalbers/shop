@@ -1,3 +1,4 @@
+
 <div>
     <div class="flex flex-col w-full overflow-y-hidden" id="top" x-data="{}"
     x-on:click.self="zeigeFavoritPosForm = false;"
@@ -53,11 +54,13 @@
    <div class="relative w-full overflow-y-auto h-[30vh] md:h-[calc(100vh-245px)] scrollbar-hide">
        <form wire:submit.prevent="InBasket">
            @csrf
-           @foreach ($artikels as $artikel)
+           
+           @foreach ($aPositions as $position)
+
                @if (!$listKurz)
-                   <x-artikel-detail :artikel="$artikel" :quantities="$quantities" />
+                   <x-artikel-detail :pos="$position" :loop="$loop" />
                @else
-                   <x-artikel-kurz :artikel="$artikel" :quantities="$quantities" />
+                   <x-artikel-kurz :pos="$position" :loop="$loop" />
                @endif
            @endforeach
 

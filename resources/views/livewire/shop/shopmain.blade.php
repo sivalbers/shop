@@ -79,7 +79,7 @@
                             -->
 
                             @if ($activeTab === 'tab1') <!-- Warengruppen -->
-                                <div class="p-3 w-full md:w-1/3 flatwhite bg-red-400">
+                                <div class="p-3 w-full md:w-1/3 flatwhite bg-red-400 h-[calc(100vh-245px)] overflow-hidden">
 
                                     <div class="text-base font-bold  text-sky-600 border-b border-sky-600 h-6 flex items-center">
                                         <span
@@ -88,7 +88,7 @@
                                         </span>
                                     </div>
                                     <!-- SCROLLCONTAINER -->
-                                    <div class=" h-[30vh] md:h-[calc(100vh-205px)]  overflow-scroll">
+                                    <div class="overflow-scroll h-full">
                                         <!-- Neue Anpassung hier -->
                                         <div class="text-sm w-full  pt-2 ">
                                             <ul class=" list-image-none">
@@ -120,7 +120,7 @@
                             @endif
 
                             @if ($activeTab === 'tab2') <!-- Suche -->
-                                <div class="p-2 mb-4 align-top flatwhite w-full md:w-1/3">
+                                <div class="p-2 mb-4 align-top flatwhite w-full md:w-1/3 h-[calc(100vh-245px)] overflow-hidden">
                                     <div class="text-base font-bold text-sky-600 border-b border-sky-600 mb-4">
                                         Suche
                                     </div>
@@ -245,7 +245,7 @@
                             @endif
 
                             @if ($activeTab === 'tab3') <!-- Favoriten -->
-                                <div class=" p-3 mb-4 align-top flatwhite w-full md:w-1/3">
+                                <div class=" p-3 mb-4 align-top flatwhite w-full md:w-1/3 h-[calc(100vh-245px)] overflow-hidden">
                                     <div
                                         class="flex flex-row justify-between font-bold text-sky-600 border-b border-sky-600">
                                         <div class="text-base">
@@ -311,7 +311,7 @@
                             @endif
 
                             @if ($activeTab === 'tab4') <!-- Schnellerfassung -->
-                                <div class="p-3 mb-4 align-top  flatwhite w-full md:w-1/3">
+                                <div class="p-3 mb-4 align-top  flatwhite w-full md:w-1/3 h-[calc(100vh-245px)] overflow-hidden">
                                     <div class="text-base font-bold text-sky-600 border-b border-sky-600">
                                         Schnellerfassung</div>
                                     @livewire('schnellerfassung-component', ['sortiment' => $sortiment])
@@ -330,8 +330,8 @@
                             <!-- SPALTE 2 -->
 
                             @if ($activeTab != 'tab5') <!-- Alle Menüpunkte aus Warenkorb -->
-                            <div class="w-full md:w-2/3 md:ml-2 flatwhite">
-                                <div class="flex flex-col h-[calc(100vh-205px)] overflow-hidden" id="tab5">
+                            <div class="w-full md:w-2/3 md:ml-2 flatwhite h-[calc(100vh-245px)] overflow-hidden">
+                                <div class="flex flex-col " id="tab5">
                                     <!-- Enthält die Komponente -->
                                     <div class="w-full max-h-full p-3 mb-2">
 
@@ -343,7 +343,7 @@
 
                             @else
                                 <div class="w-full md:w-2/3 md:ml-2 mb-4 align-top  flatwhite   ">
-                                    <div class="flex flex-col h-[calc(100vh-5vh)] overflow-auto">
+                                    <div class="flex flex-col h-[calc(100vh-245px)] overflow-auto">
                                         <div class="w-full max-h-full p-3 mb-2">
                                             @livewire('shop-positionen-component')
                                         </div>

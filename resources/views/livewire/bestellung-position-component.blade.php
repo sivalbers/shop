@@ -1,4 +1,4 @@
-<div class="flatwhite p-2 mb-2 ml-0 lg:ml-2">
+<div class="flatwhite p-2 mb-2 ml-0 lg:ml-2 h-[calc(100vh-355px)] overflow-hidden">
 
     @php
         $s1 = 7;
@@ -48,9 +48,9 @@
                         <input type="checkbox" wire:model.live="markiertePositionen" value="{{ $position->id }}">
                         &nbsp; {{ $position->artikelnr }}
                     </div>
-                    <div class=" text-left  w-[47vH] truncate">{{ $position->artikel->bezeichnung }}</div>
+                    <div class=" text-left  w-[47vH] truncate">{{ (!empty($position->artikel->bezeichnung)) ? $position->artikel->bezeichnung : 'n.v.' }}</div>
                     <div class=" text-right w-[7vH] pr-1">{{ number_format($position->menge, 0, ',', '.') }}</div>
-                    <div class=" text-left  w-[5vH]">{{ $position->artikel->einheit }}</div>
+                    <div class=" text-left  w-[5vH]">{{ (!empty($position->artikel->einheit)) ? $position->artikel->einheit : 'n.v.' }}</div>
                     <div class=" text-right w-[13vH]">{{ number_format($position->epreis, 2, ',', '.') }} €</div>
                     <div class=" text-right w-[15vH] pr-2">{{ number_format($position->gpreis, 2, ',', '.') }} €</div>
 

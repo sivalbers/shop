@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\ArtikelSortiment;
+use App\Models\Sortiment;
 use Illuminate\Support\Facades\Log;
 
 class ArtikelSortimentRepository
@@ -122,14 +123,19 @@ class ArtikelSortimentRepository
         }
     }
 
-    public function delete($id)
+    public function delete($artikelNr, $sortimentId)
     {
         try {
-            $rec = ArtikelSortiment::findOrFail($id);
-            $rec->delete();
-            $this->logMessage('info', "ArtikelSortiment mit ID {$id} erfolgreich gelöscht.");
+            $sortimentBezeichnung = Sortiment::where('id', $sortimentId)->value('bezeichnung');
+
+            if ($sortimentBezeichnung) {
+                ArtikelSortiment::where('artikelnr', $artikelNr)
+                    ->where('sortiment', $sortimentBezeichnung)
+                    ->delete();
+            }
+            $this->logMessage('info', "Artikel-Sortiment-Zuordnung wurde gelöscht. {$artikelNr} -> {$sortimentBezeichnung} wurden gelöscht.");
         } catch (\Throwable $e) {
-            $this->logMessage('error', "Fehler beim Löschen des ArtikelSortiments mit ID {$id}: " . $e->getMessage());
+            $this->logMessage('error', "Fehler beim Löschen aller ArtikelSortimente mit Artikelnummer {$artikelNr}: " . $e->getMessage());
         }
     }
 
@@ -142,6 +148,7 @@ class ArtikelSortimentRepository
             $this->logMessage('error', "Fehler beim Löschen aller ArtikelSortimente mit Artikelnummer {$artikelNr}: " . $e->getMessage());
         }
     }
+
 
     public function updateRecordFromData($artikelSortiment, $data)
     {
