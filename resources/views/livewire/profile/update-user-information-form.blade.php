@@ -147,7 +147,8 @@ new class extends Component {
 
         $this->updateUsers();
 
-        session()->flash('message', "Neuer Benutzer wurde erstellt: {$this->inputName}, {$this->inputEmail}.");
+        $this->dispatch('neuerBenutzer', name: $this->inputName);
+
         $this->showForm = false;
     }
 
@@ -172,6 +173,9 @@ new class extends Component {
                             {{ session('message') }}
                         </div>
                     @endif
+                    <x-action-message class="me-3 border border-red-600 bg-red-500 rounded px-6 text-white" on="neuerBenutzer">
+                        {{ __('Änderung wurde gespeichert.') }}
+                    </x-action-message>
                 </div>
             </div>
 

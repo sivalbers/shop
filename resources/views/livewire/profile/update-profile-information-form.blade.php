@@ -39,9 +39,10 @@ new class extends Component
         }
 
 
-        $user->save();
+        // $user->save();
 
         $this->dispatch('profile-updated', name: $user->name);
+        //session()->flash('message', "Neuer Benutzer wurde erstellt: {$this->inputName}, {$this->inputEmail}.");
     }
 
     /**
@@ -108,8 +109,8 @@ new class extends Component
             <div class="flex items-center gap-4 pb-1">
                 <x-primary-button>{{ __('Speichern') }}</x-primary-button>
 
-                <x-action-message class="me-3" on="profile-updated">
-                    {{ __('Saved.') }}
+                <x-action-message class="me-3 border border-red-600 bg-red-500 rounded px-6 text-white" on="profile-updated">
+                    {{ __('Änderung wurde gespeichert.') }}
                 </x-action-message>
             </div>
         </div>

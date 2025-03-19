@@ -27,7 +27,7 @@ class LoginForm extends Form
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function authenticate(): void
+    public function xauthenticate(): void
     {
 
         $this->ensureIsNotRateLimited();
@@ -43,7 +43,36 @@ class LoginForm extends Form
 
         RateLimiter::clear($this->throttleKey());
     }
+    public function authenticate(): void
+    {
+        $this->ensureIsNotRateLimited();
 
+        try {
+            // Prüfe, ob die Authentifizierung funktioniert
+            if (! Auth::attempt($this->only(['email', 'password']), $this->remember)) {
+                RateLimiter::hit($this->throttleKey());
+
+                throw ValidationException::withMessages([
+                    'form.email' => trans('auth.failed'),
+                ]);
+            }
+        } catch (\RuntimeException $exception) {
+            // Fehler beim Passwort (nicht bcrypt)
+            if (str_contains($exception->getMessage(), 'does not use the Bcrypt algorithm')) {
+                throw ValidationException::withMessages([
+                    'form.password' => trans('auth.password_format_error'), // Neue Übersetzung für diesen Fehler anlegen
+                ]);
+            }
+
+            // Allgemeiner Fehler
+            throw ValidationException::withMessages([
+                'form.general' => trans('auth.general_error'), // Übersetzung für allgemeinen Fehler
+            ]);
+        }
+
+        // RateLimiter zurücksetzen, falls erfolgreich
+        RateLimiter::clear($this->throttleKey());
+    }
     /**
      * Ensure the authentication request is not rate limited.
      */

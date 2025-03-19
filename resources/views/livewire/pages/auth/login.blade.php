@@ -24,8 +24,8 @@ new #[Layout('layouts.guest')] class extends Component
         $this->form->authenticate();
 
         Session::regenerate();
-        if (auth()->user()){
-            $user_debitor = auth()->user()->standardDebitor();
+        if ( Auth::user()){
+            $user_debitor =  Auth::user()->standardDebitor();
             AuthHelper::AfterLogin($user_debitor);
         }
 
@@ -43,7 +43,6 @@ new #[Layout('layouts.guest')] class extends Component
         <div>
             <x-input-label for="email" :value="__('auth.email')" />
             <x-text-input wire:model="form.email" id="email" class="block mt-1 w-full" type="text" name="email" required autofocus autocomplete="email" />
-
             <x-input-error :messages="$errors->get('form.email')" class="mt-2" />
         </div>
 
