@@ -47,7 +47,7 @@ class AuthHelper
         session()->put('debitornr', $stdDebitor->debitor_nr );
         session()->put('firma',     $stdDebitor->debitor->name);
         session()->put('sortiment', $stdDebitor->debitor->sortiment);
-        session()->put('role',      $stdDebitor->role );
+        session()->put('rolle',     $stdDebitor->rolle );
 
         $bestellung = Bestellung::getBasket();
         if ($bestellung){

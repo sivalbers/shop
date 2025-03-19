@@ -92,7 +92,7 @@ class NavigationComponent extends Component
         session()->put('debitornr', $user_debitor->debitor_nr );
         session()->put('firma',     $user_debitor->debitor->name);
         session()->put('sortiment', $user_debitor->debitor->sortiment);
-        session()->put('role',      $user_debitor->role );
+        session()->put('rolle',     $user_debitor->rolle );
 
         $this->doUpdate();
 

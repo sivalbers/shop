@@ -14,7 +14,7 @@
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
-    </head>   
+    </head>
     <body class="font-sans antialiased flex flex-col h-screen">
         <!-- Fixiere den Header oben -->
         <div class="top-0 left-0 w-full z-50">

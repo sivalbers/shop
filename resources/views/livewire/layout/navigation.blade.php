@@ -2,33 +2,23 @@
     <!-- Primary Navigation Menu -->
 
     <div class="w-full m-auto flex flex-row items-center ">
-        <div class="w-1/12 flex justify-end">
 
-                <div class="flex flex-row items-center min-w-12 border rounded-full p-2  {{ \App\Helpers\SortimentHelper::getBGColorClass($sortiment) }} text-white">
-                    <x-fluentui-box-16-o class="w-7 pr-1" />
-                    <!-- x-fluentui-person-32-o class="w-7 " / -->
-                    <div>{{ $sortiment }}</div>
-                </div>
-
-        </div>
-        <div class="w-11/12 flex justify-between h-20" >
-            <div class="flex justify-between w-full">
+        <div class="w-full flex justify-between h-20 pr-2 " >
+            <div class="flex justify-between w-4/5">
 
                 <!-- Settings Dropdown -->
                 @if (Auth::user())
-                    <div class="hidden sm:flex sm:items-center min-w-48 max-w-56">
-                        <x-dropdown align="left" >
-                            <x-slot name="trigger">
-                                <button
-                                    class="inline-flex items-center pr-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
-
-                                    <div x-data="{{ json_encode([ 'navText' => $navText ]) }}"
-                                        x-html="navText"
-                                        x-on:profile-updated.window="navText = $event.detail.navText"
-                                        class="pl-2 text-left">
+                    <div class="hidden sm:flex sm:items-center min-w-48 w-3/12">
+                        <x-dropdown align="left"  width="{{  (count($kunden) > 1) ? 96 : 'w-56' }}">
+                            <x-slot name="trigger" >
+                                <button class="w-full bg-white pl-4 inline-flex items-center pr-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md
+                                    text-gray-500 dark:text-gray-400  dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
+                                    <div class="w-3/12 flex flex-row items-center min-w-12 border rounded-full p-2  {{ \App\Helpers\SortimentHelper::getBGColorClass($sortiment) }} text-white">
+                                        <x-fluentui-box-16-o class="w-7 pr-1" />
+                                        <div>{{ $sortiment }}</div>
                                     </div>
 
-                                    <div class="ms-1">
+                                    <div class="ms-1 w-1/12">
                                         <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
                                             viewBox="0 0 20 20">
                                             <path fill-rule="evenodd"
@@ -36,29 +26,48 @@
                                                 clip-rule="evenodd" />
                                         </svg>
                                     </div>
+
+                                    <div x-data="{{ json_encode([ 'navText' => $navText ]) }}"
+                                        x-html="navText"
+                                        x-on:profile-updated.window="navText = $event.detail.navText"
+                                        class="w-8/12 pl-2 text-left">
+                                    </div>
+
                                 </button>
                             </x-slot>
 
                             <x-slot name="content">
                                 @if (count($kunden) > 1)
                                 @foreach ($kunden as $kunde)
+                                    @php
+                                        $fontColor = 'text-'.strtolower($kunde->sortiment);
+                                    @endphp
+
                                     <x-dropdown-link wire:click="changeDebitor({{ $kunde->nr }})" href="#">
                                         <div class="flex flex-row item-center">
-                                            @if ($kunde->nr === $this->debitornr )
-                                                <div class="text-ewe-gruen pr-2"> <x-fluentui-checkbox-checked-24 class='h-5' /> </div>
-                                            @else
-                                                <div class="text-gray-300 pr-2"> <x-fluentui-checkbox-checked-24-o class='h-5' /> </div>
-                                            @endif
-                                            <div class="pr-1">{{ $kunde->nr}} - {{ $kunde->name }} - </div>
-                                            @php
-                                                $fontColor = 'text-'.strtolower($kunde->sortiment);
-                                            @endphp
-
-                                            <div class="{{ \App\Helpers\SortimentHelper::getColorClass($kunde->sortiment) }} pr-1">
-                                                <x-fluentui-checkbox-indeterminate-16-o class="h-5" />
+                                            <div class="w-1/12">
+                                                @if ($kunde->nr === $this->debitornr )
+                                                    <div class="text-ewe-gruen pr-2"> <x-fluentui-checkbox-checked-24 class='h-5' /> </div>
+                                                @else
+                                                    <div class="text-gray-300 pr-2"> <x-fluentui-checkbox-checked-24-o class='h-5' /> </div>
+                                                @endif
                                             </div>
 
-                                            <div>{{ $kunde->sortiment }}</div>
+                                            <div class="w-2/12 pr-1">
+                                                {{ $kunde->nr}}
+                                            </div>
+
+                                            <div class="w-6/12 flex flex-row">
+                                                {{ $kunde->name }}
+                                            </div>
+
+                                            <div class="w-3/12 flex flex-row">
+
+                                                <div class="{{ \App\Helpers\SortimentHelper::getColorClass($kunde->sortiment) }} pr-1">
+                                                    <x-fluentui-checkbox-indeterminate-16-o class="h-5" />
+                                                </div>
+                                                <div>{{ $kunde->sortiment }}</div>
+                                            </div>
 
                                         </div>
                                     </x-dropdown-link>
@@ -101,7 +110,7 @@
                         </x-dropdown>
                     </div>
                 @endif
-                <div class="flex items-center m-auto w-full justify-between">
+                <div class="flex items-center m-auto w-9/12 justify-between">
                     <!-- img src="{{ asset('storage/c-1.png') }}" -->
 
                     <!-- Logo -->
@@ -221,30 +230,29 @@
 
 
             @if (Auth::user())
-            <div class="hidden sm:flex w-[20vh] flex">
-                <div class="flex flex-row justify-between w-full">
-                    <div class="flex flex-col sm:items-center sm:ms-6">
-                        <x-nav-link :href="route('shop',[ 'tab' => 'tab5'] )" :active="request()->routeIs('bestellungen')" wire:navigate>
-                            <x-fluentui-shopping-bag-20-o class="w-8 h-8" />
-                            <div class="text-5xl text-sky-600">{{ $bestellung->anzpositionen }}</div>
-                        </x-nav-link>
-                        <div class="text-xs text-gray-50 bg-gray-500 px-2">{{ formatGPreis($bestellung->gesamtbetrag) }} €</div>
-                    </div>
-                    <a href="https://zeugnisse.netzmaterialonline.de" title="Zeugnisarchiv aufrufen" target="_blank"
-                    class="p-2 hover:block hover:text-white hover:bg-ewe-gruen text-ewe-gruen">
-                    <div class=" flex flex-col items-center">
+                <div class="hidden sm:flex w-1/5] flex">
+                    <div class="flex flex-row justify-between w-full">
+                        <div class="flex flex-col sm:items-center sm:ms-6">
+                            <x-nav-link :href="route('shop',[ 'tab' => 'tab5'] )" :active="request()->routeIs('bestellungen')" wire:navigate>
+                                <x-fluentui-shopping-bag-20-o class="w-8 h-8" />
+                                <div class="text-5xl text-sky-600">{{ $bestellung->anzpositionen }}</div>
+                            </x-nav-link>
+                            <div class="text-xs text-gray-50 bg-gray-500 px-2">{{ formatGPreis($bestellung->gesamtbetrag) }} €</div>
+                        </div>
+                        <a href="https://zeugnisse.netzmaterialonline.de" title="Zeugnisarchiv aufrufen" target="_blank"
+                        class="p-2 hover:block hover:text-white hover:bg-ewe-gruen text-ewe-gruen">
+                        <div class=" flex flex-col items-center">
 
-                        <div class="flex items-center mr-4">
-                            <x-fluentui-cloud-archive-24-o class="w-12 " />
+                            <div class="flex items-center mr-4">
+                                <x-fluentui-cloud-archive-24-o class="w-12 " />
+                            </div>
+                            <div class="text-xs ">
+                                Zeugnisarchiv
+                            </div>
                         </div>
-                        <div class="text-xs ">
-                            Zeugnisarchiv
-                        </div>
+                    </a>
                     </div>
-                </a>
                 </div>
-            </div>
-
             @endif
 
 

@@ -10,4 +10,5 @@ return [
     'unique' => 'Feldinhalt ist nicht eindeutig.',
     'confirmed' => 'Passwortbestätigung ist ungleich.',
     'min.string' => 'Textlänge ist zu kurz.',
+    'current_password' => 'Aktuelles Passwort stimmt nicht.'
 ];
