@@ -7,6 +7,7 @@ use Livewire\Form;
 
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -54,6 +55,25 @@ class HeaderComponent extends Component
 
         return view('layouts.header');
 
+    }
+
+    public function nachrichtClick($id){
+
+
+        $referer = request()->headers->get('referer'); // http://shop.local/login
+        $path = parse_url($referer, PHP_URL_PATH); // "/login"
+        $page = basename($path);
+
+        if ($page === 'login'){
+        //    Log::info('Vor - showNachrichtOnLoginForm dispatch: '.$id);
+            $this->dispatch('showNachrichtOnLoginForm', $id);
+        }
+        else{
+
+            $link = sprintf('/startseite#nachricht%d', $id );
+           // Log::info('Link: '.$link);
+            return redirect($link);
+        }
     }
 
 }

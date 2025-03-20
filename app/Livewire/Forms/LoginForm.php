@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Forms;
 
+
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -10,6 +11,8 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Livewire\Attributes\Validate;
 use Livewire\Form;
+
+use App\Models\Nachricht;
 
 class LoginForm extends Form
 {
@@ -21,28 +24,16 @@ class LoginForm extends Form
 
     #[Validate('boolean')]
     public bool $remember = false;
+    public bool $showForm = false ;
+    public bool $isModified = false ;
+    public $nachricht;
 
     /**
      * Attempt to authenticate the request's credentials.
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function xauthenticate(): void
-    {
 
-        $this->ensureIsNotRateLimited();
-
-        if (!Auth::attempt($this->only(['email', 'password']), $this->remember)) {
-
-            RateLimiter::hit($this->throttleKey());
-
-            throw ValidationException::withMessages([
-                'form.login' => trans('auth.failed'),
-            ]);
-        }
-
-        RateLimiter::clear($this->throttleKey());
-    }
     public function authenticate(): void
     {
         $this->ensureIsNotRateLimited();
@@ -101,6 +92,7 @@ class LoginForm extends Form
     protected function throttleKey(): string
     {
         return Str::transliterate(Str::lower($this->email).'|'.request()->ip());
-
     }
+
+
 }

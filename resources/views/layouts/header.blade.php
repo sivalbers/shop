@@ -8,7 +8,9 @@
                     if (count($nachrichten) > 0){
                         $s = '+++ ';
                         foreach ($nachrichten as $key => $nachricht) {
-                            $s = sprintf( '%s <a href="%s#id%d"><span class="prio_%s">%s</span></a> +++', $s, route('startseite'), $nachricht->id, $nachricht->prioritaet, $nachricht->kurztext);
+                            //$s = sprintf( '%s <a href="%s#id%d"><span class="prio_%s">%s</span></a> +++', $s, route('startseite'), $nachricht->id, $nachricht->prioritaet, $nachricht->kurztext);
+                           $s = sprintf( '%s <button wire:click="nachrichtClick(%d)"> <span class="prio_%s">%s</span></button> +++', $s, $nachricht->id, $nachricht->prioritaet, $nachricht->kurztext);
+
                         }
                     }
                 @endphp
