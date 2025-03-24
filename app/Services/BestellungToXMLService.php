@@ -78,7 +78,8 @@ class BestellungToXMLService
 
         // Bemerkung
         // $params->appendChild($this->createElement('Bemerkung', $best->bemerkung));
-        $params->appendChild($this->createElement('Lieferdatum', $best->lieferdatum->format('d.m.y')));
+        $params->appendChild($this->createElement('Lieferdatum', optional($best->lieferdatum)->format('Y-m-d')));
+        
 
 
         /*

@@ -60,7 +60,7 @@
                                 {{ $nachricht->kurztext }}
                             </div>
                             <div class="text-xs text-gray-400">
-                                {{ $nachricht->updated_at->format('d.m.Y H:i') }}
+                                {{ $nachricht->updated_at->diffForHumans() }}
                             </div>
                         </div>
                         <div class="text-base">

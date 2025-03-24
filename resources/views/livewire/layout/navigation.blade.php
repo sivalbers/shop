@@ -226,33 +226,47 @@
             </div>
 
 
-
-
-
             @if (Auth::user())
-                <div class="hidden sm:flex w-1/5] flex">
-                    <div class="flex flex-row justify-between w-full">
-                        <div class="flex flex-col sm:items-center sm:ms-6">
-                            <x-nav-link :href="route('shop',[ 'tab' => 'tab5'] )" :active="request()->routeIs('bestellungen')" wire:navigate>
-                                <x-fluentui-shopping-bag-20-o class="w-8 h-8" />
-                                <div class="text-5xl text-sky-600">{{ $bestellung->anzpositionen }}</div>
-                            </x-nav-link>
-                            <div class="text-xs text-gray-50 bg-gray-500 px-2">{{ formatGPreis($bestellung->gesamtbetrag) }} €</div>
-                        </div>
-                        <a href="https://zeugnisse.netzmaterialonline.de" title="Zeugnisarchiv aufrufen" target="_blank"
-                        class="p-2 hover:block hover:text-white hover:bg-ewe-gruen text-ewe-gruen">
-                        <div class=" flex flex-col items-center">
+            <div class="hidden sm:flex w-1/5 flex">
+                <div class="flex flex-row justify-between w-full">
+                    <div class="flex flex-col sm:items-center sm:ms-6">
+<!--- Animation Anfang ---->
 
+
+
+<x-nav-link :href="route('shop',[ 'tab' => 'tab5'] )" :active="request()->routeIs('bestellungen')" wire:navigate>
+    <x-fluentui-shopping-bag-20-o class="w-8 h-8" />
+    <div class="text-5xl text-sky-600">{{ $bestellung->anzpositionen }}</div>
+</x-nav-link>
+
+
+
+
+<!--- Animation Ende ---->
+
+
+
+                        <!-- Preis-Anzeige -->
+                        <div class="text-xs text-gray-50 bg-gray-500 px-2">
+                            {{ formatGPreis($bestellung->gesamtbetrag) }} €
+                        </div>
+                    </div>
+
+                    <!-- Zeugnisarchiv -->
+                    <a href="https://zeugnisse.netzmaterialonline.de" title="Zeugnisarchiv aufrufen" target="_blank"
+                       class="p-2 hover:block hover:text-white hover:bg-ewe-gruen text-ewe-gruen">
+                        <div class="flex flex-col items-center">
                             <div class="flex items-center mr-4">
-                                <x-fluentui-cloud-archive-24-o class="w-12 " />
+                                <x-fluentui-cloud-archive-24-o class="w-12" />
                             </div>
-                            <div class="text-xs ">
+                            <div class="text-xs">
                                 Zeugnisarchiv
                             </div>
                         </div>
                     </a>
-                    </div>
                 </div>
+            </div>
+
             @endif
 
 

@@ -30,6 +30,8 @@ class NavigationComponent extends Component
 
     public $navText;
 
+    public $anzpositionen;
+    protected $listeners = ['updateAnzPositionen' => 'updateBestellungCount'];
 
     public function mount()
     {
@@ -56,6 +58,7 @@ class NavigationComponent extends Component
 
 
         $this->bestellung = Bestellung::getBasket();
+        $this->anzpositionen = $this->bestellung->anzpositionen;
 
     }
 
@@ -71,10 +74,21 @@ class NavigationComponent extends Component
     {
         $this->bestellung = Bestellung::getBasket();
         // Log::info('NavigationComponent->doUpdate()',['Bestellnr' => $this->bestellung->nr]);
+
         $this->bestellung = Bestellung::doCalc($this->bestellung->nr);
+        $this->anzpositionen = $this->bestellung->anzpositionen;
+
+        $this->dispatch('refresh-anzpositionen', ['detail' => $this->bestellung->anzpositionen]);
+
 
         // Log::info('NavigationComponent=>doUpdate', [ 'bestNr' => $this->bestellung->nr, 'anz' => $this->bestellung->anzpositionen, 'Gpreis'=> $this->bestellung->gesamtbetrag]);
 
+    }
+
+    #[On('updateAnzPositionen')]
+    public function updateBestellungCount($count)
+    {
+        $this->anzpositionen = $count;
     }
 
 
