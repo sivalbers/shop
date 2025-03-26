@@ -8,21 +8,21 @@
                 <p class="mt-1">Tenstedter Straße 40</p>
                 <p>49692 Cappeln</p>
 
-                <h3 class="text-lg font-semibold mt-4 text-teal-600">Lager Oldenburg</h3>
+                <h3 class="text-lg font-semibold mt-4 text-sky-600">Lager Oldenburg</h3>
                 <p>Bloher Landstraße 33</p>
                 <p>26160 Bad Zwischenahn</p>
                 <p><strong>Telefon:</strong> 0441 / 361 08 81 00, 361 08 81 01</p>
                 <p><strong>Fax:</strong> 0441 / 361 08 81 95</p>
                 <p><strong>E-Mail:</strong> <a href="mailto:lageroldenburg@ewe-netz.de" class="text-blue-500 hover:underline">lageroldenburg@ewe-netz.de</a></p>
 
-                <h3 class="text-lg font-semibold mt-4 text-teal-600">Lager Bremen</h3>
+                <h3 class="text-lg font-semibold mt-4 text-sky-600">Lager Bremen</h3>
                 <p>Am Gasgraben 4</p>
                 <p>28197 Bremen</p>
                 <p><strong>Telefon:</strong> 0421 / 359 46 46</p>
                 <p><strong>Fax:</strong> 0421 / 359 47 22</p>
                 <p><strong>E-Mail:</strong> <a href="mailto:lagerbremen@ewe-netz.de" class="text-blue-500 hover:underline">lagerbremen@ewe-netz.de</a></p>
 
-                <h3 class="text-lg font-semibold mt-4 text-teal-600">Lager Brandenburg</h3>
+                <h3 class="text-lg font-semibold mt-4 text-sky-600">Lager Brandenburg</h3>
                 <p>Ahornallee 8</p>
                 <p>16356 Werneuchen</p>
                 <p><strong>Telefon:</strong> 033398 / 899 80</p>
@@ -56,7 +56,7 @@
                     Weitere Details zu Datenschutz und Nutzungsbedingungen finden Sie auf
                     <a href="https://www.google.de/intl/de/policies/" class="text-blue-500 hover:underline">Googles Datenschutzseite</a>.
                 </p>
-                --> 
+                -->
             </div>
 
             <div class="text-center mt-6">
