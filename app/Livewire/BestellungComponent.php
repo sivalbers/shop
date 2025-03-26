@@ -4,10 +4,9 @@ namespace App\Livewire;
 
 
 use Livewire\Component;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
+// use Illuminate\Support\Facades\Log;
 use App\Models\Bestellung;
-use App\Models\User;
+
 use App\Repositories\BestellungRepository;
 
 class BestellungComponent extends Component
@@ -20,14 +19,12 @@ class BestellungComponent extends Component
 
     public function mount()
     {
-        Log::info('Bestellcomponent-mount()');
+
         $this->loadData();
     }
 
 
     public function loadData(){
-        Log::info('Bestellcomponent-loadData()');
-
         $kundennr = Session()->get('debitornr');
 
 
@@ -83,23 +80,15 @@ class BestellungComponent extends Component
 
     public function render()
     {
-        Log::info('Bestellcomponent-render()');
-
         return view('livewire.bestellung-component');
     }
 
 
     public function loadPositionen($bestellnr)
     {
-        Log::info(['Bestellcomponent-loadPositionen()'=> $bestellnr]);
-
         // Lade die Positionen der Bestellung anhand der Bestellnummer
 
         $this->activeBestellung = Bestellung::where('nr', $bestellnr)->first();
-
-        //$user = User::find($this->activeBestellung->user_id);
-
-        Log::info([ 'Vor-Dispatch-loadPositionen', 'activeBestellung->nr' => $this->activeBestellung->nr ]);
         $this->dispatch('loadPositionen', $bestellnr );
     }
 

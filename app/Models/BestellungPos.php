@@ -43,7 +43,7 @@ class BestellungPos extends Model
         parent::boot();
 
         static::saving(function ($bestellungPos) {
-            Log::info('BestellungPos->boot->saving: ',[ 'menge' => $bestellungPos->menge, 'epreis' => $bestellungPos->epreis, 'gpreis' => ($bestellungPos->menge * $bestellungPos->epreis)]);
+            // Log::info('BestellungPos->boot->saving: ',[ 'menge' => $bestellungPos->menge, 'epreis' => $bestellungPos->epreis, 'gpreis' => ($bestellungPos->menge * $bestellungPos->epreis)]);
             $bestellungPos->gpreis = $bestellungPos->menge * ($bestellungPos->epreis );
         });
     }

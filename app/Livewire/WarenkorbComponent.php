@@ -133,15 +133,18 @@ class WarenkorbComponent extends Component
 
 
     #[On('updateWarenkorb')]
-    public function updateWarenkorb(){
+    public function updateWarenkorb($doShowMessage = true){
 
-        Log::info('Warenkorbkomponent->updateWarenkorb');
-
+/*
         $this->bestellung->kundenbestellnr = $this->kundenbestellnr;
         $this->bestellung->kommission = $this->kommission;
         $this->bestellung->bemerkung = $this->bemerkung;
         $this->bestellung->lieferdatum = ($this->lieferdatum === '') ? null: $this->lieferdatum;
         $this->bestellung->save();
+        */
+        if ($doShowMessage){
+            $this->dispatch('zeigeMessage', titel:"Angaben gespeichert.", hinweis: "Die Bestellung wurde noch nicht versendet.");
+        }
 
     }
 

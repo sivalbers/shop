@@ -57,7 +57,7 @@ Aktuelle Lagerinformationen:
 ---------------------------------------------
 @foreach ($order['nachrichten'] as $nachricht)
 - {{ $nachricht->kurztext }}
-  {{ $nachricht->langtext }}
+  {{ $nachricht->langtext }} - Alter: {{ $nachricht->updated_at->diffForHumans() }}
   @if (!empty($nachricht->links))
   @php
       $links = $nachricht->getLinksArray();

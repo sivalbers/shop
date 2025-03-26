@@ -23,14 +23,14 @@ class ShopPositionenComponent extends Component
 
     /* Wird ausgeführt beim ersten aufruf. */
     public function mount(){
-        Log::info('ShopPositionComponent.Mount()');
+
         $this->loadData();
     }
 
 
     /* Bestellung und Positionen laden */
     public function loadData(){
-        Log::info('ShopPositionComponent.loadData()');
+
         $this->bestellung = Bestellung::getBasket();
         $mPositionen = BestellungPos::select('artikel.bezeichnung', 'artikel.langtext', 'bestellungen_pos.*',  'artikel.einheit')->where('bestellnr', $this->bestellung->nr)
 
@@ -60,28 +60,10 @@ class ShopPositionenComponent extends Component
 
     /* übergabe ins Frontend */
     public function render(){
-        Log::info('ShopPositionComponent.render()');
 
         return view('livewire.shop.shopPositionen' );
     }
 
-    /* Menge aktualisieren
-    #[On('updateQuantityPos')]
-    public function updateQuantityPos($artikelnr, $quantity)
-    {
-        // Log::info('In updateQuantityPos', [ $artikelnr, $quantity ]);
-        $this->isPosModified = true ;
-        try{
-            if ($quantity >= 0) {
-                $this->bPositionen[$artikelnr]['menge'] = $quantity;
-                //Log::info('Neue Menge ', [ $this->bPositionen[$artikelnr] ]);
-                //$this->dispatch('updateQuantity' , $artikelnr, $quantity);
-            }
-        } catch (\Exception $e) {
-            return log::error ( 'Fehler in updateQuantityPos: ' , [ $e->getMessage()]);
-        }
-    }
-        */
 
     function extractMiddleNumber($input) {
         // Verwende ein reguläres Muster, um die Zahl in der Mitte zu extrahieren
@@ -102,23 +84,18 @@ class ShopPositionenComponent extends Component
 
     /*  Wird bei jeder Feldänderung die auf .live steht ausgeführt  */
     public function updated($fld){
-        // Log::info('In updated');
+
         $this->isPosModified = true ;
 
-            $this->validate( [
-                $fld => 'required|integer|min:0',
-            ]);
-
-        // Log::info('updated',[$fld]);
+        $this->validate( [
+            $fld => 'required|integer|min:0',
+        ]);
 
         $id = $this->extractMiddleNumber($fld);
 
         $this->bPositionen[$id]['gpreis'] = round($this->bPositionen[$id]['epreis']*$this->bPositionen[$id]['menge'],2);
-        // Log::info('Neue Preis',[$this->bPositionen[$id]['gpreis']]);
 
         $this->calc();
-
-        // Log::info('Neue summe',[$this->bestellung->gesamtbetrag]);
 
     }
 
@@ -142,9 +119,6 @@ class ShopPositionenComponent extends Component
     /*Positionen speichern,
         Meldung an Bestellung, diese zu speichern */
     public function BtnSpeichern(){
-
-
-        Log::info('ShopPositionenComponent=>BtnSpeichern()');
         $gesamt = 0;
         $haveToUpdate = false ;
         foreach ($this->bPositionen as $key => $qu) {
@@ -173,14 +147,14 @@ class ShopPositionenComponent extends Component
         }
         $this->bestellung->gesamtbetrag = round($gesamt,2);
 
-        Log::info('VOR => $this->dispatch(updateWarenkorb');
+
 
         if (!$this->isPosModified && (count($this->bPositionen) > 0)){
             $this->dispatch('bestellungAbsenden'); // Warenkorbkomponent->bestellungAbsenden();
         }
         else {
-            Log::info('updateWarenkorb');
-            $this->dispatch('updateWarenkorb'); // Warenkorbkomponent->updateWarenkorb();
+
+            $this->dispatch('updateWarenkorb', doShowMessage: false ); // Warenkorbkomponent->updateWarenkorb();
             $this->dispatch('updateNavigation');
         }
 
@@ -192,8 +166,6 @@ class ShopPositionenComponent extends Component
     public function btnDelete($id){
 
         BestellungPos::where('id', $id)->delete();
-
-        Log::info("btnDelete", [ 'id' => $id]);
 
         unset($this->bPositionen[$id]);
 

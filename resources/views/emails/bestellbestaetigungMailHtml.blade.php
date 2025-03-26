@@ -152,7 +152,7 @@
 
         <tr>
 
-            <td>
+
                 @php
                     $color = "";
                     if ($nachricht->prioritaet === 'hoch') {
@@ -162,11 +162,12 @@
                     $color = "color: green;";
                     }
                 @endphp
-            </td>
+
 
             <td><!-- Spalte 2 -->
+
                 <div style="font-weight: bold;{{ $color }}">
-                    {{ $nachricht->kurztext }}
+                    {{ $nachricht->kurztext }} - <span style="font-size: 0.7em; color: black;">(Alter: {{ $nachricht->updated_at->diffForHumans() }})</span>
                 </div>
                 <div>
                     {{ $nachricht->langtext }}

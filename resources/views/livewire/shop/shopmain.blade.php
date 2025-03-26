@@ -357,7 +357,7 @@
             </div>
         </div>
 
-        <x-my-message />
+        <x-my-message :titel="$messageTitel" :hinweis="$messageHinweis"/>
 
 
         <x-my-favoritposform :mArtikel="$mArtikel" :favoriten="$favoriten" :aktiveFavorites="$aktiveFavorites" />

@@ -89,9 +89,13 @@
 
 
             </div>
-
-            <button type="submit"
-                class="mt-2 px-4 py-2 bg-sky-600 text-white rounded-md shadow-md shadow-gray-400">Speichern</button>
+            <div class="flex flex-row items-center relative">
+                <div>
+                    <button type="submit" class="mt-2 px-4 py-2 bg-sky-600 text-white rounded-md shadow-md shadow-gray-400">
+                        Speichern
+                    </button>
+                </div>
+            </div>
         </form>
     </div>
 

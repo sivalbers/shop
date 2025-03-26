@@ -69,7 +69,6 @@ class ShopArtikellisteComponent extends Component
         $this->listKurz =  Config::userString(self::CONFIG_LISTKURZ) === 'true';
         $this->myArtikels = collect();
 
-        Log::info('ShopArtikellisteComponent.mount()');
         $this->favoriten = Favorit::cFavoriten();
 
         $this->updateSelection();
@@ -92,12 +91,11 @@ class ShopArtikellisteComponent extends Component
             $this->selectedTab = Tab::arSchnellerfassung;
         }
 
-        Log::info(['In ShopArtikellistComponent', 'selectedTab' => $this->selectedTab]);
+
 
         switch ($this->selectedTab){
             case Tab::arWG:
                 $this->lastWgNr = configGet('aktiveWarengruppe');
-                Log::info('ShopArtikellisteComponent => updateSelection => Tab::arWG', ['lastWgNr' => $this->lastWgNr ]);
                 $this->selectWarengruppe($this->lastWgNr);
                 break;
             case Tab::arSuche:
@@ -263,7 +261,7 @@ class ShopArtikellisteComponent extends Component
         $duration = ($endTime - $startTime) * 1000;
 
         // Zeit in die Log-Datei schreiben
-        Log::info('Dauer der Funktion "ShopArtikellisteComponent.selectWarengruppe":', ['Dauer (ms)' => $duration]);
+        // Log::info('Dauer der Funktion "ShopArtikellisteComponent.selectWarengruppe":', ['Dauer (ms)' => $duration]);
 
     }
 
@@ -271,7 +269,6 @@ class ShopArtikellisteComponent extends Component
 
     #[On('showArtikelsuche')]
     public function showArtikelSuch($suchArtikelNr, $suchBezeichnung){
-        Log::info('showArtikelSuch', [$suchArtikelNr, $suchBezeichnung]);
 
         session()->put('suchArtikelNr', $suchArtikelNr);
         session()->put('suchBezeichnung', $suchBezeichnung);
@@ -329,8 +326,6 @@ class ShopArtikellisteComponent extends Component
         ->whereIn('artikelnr', ArtikelSortiment::whereIn('sortiment', $sortiment)->pluck('artikelnr'))
         ->take(200);
 
-       // Log::info(['Query' => $q->toRawSql()]);
-
         // Ergebnis abrufen
         $this->myArtikels = $q->get();
 
@@ -384,8 +379,6 @@ class ShopArtikellisteComponent extends Component
             $artikelStr = $artikelStr . $art['artikelnummer']. ', ';
         }
 
-        // dd($artikelStr);
-        //Log::info([ 'Artikelliste' => $artikelStr ]);
         $artikelnummern = array_column($artikelArray, 'artikelnummer');
         $sortimentArray = explode(' ', $sortiment);
 
@@ -406,7 +399,7 @@ class ShopArtikellisteComponent extends Component
                       AND (f.user_id = 0 OR f.user_id = ?)
                     ) THEN 1 ELSE 0 END AS is_favorit", [$kundennr, $userId]);
 
-        //Log::info($qu->toRawSql());
+
         $artikellist = $qu->get();
 
         $this->myArtikels = array();
@@ -418,7 +411,6 @@ class ShopArtikellisteComponent extends Component
             }
 
         }
-        //dd($this->myArtikels);
 
         $this->aPositions = [];
 
@@ -437,14 +429,13 @@ class ShopArtikellisteComponent extends Component
             ] ;
 
         }
-        //dd($this->quantities);
+
         $this->anzGefunden = count($this->quantities);
     }
 
     #[On('showFavoritMitID')]
     public function showFavoritMitID($favoritId){
 
-        Log::info('Angekommen: showFavoritMitID', [$favoritId]);
         $this->selectedTab = Tab::arFavoriten;
         $this->quantities = array();
 
@@ -458,7 +449,6 @@ class ShopArtikellisteComponent extends Component
             ->whereIn('s.sortiment', $sortimentArray)
             ->where('artikel.gesperrt', '=', false)
             ->select('artikel.*', \DB::raw('true as is_favorit'));
-         Log::info( 'SQL-Auswhahl der Favoriten: ',[ $qu->toRawSql() ]);
 
 
         $artikellist = $qu->get();
@@ -493,11 +483,10 @@ class ShopArtikellisteComponent extends Component
     #[On('updateQuantityPos')]
     public function updateQuantityPos($artikelnr, $quantity)
     {
-        Log::info('ShopArtikellisteComponent=>updateQuantityPos', [ $artikelnr, $quantity ]);
         try{
             if ($quantity >= 0) {
                 $this->quantities[$artikelnr]['menge'] = $quantity;
-                Log::info('Neue Menge ', [ $this->quantities[$artikelnr] ]);
+
                 //$this->dispatch('updateQuantity' , $artikelnr, $quantity);
             }
         } catch (\Exception $e) {
@@ -506,7 +495,6 @@ class ShopArtikellisteComponent extends Component
     }
 
     public function InBasket(){
-        Log::info('ShopArtikellisteComponent=>inBasket()');
 
         $bestellung = Bestellung::getBasket();
         if ($bestellung) {
@@ -514,12 +502,9 @@ class ShopArtikellisteComponent extends Component
             $bestellung->save();
 
 
-
-            //dd($this->aPositions); // Zum Debuggen
-
             foreach ($this->aPositions as $key => $pos) {
                 if ($pos['menge'] >0) {
-                    Log::info('in Basket ',[ 'menge' => $pos['menge'], 'vkpreis' => $pos['vkpreis'], 'gpreis' => $pos['menge'] * $pos['vkpreis']]);
+
                     if ($pos['id'] == 0){
                         BestellungPos::Create([
                             'bestellnr' => $bestellung->nr,
@@ -530,51 +515,12 @@ class ShopArtikellisteComponent extends Component
                             'sort' => 0,
                         ]);
 
-                        Log::info('Before Bestellnr, artikelnr, menge, gpreis', [ $bestellung->nr, $pos['artikelnr'], $pos['menge'], $pos['vkpreis'], $pos['steuer'] ]);
-
                         $this->aPositions[$key]['menge'] = 0;
 
-
-                        Log::info('After Bestellnr, artikelnr, menge, gpreis', [ $bestellung->nr, $pos['artikelnr'], $pos['menge'], $pos['vkpreis'], $pos['steuer'] ]);
                     }
                 }
 
             }
-
-
-
-/*
-            // Jetzt kannst du direkt auf die Mengen zugreifen
-            $quantities = $this->quantities;
-            // dd($quantities); // Zum Debuggen
-
-            foreach ($quantities as $artikelnr => $data) {
-                if ($data['menge'] >0) {
-                    Log::info('in Basket ',[ 'menge' => $data['menge'], 'vkpreis' => $data['vkpreis'], 'gpreis' => $data['menge'] * $data['vkpreis']]);
-                    if ($data['id'] == 0){
-                        $pos = BestellungPos::Create([
-                            'bestellnr' => $bestellung->nr,
-                            'artikelnr' => $data['artikelnr'],
-                            'menge' => $data['menge'],
-                            'epreis' => $data['vkpreis'],
-                            //'gpreis' => $data['menge'] * $data['epreis'],
-                            'steuer' => $data['steuer'],
-                            'sort' => 0,
-                        ]);
-
-                        Log::info('Before Bestellnr, artikelnr, menge, gpreis', [ $bestellung->nr, $data['artikelnr'], $quantities[$artikelnr]['menge'], $data['vkpreis'], $data['steuer'] ]);
-
-                        $quantities[$artikelnr]['menge'] = 0;
-                        $this->quantities[$artikelnr]['menge'] = 0;
-
-                        Log::info('After Bestellnr, artikelnr, menge, gpreis', [ $bestellung->nr, $data['artikelnr'], $quantities[$artikelnr]['menge'], $data['vkpreis'], $data['steuer'] ]);
-                    }
-                }
-
-            }
-*/
-
-            //Log::info($this->quantities);
 
 
             $this->dispatch('updateNavigation');

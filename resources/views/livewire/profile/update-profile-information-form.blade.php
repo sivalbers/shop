@@ -39,10 +39,9 @@ new class extends Component
         }
 
 
-        // $user->save();
+        $user->save();
 
         $this->dispatch('profile-updated', name: $user->name);
-        //session()->flash('message', "Neuer Benutzer wurde erstellt: {$this->inputName}, {$this->inputEmail}.");
     }
 
     /**
