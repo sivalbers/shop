@@ -35,30 +35,32 @@ class NavigationComponent extends Component
 
     public function mount()
     {
-        $this->kunden = Auth::user()->debitoren;
-        $this->sortiment = session()->get('sortiment');
-        $this->firma     = session()->get('firma');
-        $this->debitornr = session()->get('debitornr');
-/*
-        "<span style='font-size: 0.9em;'><span style='font-weight: bold; '>%s</span><br>
-        <span style='font-weight: bold;'>%s</span><br>
-        %s - <span style='font-weight: bold;'>%s</span></span>",
-*/
-        $this->navText = sprintf(
+        if (Auth::user()){
+            $this->kunden = Auth::user()->debitoren;
+            $this->sortiment = session()->get('sortiment');
+            $this->firma     = session()->get('firma');
+            $this->debitornr = session()->get('debitornr');
+    /*
+            "<span style='font-size: 0.9em;'><span style='font-weight: bold; '>%s</span><br>
+            <span style='font-weight: bold;'>%s</span><br>
+            %s - <span style='font-weight: bold;'>%s</span></span>",
+    */
+            $this->navText = sprintf(
 
-             "<span style='font-size: 0.9em;'>%s<br>
-             %s<br>
-             %s - %s</span>",
-            Auth::user()->name,
-            $this->firma,
-            $this->debitornr,
-            $this->sortiment
-        );
+                "<span style='font-size: 0.9em;'>%s<br>
+                %s<br>
+                %s - %s</span>",
+                Auth::user()->name,
+                $this->firma,
+                $this->debitornr,
+                $this->sortiment
+            );
 
 
 
-        $this->bestellung = Bestellung::getBasket();
-        $this->anzpositionen = $this->bestellung->anzpositionen;
+            $this->bestellung = Bestellung::getBasket();
+            $this->anzpositionen = $this->bestellung->anzpositionen;
+        }
 
     }
 

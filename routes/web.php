@@ -102,6 +102,8 @@ Route::middleware([AdminMiddleware::class])->group(function(){
 
 Route::post('/punchout', [Punchout::class, 'handlePunchOut']);
 
+Route::view('/datenschutz', 'datenschutz')->name('datenschutz');
+Route::view('/impressum', 'impressum')->name('impressum');
 
 /*
 Route::get('/send-email', function () {
