@@ -25,7 +25,7 @@
                 </div>
             </a>
         @endforeach
-        @if (!empty(auth::user()) && auth::user()->isAdmin())
+        @if (!empty(auth::user()) && auth::user()->isReporter())
             <a href="{{ route('nachrichten') }}">
                 <div class="flex flex-row text-ewe-gruen items-center">
                     <div class="min-w-12 flex justify-center">
@@ -56,7 +56,7 @@
 
                     <div class="flex flex-col w-full">
                         <div class="flex flex-row items-center justify-between">
-                            <div class="text-xl text-sky-600 font-bold">
+                            <div class="text-xl text-sky-600 font-bold ">
                                 {{ $nachricht->kurztext }}
                             </div>
                             <div class="text-xs text-gray-400">
@@ -99,7 +99,7 @@
         </div>
 
         <!-- Nachrichten verwalten Button -->
-        @if (!empty(auth::user()) && auth::user()->isAdmin())
+        @if (!empty(auth::user()) && auth::user()->isReporter())
             <a href="{{ route('nachrichten') }}">
                 <div class="flex flex-row m-2 p-3 flatwhite bg-green-100 text-ewe-gruen items-center">
                     <div class="min-w-12 flex justify-center">

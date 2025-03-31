@@ -101,5 +101,16 @@ class Nachricht extends Model
         return $arrayFormat;
     }
 
+    public function isAbgelaufen(): bool
+    {
+        if (empty($this->bis)){
+            return false ;
+        }
+
+//        dd($this->bis);
+        return ($this->bis < now());
+
+
+    }
 
 }

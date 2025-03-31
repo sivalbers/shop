@@ -33,7 +33,14 @@ class NachrichtComponent extends Component
 
         //$this->nachrichten = Nachricht::all();
         //$this->nachrichten = Nachricht::orderby('von', 'asc')->get();
-        $this->nachrichten = Nachricht::orderBy('updated_at', 'desc')->get();
+        //$this->nachrichten = Nachricht::orderBy('updated_at', 'desc')->get();
+        $this->nachrichten = Nachricht::orderByRaw('
+        CASE
+            WHEN bis IS NULL THEN 0
+            WHEN bis >= ? THEN 0
+            ELSE 1
+        END, created_at DESC
+    ', [now()])->get();
     }
 
     public function resetInputFields()
@@ -81,7 +88,6 @@ class NachrichtComponent extends Component
         // Erstellen oder Aktualisieren der Nachricht
         Nachricht::updateOrCreate(['id' => $this->nachrichtId], $validatedData);
 
-        // Nachrichten neu laden orderby('prioritaet', 'desc')->
         $this->nachrichten = Nachricht::orderby('von', 'desc')->get();
 
         // Felder zurücksetzen
@@ -140,4 +146,7 @@ class NachrichtComponent extends Component
         // Die Komponente rendern und die Nachrichten anzeigen
         return view('livewire.nachricht-component');
     }
+
+
+
 }

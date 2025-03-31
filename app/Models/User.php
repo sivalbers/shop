@@ -14,8 +14,19 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
+    // Rolle int
+    // A = Admin
+    // R = Reporter (Darf nachrichten erstellen)
+    //                          R  A
+    //              1 2 4 8 16 32 64
+
+
     public function isAdmin(){
-        return $this->role === 99;
+        return ( $this->role & 64 ) === 64 ;
+    }
+
+    public function isReporter(){
+        return (( $this->role & 32 ) === 32) | $this->isAdmin() ;
     }
 
     /**

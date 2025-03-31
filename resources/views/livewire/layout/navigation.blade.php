@@ -90,6 +90,14 @@
                                     <x-dropdown-link :href="route('logs')" wire:navigate class="bg-red-50">
                                         {{ __('Log-Datei') }}
                                     </x-dropdown-link>
+                                    <x-dropdown-link :href="route('belegarchiv')" wire:navigate class="bg-red-50">
+                                        <div class="flex flex-row">
+                                             <x-fluentui-database-search-20-o class="w-6 h-6 mr-1" />
+                                            {{ __('Belegarchiv') }}
+                                        </div>
+                                    </x-dropdown-link>
+
+
 
                                     <x-dropdown-hr />
 
@@ -118,16 +126,23 @@
                         <x-ewe-logo class="w-full" />
                     </div>
 
+
                     <!-- Navigation Links -->
+
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex ">
-                        <x-nav-link :href="route('startseite')" :active="request()->routeIs('startseite')" wire:navigate>
-                            {{ __('Startseite') }} <!-- /*  ###########################  */ -->
-                        </x-nav-link>
 
                         @if (Auth::user())
+                            <x-nav-link :href="route('startseite')" :active="request()->routeIs('startseite')" wire:navigate>
+                                <x-fluentui-home-24-o class="w-6 h-6 mr-1" />
+                                {{ __('Startseite') }} <!-- /*  ###########################  */ -->
+                            </x-nav-link>
+
+
                             <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 <x-nav-link :href="route('bestellungen')" :active="request()->routeIs('bestellungen')" wire:navigate>
-                                    <x-fluentui-building-shop-16-o class="w-5 h-5 mr-2" />
+
+                                    <x-fluentui-text-bullet-list-square-clock-20-o class="w-6 h-6 mr-1" />
+
                                     {{ __('Bestellungen') }} <!-- /*  ###########################  */ -->
 
                                 </x-nav-link>
@@ -215,7 +230,7 @@
                         @if (Auth::user())
                             <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 <x-nav-link :href="route('shop')" :active="request()->routeIs('shop')" wire:navigate>
-                                    <x-fluentui-building-shop-16-o class="w-5 h-5 mr-2" />
+                                    <x-fluentui-building-shop-16-o class="w-5 h-5 mr-1" />
                                     {{ __('Shop') }} <!-- /*  ###########################  */ -->
 
                                 </x-nav-link>
@@ -230,20 +245,11 @@
             <div class="hidden sm:flex w-1/5 flex">
                 <div class="flex flex-row justify-between w-full">
                     <div class="flex flex-col sm:items-center sm:ms-6">
-<!--- Animation Anfang ---->
 
-
-
-<x-nav-link :href="route('shop',[ 'tab' => 'tab5'] )" :active="request()->routeIs('bestellungen')" wire:navigate>
-    <x-fluentui-shopping-bag-20-o class="w-8 h-8" />
-    <div class="text-5xl text-sky-600">{{ $bestellung->anzpositionen }}</div>
-</x-nav-link>
-
-
-
-
-<!--- Animation Ende ---->
-
+                        <x-nav-link :href="route('shop',[ 'tab' => 'tab5'] )"  wire:navigate>
+                            <x-fluentui-shopping-bag-20-o class="w-8 h-8" />
+                            <div class="text-5xl text-sky-600">{{ $bestellung->anzpositionen }}</div>
+                        </x-nav-link>
 
 
                         <!-- Preis-Anzeige -->

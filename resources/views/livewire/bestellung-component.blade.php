@@ -1,4 +1,4 @@
-<div>
+<div x-data="{ zeigeMessage: @entangle('zeigeMessage'), }" >
     <div class=" w-11/12 text-sm m-auto">
         <div class="flex flex-col lg:flex-row ">
             <div
@@ -178,5 +178,7 @@
             </div>
         </div>
     </div>
+
+    <x-my-message :titel="$messageTitel" :hinweis="$messageHinweis"/>
 
 </div>

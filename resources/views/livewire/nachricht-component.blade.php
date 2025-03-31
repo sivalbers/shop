@@ -3,7 +3,7 @@
     <div class="p-4 w-11/12 m-auto flatwhite" x-data="{ showForm: @entangle('showForm') }" x-cloak x-on:click.self="showForm = false"
         x-on:keydown.escape.window="showForm = false">
 
-        <x-my-form>
+        <x-my-form class="z-50">
             <form wire:submit.prevent="store">
                 <input type="hidden" wire:model="nachrichtId" />
                 <div class="flex flex-col p-3">
@@ -22,7 +22,7 @@
                         </div>
                     </div>
 
-                    <div class="mb-4 flex flex-row items-center">
+                    <div class="mb-2 flex flex-row items-center">
                         <div class="w-32 text-right mr-2">
                             <label for="von" class="block font-bold">Von:</label>
                         </div>
@@ -45,19 +45,19 @@
                         </div>
                     </div>
 
-                    <div class="mb-4 flex flex-row items-start">
+                    <div class="mb-2 flex flex-row items-start">
                         <div class="w-32 text-right mr-2">
                             <label for="langtext" class="block font-bold">Langtext:</label>
                         </div>
                         <div class="w-full">
-                            <textarea id="langtext" wire:model="langtext" class="border rounded p-1 w-full"></textarea>
+                            <textarea id="langtext" wire:model="langtext" class="border rounded p-1 w-full h-48"></textarea>
                             @error('langtext')
                                 <span class="text-red-500">{{ $message }}</span>
                             @enderror
                         </div>
                     </div>
 
-                    <div class="mb-4 flex flex-row items-start">
+                    <div class="mb-2 flex flex-row items-start">
                         <div class="w-32 text-right mr-2">
                             <label for="links" class="block font-bold">Links:</label>
                         </div>
@@ -70,7 +70,7 @@
                         </div>
                     </div>
 
-                    <div class="mb-4 flex flex-row items-center">
+                    <div class="mb-2 flex flex-row items-center">
                         <div class="w-32 text-right mr-2">
                             <label for="prioritaet" class="block font-bold">Priorität:</label>
                         </div>
@@ -86,7 +86,7 @@
                         </div>
                     </div>
 
-                    <div class="mb-4 flex flex-row items-center">
+                    <div class="mb-2 flex flex-row items-center">
                         <div class="w-32 text-right mr-2">
                             <label for="kopfzeile" class="block font-bold">Im Kopf:</label>
                         </div>
@@ -105,7 +105,7 @@
 
                     </div>
 
-                    <div class="mb-4 flex flex-row items-center">
+                    <div class="mb-2 flex flex-row items-center">
                         <div class="w-32 text-right mr-2">
                             <label for="mitlogin" class="block font-bold">Mit Login:</label>
                         </div>
@@ -123,11 +123,13 @@
                                     <span class="text-red-500">{{ $message }}</span>
                                 @enderror
                             </div>
+                            <div class="text-right ml-auto w-full">
+                                <button type="submit" class="bg-sky-600 text-white px-4 py-2 rounded">Speichern</button>
+                            </div>
                         </div>
+
                     </div>
-                    <div class="text-right ml-auto w-full">
-                        <button type="submit" class="bg-sky-600 text-white px-4 py-2 rounded">Speichern</button>
-                    </div>
+
 
                 </div>
 
@@ -153,11 +155,11 @@
                     <span title="Priorität">Prio.</span>
                 </div>
 
-                <div class="w-4/12 px-2 border-r">
+                <div class="w-5/12 px-2 border-r">
                     Kurztext
                 </div>
 
-                <div class="w-3/12 px-2 border-r">
+                <div class="w-2/12 px-2 border-r">
                     Zeitraum
                 </div>
 
@@ -177,77 +179,97 @@
                 <div class="w-1/12 px-2 ">
                     Aktion
                 </div>
+                <div class="w-1/12 px-2 text-right">
+                    Erstellt am
+                </div>
+
             </div>
 
 
             @foreach ($nachrichten as $nachricht)
-                <div class="hover:bg-[#CDD503]">
-                <div class="flex flex-row pt-1 border-b ">
-                    <div class="min-w-6 w-[6%] px-2 border-r flex justify-center">
-                        @if ($nachricht->prioritaet === 'hoch')
-                            <span class="text-red-600 "><x-fluentui-important-24 class="h-5  bg-white rounded-md" /></span>
-                        @elseif ($nachricht->prioritaet === 'mittel')
-                            <span class="text-ewe-gruen  "><x-fluentui-important-24-o class="h-5 bg-white rounded-md" /></span>
-                        @else
-                            <span class="text-ewe-gruen  ">&nbsp;</span>
-                        @endif
-                    </div>
-
-                    <div class="w-4/12 px-2 border-r font-bold">
-                        {{ $nachricht->kurztext }}
-                    </div>
-
-                    <div class="w-3/12 px-2 border-r">
-                        {{ $nachricht->getVonBisStr() }}
-                    </div>
-
-                    <div class="min-w-6 w-[6%] px-2 border-r flex justify-center">
-                        @if ($nachricht->kopfzeile === true)
-                            <x-fluentui-square-12 class="h-5" title="Wird im Kopf angezeigt." />
-                        @else
-                            <x-fluentui-square-12-o class="h-5" title="Wird nicht im Kopf angezeigt." />
-                        @endif
-                    </div>
-
-                    <div class="min-w-6 w-[6%] px-2 border-r flex justify-center">
-                        @if ($nachricht->mail === true)
-                            <x-fluentui-square-12 class="h-5" title="Wird mit der Bestellbestätigung versendet."/>
-                        @else
-                            <x-fluentui-square-12-o class="h-5" title="Wird nicht mit der Bestellbestätigung versendet."/>
-                        @endif
-                    </div>
-
-                    <div class="min-w-6 w-[6%] px-2 border-r flex justify-center">
-                        @if ($nachricht->mitlogin === true)
-                            <x-fluentui-square-12 class="h-5" title="Benutzer muss angemeldet sein, um die Nachricht zu sehen." />
-                        @else
-                            <x-fluentui-square-12-o class="h-5" title="Benutzer muss nicht angemeldet sein, um die Nachricht zu sehen." />
-                        @endif
-                    </div>
-
-
-                    <div class="w-1/12 flex flex-col lg:flex-row ">
-                        <div class=" px-2">
-                            <button
-                                class="w-6 border border-gray-400 rounded bg-sky-600 shadow-sm shadow-gray-400 text-white"
-                                type="button" wire:click="edit({{ $nachricht->id }})"><x-fluentui-edit-16-o
-                                    class="h-5" /></button>
+                <div class="hover:bg-[#CDD503] flatwhite bg-red-600   my-2">
+                    <div class="flex flex-row pt-1 ">
+                        <div class="min-w-6 w-[6%] px-2 border-r flex justify-center">
+                            @if ($nachricht->prioritaet === 'hoch')
+                                <span class="text-red-600 "><x-fluentui-important-24
+                                        class="h-5  bg-white rounded-md" /></span>
+                            @elseif ($nachricht->prioritaet === 'mittel')
+                                <span class="text-ewe-gruen  "><x-fluentui-important-24-o
+                                        class="h-5 bg-white rounded-md" /></span>
+                            @else
+                                <span class="text-ewe-gruen  ">&nbsp;</span>
+                            @endif
                         </div>
 
-                        <div class=" px-2">
-                            <button
-                                class="w-6 border border-red-600 rounded bg-red-500 shadow-sm shadow-gray-400 text-white"
-                                type="submit" wire:click="delete({{ $nachricht->id }})"><x-fluentui-delete-12-o
-                                    class="h-5" /></button>
+                        <div class="w-5/12 px-2 border-r font-bold {{ ($nachricht->isAbgelaufen()) ? 'line-through ' : '' }}">
+
+                            {{ $nachricht->kurztext }}
+                        </div>
+
+                        <div class="w-2/12 px-2 border-r">
+                            {{ $nachricht->getVonBisStr() }}
+                        </div>
+
+                        <div class="min-w-6 w-[6%] px-2 border-r flex justify-center">
+                            @if ($nachricht->kopfzeile === true)
+
+                                <x-fluentui-checkbox-checked-16-o class="h-5" title="Wird im Kopf angezeigt." />
+                            @else
+                            <x-fluentui-checkbox-unchecked-16-o class="h-5" title="Wird nicht im Kopf angezeigt." />
+                            @endif
+                        </div>
+
+                        <div class="min-w-6 w-[6%] px-2 border-r flex justify-center">
+                            @if ($nachricht->mail === true)
+                                <x-fluentui-checkbox-checked-16-o class="h-5"
+                                    title="Wird mit der Bestellbestätigung versendet." />
+                            @else
+                                <x-fluentui-checkbox-unchecked-16-o class="h-5"
+                                    title="Wird nicht mit der Bestellbestätigung versendet." />
+                            @endif
+                        </div>
+
+                        <div class="min-w-6 w-[6%] px-2 border-r flex justify-center">
+                            @if ($nachricht->mitlogin === true)
+                                <xx-fluentui-checkbox-checked-16-o class="h-5"
+                                    title="Benutzer muss angemeldet sein, um die Nachricht zu sehen." />
+                            @else
+                                <x-fluentui-checkbox-unchecked-16-o class="h-5"
+                                    title="Benutzer muss nicht angemeldet sein, um die Nachricht zu sehen." />
+                            @endif
+                        </div>
+
+
+                        <div class="w-1/12 flex flex-col lg:flex-row">
+                            <div class=" px-2">
+                                <button
+                                    class="w-6 border border-gray-400 rounded bg-sky-600 shadow-sm shadow-gray-400 text-white"
+                                    type="button" wire:click="edit({{ $nachricht->id }})"><x-fluentui-edit-16-o
+                                        class="h-5" /></button>
+                            </div>
+
+                            <div class=" px-2">
+                                <button
+                                    class="w-6 border border-red-600 rounded bg-red-500 shadow-sm shadow-gray-400 text-white"
+                                    type="submit" wire:click="delete({{ $nachricht->id }})"><x-fluentui-delete-12-o
+                                        class="h-5" /></button>
+                            </div>
+                        </div>
+                        <div class="w-1/12 flex flex-col lg:flex-row">
+                            <div class=" px-2 text-xs text-right w-full">
+                                {{ $nachricht->created_at->format('Y-m-d') }}
+                            </div>
+
                         </div>
                     </div>
-                </div>
-                <div class="flex flex-row border-b-2 border-gray-500 mb-4 text-sm ">
-                    <div class="ml-[6%] w-full px-2 max-h-14 overflow-y-scroll">
-                        {{ $nachricht->langtext }}
-                        @if (!empty($nachricht->links)) <br> {{ $nachricht->links }}@endif;
+                    <div class="flex flex-row mb-4 text-sm ">
+                        <div class="ml-[6%] w-full px-2 max-h-14 overflow-y-scroll">
+                            {{ $nachricht->langtext }}
+                            @if (!empty($nachricht->links))
+                                <br> {{ $nachricht->links }}
+                            @endif;
+                        </div>
                     </div>
-                </div>
                 </div>
             @endforeach
 

@@ -6,8 +6,9 @@ namespace App\Livewire;
 use Livewire\Component;
 // use Illuminate\Support\Facades\Log;
 use App\Models\Bestellung;
-
 use App\Repositories\BestellungRepository;
+use Livewire\Attributes\On;
+
 
 class BestellungComponent extends Component
 {
@@ -16,6 +17,10 @@ class BestellungComponent extends Component
     public $selectedBestellung = null;
     public $activeBestellung = null;
     public $bestellung;
+
+    public $zeigeMessage = false ;
+    public $messageTitel;
+    public $messageHinweis;
 
     public function mount()
     {
@@ -97,5 +102,14 @@ class BestellungComponent extends Component
         $best = Bestellung::where('nr', $bestellnr)->first();
         $br = new BestellungRepository();
         $br->sendToERP($best);
+
+        $this->zeigeMessage(titel:"Bestellung erneut versendet!", hinweis: "Eine Bestellbestätigung wird nicht versendet.");
+    }
+
+    public function zeigeMessage($titel = '', $hinweis = ''){
+        $this->messageTitel = $titel;
+        $this->messageHinweis = $hinweis;
+        $this->zeigeMessage = true ;
+
     }
 }

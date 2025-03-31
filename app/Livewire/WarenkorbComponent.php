@@ -97,23 +97,6 @@ class WarenkorbComponent extends Component
         $this->bestellung->status_id = 1;
         $this->bestellung->save();
 
-        /*
-        $best = new BestellungRepository();
-        $best->sendToERP($this->bestellung);
-
-        return;
-        */
-
-
-        Log::info('Warenkorbkomponent->bestellungAbsenden');
-
-        $this->bestellung->kundenbestellnr = $this->kundenbestellnr;
-        $this->bestellung->kommission = $this->kommission;
-        $this->bestellung->bemerkung = $this->bemerkung;
-        $this->bestellung->lieferdatum = ($this->lieferdatum === '') ? null: $this->lieferdatum;
-        $this->bestellung->status_id = 1;
-        $this->bestellung->save();
-
         SendBestellungToErp::dispatch($this->bestellung); // Bestellung in warteschlange zum übertragen an faveo
 
         $nachrichten = $this->getNachrichten();

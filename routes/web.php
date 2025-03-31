@@ -20,6 +20,7 @@ use App\Livewire\TestMainComponent;
 use App\Livewire\NachrichtComponent;
 use App\Livewire\ApiLogComponent;
 use App\Livewire\ImportComponent;
+use App\Livewire\BelegarchivComponent;
 
 use App\Models\Config;
 
@@ -38,36 +39,30 @@ Route::get('/', function () {
     return redirect('/startseite');
 });
 
+
 Route::view('startseite', 'startseite')
-    ->middleware(['auth', 'verified'])
+//    ->middleware(['auth', 'verified'])
+    ->middleware(['auth' ])
     ->name('startseite');
+
 
 Route::view('profile', 'profile')
     ->middleware(['auth'])
     ->name('profile');
 
 Route::get('/shop', ShopComponent::class)
-    ->middleware('auth')
+    ->middleware(['auth'])
     ->name('shop');
 
 Route::get('/bestellungen', BestellungComponent::class)
-    ->middleware('auth')
+    ->middleware(['auth'])
     ->name('bestellungen');
-/*
-Route::get('/shop', BestellungListComponent::class)
-    ->middleware('auth')
-    ->name('bestellungen');
-*/
-
-
-    /*
-    Route::get('/warenkorb', WarenkorbComponent::class)
-        ->middleware('auth')
-        ->name('warenkorb');
-    */
 
 Route::get('/testmain', TestMainComponent::class)
+    ->middleware(['auth'])
     ->name('testmain');
+
+
 
 
 Route::middleware([AdminMiddleware::class])->group(function(){
@@ -95,7 +90,7 @@ Route::middleware([AdminMiddleware::class])->group(function(){
         return view('logs');
     })->name('logs');
 
-
+    Route::get('/belegarchiv', BelegarchivComponent::class)->name('belegarchiv');
 
 });
 
