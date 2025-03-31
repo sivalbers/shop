@@ -62,7 +62,9 @@ Route::get('/testmain', TestMainComponent::class)
     ->middleware(['auth'])
     ->name('testmain');
 
-
+Route::get('/nachrichten', NachrichtComponent::class)
+    ->middleware(['auth'])
+    ->name('nachrichten');
 
 
 Route::middleware([AdminMiddleware::class])->group(function(){
@@ -80,7 +82,6 @@ Route::middleware([AdminMiddleware::class])->group(function(){
 
     Route::get('/anschriften', AnschriftComponent::class)->name('anschriften');
 
-    Route::get('/nachrichten', NachrichtComponent::class)->name('nachrichten');
     Route::get('/import', ImportComponent::class)->name('import');
 
 

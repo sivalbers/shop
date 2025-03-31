@@ -5,6 +5,7 @@ use Livewire\Component;
 use App\Models\Nachricht;
 
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class NachrichtComponent extends Component
@@ -29,11 +30,14 @@ class NachrichtComponent extends Component
 
     public function mount()
     {
+        if (!auth::user()->isReporter()){
+            return redirect('/startseite');
+        }
         // Nachrichten laden, die in der Datenbank gespeichert sind
+        $this->loadData();
+    }
 
-        //$this->nachrichten = Nachricht::all();
-        //$this->nachrichten = Nachricht::orderby('von', 'asc')->get();
-        //$this->nachrichten = Nachricht::orderBy('updated_at', 'desc')->get();
+    public function loadData(){
         $this->nachrichten = Nachricht::orderByRaw('
         CASE
             WHEN bis IS NULL THEN 0
@@ -88,7 +92,7 @@ class NachrichtComponent extends Component
         // Erstellen oder Aktualisieren der Nachricht
         Nachricht::updateOrCreate(['id' => $this->nachrichtId], $validatedData);
 
-        $this->nachrichten = Nachricht::orderby('von', 'desc')->get();
+        $this->loadData();
 
         // Felder zurücksetzen
         $this->resetInputFields();
@@ -138,7 +142,7 @@ class NachrichtComponent extends Component
         Nachricht::findOrFail($id)->delete();
 
         // Nachrichten neu laden
-        $this->nachrichten = Nachricht::all();
+        $this->loadData();
     }
 
     public function render()

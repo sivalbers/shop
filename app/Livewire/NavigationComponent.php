@@ -59,7 +59,12 @@ class NavigationComponent extends Component
 
 
             $this->bestellung = Bestellung::getBasket();
-            $this->anzpositionen = $this->bestellung->anzpositionen;
+            if($this->bestellung){
+                $this->anzpositionen = $this->bestellung->anzpositionen;
+            }
+            else{
+                $this->anzpositionen = 0;
+            }
         }
 
     }
