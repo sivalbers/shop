@@ -54,15 +54,20 @@
    <div class="relative w-full overflow-y-auto h-[30vh] md:h-[calc(100vh-245px)] scrollbar-hide">
        <form wire:submit.prevent="InBasket">
            @csrf
-           
-           @foreach ($aPositions as $position)
 
-               @if (!$listKurz)
-                   <x-artikel-detail :pos="$position" :loop="$loop" />
-               @else
-                   <x-artikel-kurz :pos="$position" :loop="$loop" />
-               @endif
-           @endforeach
+
+
+
+           @foreach ($aPositions as $index => $position)
+                <div wire:key="pos-{{ $position['uid'] }}">
+                    @if (!$listKurz)
+                        <x-artikel-detail :pos="$position" :loop="$loop" />
+                    @else
+                        <x-artikel-kurz :pos="$position" :loop="$loop" />
+                    @endif
+                </div>
+            @endforeach
+
 
            <!-- Scroll-to-Top Button -->
            <button onclick="scrollToTop()" type="button"

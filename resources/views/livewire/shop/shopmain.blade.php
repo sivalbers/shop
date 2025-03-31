@@ -95,6 +95,7 @@
                                                 @foreach ($warengruppen as $wg)
                                                     <li
                                                         class="pl-2 hover:underline  hover:bg-[#e3e692] hover:text-sky-600">
+                                                        @if ($aktiveWarengruppe != $wg['wgnr'])
                                                         <a href="#"
                                                             wire:click.prevent="clickWarengruppe('{{ $wg['wgnr'] }}')"
                                                             class=" flex items-center justify-between group">
@@ -107,10 +108,21 @@
                                                                 @endif>
                                                                 {{ $wg['bezeichnung'] }}
                                                             </span>
+                                                            <span class="text-gray-500 text-sm">({{ $wg['artikel_count'] }})</span>
+                                                        </a>
+                                                        @else
+                                                        <div class=" flex items-center justify-between group">
+
+                                                            <span class="text-xl md:text-3xl font-bold text-sky-600 truncate ...">
+
+                                                               {{ $wg['bezeichnung'] }}
+                                                            </span>
 
 
                                                             <span class="text-gray-500 text-sm">({{ $wg['artikel_count'] }})</span>
-                                                        </a>
+                                                        </div>
+
+                                                        @endif
                                                     </li>
                                                 @endforeach
                                             </ul>

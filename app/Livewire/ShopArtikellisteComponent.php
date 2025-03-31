@@ -36,7 +36,7 @@ class ShopArtikellisteComponent extends Component
     public $aPositions = [];
 
     public $myArtikels = [];
-    public $quantities;
+
     public $selectedWarengruppe = null;
     public $selectedWarengruppeBezeichung = '';
     public $showForm ;
@@ -64,7 +64,7 @@ class ShopArtikellisteComponent extends Component
     const CONFIG_LISTKURZ = 'listKurz';
 
 
-    public function mount($quantities)
+    public function mount()
     {
         $this->listKurz =  Config::userString(self::CONFIG_LISTKURZ) === 'true';
         $this->myArtikels = collect();
@@ -116,7 +116,7 @@ class ShopArtikellisteComponent extends Component
     {
 
         $artikels = $this->myArtikels;
-        //dd($this->quantities);
+
         return view('livewire.shop.shopartikelliste', [ 'artikels' => $artikels ]);
 
     }
@@ -151,7 +151,7 @@ class ShopArtikellisteComponent extends Component
         if ($wgnr) {
 
             $this->selectedTab = Tab::arWG;
-            $this->quantities = array();
+
 
             $this->aPositions = array();
 
@@ -199,10 +199,11 @@ class ShopArtikellisteComponent extends Component
 
             $this->myArtikels = DB::select($SQLquery, $params);
 
-            // Initialisiere das quantities-Array mit Standardwerten (z.B. 0)
+
             foreach ($this->myArtikels as $artikel) {
 
                 $this->aPositions[] = [
+                    'uid' => md5($artikel->artikelnr . now()),
                     'id' => 0,
                     'menge' => 0,
                     'artikelnr' => $artikel->artikelnr,
@@ -216,7 +217,7 @@ class ShopArtikellisteComponent extends Component
                 ] ;
 
             }
-            $this->anzGefunden = count($this->quantities);
+            $this->anzGefunden = count($this->aPositions);
 
             $this->selectedWarengruppe = $wgnr;
         } else {
@@ -229,15 +230,9 @@ class ShopArtikellisteComponent extends Component
                 ->get();
 
             foreach ($this->myArtikels as $artikel) {
-                $this->quantities[(string)$artikel->artikelnr] = [
-                    'menge' => 0,
-                    'id' => 0,
-                    'artikelnr' => $artikel->artikelnr,
-                    'epreis' => $artikel->vkpreis,
-                    'steuer' => $artikel->steuer,
-                    'bestand' =>  $artikel->bestand
-                ];
+
                 $this->aPositions[] = [
+                    'uid' => md5($artikel->artikelnr . now()),
                     'id' => 0,
                     'menge' => 0,
                     'artikelnr' => $artikel->artikelnr,
@@ -335,6 +330,7 @@ class ShopArtikellisteComponent extends Component
         foreach ($this->myArtikels as $artikel) {
 
             $this->aPositions[] = [
+                'uid' => md5($artikel->artikelnr . now()),
                 'id' => 0,
                 'menge' => 0,
                 'artikelnr' => $artikel->artikelnr,
@@ -370,8 +366,6 @@ class ShopArtikellisteComponent extends Component
     {
 
         $this->selectedTab = Tab::arSchnellerfassung;
-
-        $this->quantities = array();
 
         $artikelStr = '';
 
@@ -416,6 +410,7 @@ class ShopArtikellisteComponent extends Component
 
         foreach ($this->myArtikels as $artikel){
             $this->aPositions[] = [
+                'uid' => md5($artikel->artikelnr . now()),
                 'id' => 0,
                 'menge' => $this->findMengeByArtikelnummer($artikelArray, $artikel->artikelnr),
                 'artikelnr' => $artikel->artikelnr,
@@ -430,14 +425,14 @@ class ShopArtikellisteComponent extends Component
 
         }
 
-        $this->anzGefunden = count($this->quantities);
+        $this->anzGefunden = count($this->myArtikels);
     }
 
     #[On('showFavoritMitID')]
     public function showFavoritMitID($favoritId){
 
         $this->selectedTab = Tab::arFavoriten;
-        $this->quantities = array();
+
 
         $sortimentArray = explode(' ', session()->get('sortiment'));
 
@@ -458,6 +453,7 @@ class ShopArtikellisteComponent extends Component
         foreach ($artikellist as $artikel){
 
             $this->aPositions[] = [
+                'uid' => md5($artikel->artikelnr . now()),
                 'id' => 0,
                 'menge' => 0,
                 'artikelnr' => $artikel->artikelnr,
@@ -479,13 +475,13 @@ class ShopArtikellisteComponent extends Component
         $this->dispatch('showArtikel' , ['artikelnr' => $artikelnr ]);
     }
 
-
+/*
     #[On('updateQuantityPos')]
     public function updateQuantityPos($artikelnr, $quantity)
     {
         try{
             if ($quantity >= 0) {
-                $this->quantities[$artikelnr]['menge'] = $quantity;
+               // $this->quantities[$artikelnr]['menge'] = $quantity;
 
                 //$this->dispatch('updateQuantity' , $artikelnr, $quantity);
             }
@@ -493,6 +489,7 @@ class ShopArtikellisteComponent extends Component
             return log::error ( 'Fehler in updateQuantityPos: ' , [ $e->getMessage()]);
         }
     }
+*/
 
     public function InBasket(){
 

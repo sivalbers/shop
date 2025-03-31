@@ -35,10 +35,8 @@ class SchnellerfassungComponent extends Component
 
         $this->verarbeitet = true;
 
-        // if (count($this->artikel) > 0 )
-        {
-            $this->dispatch('showArtikelSchnellerfassung', $this->artikel, $this->sortiment );
-        }
+        $this->dispatch('showArtikelSchnellerfassung', $this->artikel, $this->sortiment );
+
 
     }
 

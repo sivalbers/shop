@@ -72,14 +72,14 @@
 
 
             <div class="basis-1 text-xs ml-2">
-
-                @if ($pos['bestand'] === 0)
+                
+                @if ($pos['bestand'] == 0)
                     <x-fluentui-vehicle-truck-profile-24-o class="h-7 text-red-500" />
                 @else
                     <x-fluentui-vehicle-truck-profile-24 class="h-7 text-[#CDD503]" />
                 @endif
 
-        </div>
+            </div>
 
         </div>
     </div>
