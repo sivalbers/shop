@@ -37,7 +37,7 @@ class StartseiteNachrichtenComponent extends Component
             });
 
 
-            $this->nachrichten =$qu->orderBy('updated_at', 'desc')->get();
+            $this->nachrichten =$qu->orderBy('created_at', 'desc')->get();
 
     }
 

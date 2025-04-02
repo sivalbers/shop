@@ -7,24 +7,37 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 use App\Http\Controllers\ODataController;
+use App\Services\FavoritImportService;
 
 
 class ImportComponent extends Component
 {
 
-    public function import($type)
-    {
+    public float $progress = 0;
+    public array $fehlerhafte = [];
+    public array $fehlendeDebitoren = [];
+    public int $importErfolgreich = 0;
+    public int $importFehlerhaft = 0;
+
+    public function import($type){
+
+        session()->flash('message', 'Start');
+
         if ($type === 'Artikel') {
             $this->importArtikel();
         }
-        else{
-            $response = Http::get(route("import{$type}"));
-            session()->flash('message', $response->json()['message'] ?? 'Fehler beim Import');
+        elseif ($type === 'Favoriten') {
+            $this->importFavoriten();
         }
+        elseif ($type === 'Sortiment') {
+                $odata = new ODataController();
+                $response = $odata->importSortiment();
+        }
+        session()->flash('message', $response->json()['message'] ?? 'Fehler beim Import: '.$type);
+
     }
 
-   public function render()
-    {
+    public function render(){
       return view('livewire.import');
 
     }
@@ -45,5 +58,21 @@ class ImportComponent extends Component
         session()->flash('message', $response['message'] ?? 'Fehler beim Import');
     }
 
+
+    public function importFavoriten()
+    {
+        $service = new FavoritImportService();
+
+        $result = $service->importFavoritFile(function ($fortschritt) {
+            $this->progress = $fortschritt;
+        });
+
+        $this->importErfolgreich = $result['fehlerfrei'];
+        $this->importFehlerhaft = $result['fehlerhaft'];
+        $this->fehlerhafte = $result['fehlerhafte'];
+        $this->fehlendeDebitoren = $result['debitoren_fehlen'];
+
+        session()->flash('message', sprintf('Status: OK | Erfolgreich: %d | Fehlerhaft: %d', $this->importErfolgreich, $this->importFehlerhaft));
+    }
 
 }

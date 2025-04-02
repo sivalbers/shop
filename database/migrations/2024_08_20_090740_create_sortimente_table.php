@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('sortimente', function (Blueprint $table) {
             $table->string('bezeichnung', 20)->primary();
+            $table->string('anzeigename', 20);
             $table->timestamps();
         });
     }

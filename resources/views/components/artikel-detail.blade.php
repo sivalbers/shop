@@ -18,17 +18,17 @@
             </div>
 
             <div class="flex flex-row justify-between w-full font-bold">
-                <div class="text-lg">
+                <div class="text-base">
                     <a href="#" wire:click.prevent="showArtikel('{{ $pos['artikelnr'] }}')" class="hover:underline">
-                        {{ $pos['bezeichnung'] }}
+                        {{ $pos['artikelnr'] }} - {{ $pos['bezeichnung'] }}
                     </a>
                 </div>
                 <div class="">
-                    {{ $pos['artikelnr'] }}
+                    &nbsp;
                 </div>
             </div>
         </div>
-        <div>
+        <div class="text-sm">
             {!! $pos['langtext'] !!}
         </div>
     </div>
@@ -72,7 +72,7 @@
 
 
             <div class="basis-1 text-xs ml-2">
-                
+
                 @if ($pos['bestand'] == 0)
                     <x-fluentui-vehicle-truck-profile-24-o class="h-7 text-red-500" />
                 @else

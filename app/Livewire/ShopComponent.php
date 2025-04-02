@@ -70,7 +70,7 @@ class ShopComponent extends Component
 
     public function mount()
     {
-        
+
         $this->showFavoritForm = false;
         $this->zeigeFavoritPosForm = false;
         $this->suchArtikelnr = '';
@@ -299,6 +299,15 @@ class ShopComponent extends Component
         $this->artikelnr = $artikelnr;
         $this->mArtikel = Artikel::where('artikelnr', $artikelnr)->first();
         $this->favoriten = Favorit::cFavoriten();
+        if (count($this->favoriten)===0){
+            $user = Auth::user();
+            Favorit::create([
+                'kundennr' => session()->get('debitornr'),
+                'user_id' => $user->id,
+                'name' => $user->name,
+            ]);
+            $this->favoriten = Favorit::cFavoriten();
+        }
 
         $favIDs = FavoritPos::getFavoritenIDs($artikelnr);
 

@@ -15,7 +15,7 @@
                                     text-gray-500 dark:text-gray-400  dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
                                     <div class="w-3/12 flex flex-row items-center min-w-12 border rounded-full p-2  {{ \App\Helpers\SortimentHelper::getBGColorClass($sortiment) }} text-white">
                                         <x-fluentui-box-16-o class="w-7 pr-1" />
-                                        <div>{{ $sortiment }}</div>
+                                        <div>{{ $sortimentName }}</div>
                                     </div>
 
                                     <div class="ms-1 w-1/12">
@@ -66,7 +66,7 @@
                                                 <div class="{{ \App\Helpers\SortimentHelper::getColorClass($kunde->sortiment) }} pr-1">
                                                     <x-fluentui-checkbox-indeterminate-16-o class="h-5" />
                                                 </div>
-                                                <div>{{ $kunde->sortiment }}</div>
+                                                <div>{{ $kunde->sortimentName() }}</div>
                                             </div>
 
                                         </div>
@@ -123,7 +123,9 @@
 
                     <!-- Logo -->
                     <div class="flex shrink sm:min-w-40 min-w-28"> <!-- SM Logo min -->
+                        <a href="{{ route('startseite') }}">
                         <x-ewe-logo class="w-full" />
+                        </a>
                     </div>
 
 

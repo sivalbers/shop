@@ -263,6 +263,7 @@ class ODataController extends Controller
 
     public function importSortiment()
     {
+        Log::info('ImportSortiment');
 
         $data = $this->getJsonData('URL_IMPORT_SORTIMENT');
 

@@ -26,4 +26,17 @@ class Debitor extends Model
     {
         return $this->hasMany(UserDebitor::class, 'debitor_nr', 'nr');
     }
+
+    public function sortimentName()
+    {
+        $arr = explode(" ", $this->sortiment);
+        $s = "";
+        foreach($arr as $sortiment){
+            $name = Sortiment::getAnzeigeName($sortiment);
+            $s = sprintf("%s %s",$s, $name);
+        }
+        return $s;
+    }
+
+
 }

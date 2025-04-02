@@ -446,6 +446,8 @@ class ShopArtikellisteComponent extends Component
             ->select('artikel.*', \DB::raw('true as is_favorit'));
 
 
+        Log::info($qu->toRawSql());
+
         $artikellist = $qu->get();
 
         $this->aPositions = [];

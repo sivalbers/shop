@@ -13,6 +13,7 @@ use Livewire\Attributes\On;
 use App\Models\Bestellung;
 use App\Models\UserDebitor;
 use App\Models\Debitor;
+use App\Models\Sortiment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Redirect;
@@ -25,6 +26,7 @@ class NavigationComponent extends Component
     public $bestellung;
     public $name;
     public $sortiment;
+    public $sortimentName;
     public $firma;
     public $debitornr;
 
@@ -38,6 +40,7 @@ class NavigationComponent extends Component
         if (Auth::user()){
             $this->kunden = Auth::user()->debitoren;
             $this->sortiment = session()->get('sortiment');
+            $this->sortimentName = Sortiment::getAnzeigeNamen($this->sortiment);
             $this->firma     = session()->get('firma');
             $this->debitornr = session()->get('debitornr');
     /*
@@ -53,7 +56,7 @@ class NavigationComponent extends Component
                 Auth::user()->name,
                 $this->firma,
                 $this->debitornr,
-                $this->sortiment
+                $this->sortimentName
             );
 
 
