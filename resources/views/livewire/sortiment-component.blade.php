@@ -1,4 +1,5 @@
-<div>
+<div x-data="{ showMessage: false, showEditWindow: @entangle('showEditWindow') }"
+        x-cloak>
 
 
     @if (session()->has('message'))
@@ -7,50 +8,63 @@
         </div>
     @endif
 
-
-
-
-
-
-    <div class="w-full text-sm">
-        <div class="border border-gray-500 w-4/5 rounded m-auto" >
-            <div class="grid grid-cols-3 gap-x-4 gap-y-1 m-4">
-                <div class="col-span-2 bg-slate-300 rounded p-3 font-bold">
-                    Bezeichnung
+    <div class="text-sm w-4/5 m-auto">
+        <div class="flatwhite">
+            <div class="flex flex-col items-center text-base">
+                <div class="flex flex-row w-full justify-between text-sky-600 text-xl font-bold px-2 py-4">
+                    <div>
+                    Sortimente
+                    </div>
+                    <div>
+                    <button title="Neues Sortiment anlegen" class="text-ewe-gruen flex items-center" type="button"
+                        wire:click="create">
+                        <x-fluentui-receipt-add-24-o class="h-10" />
+                    </button>
+                    </div>
                 </div>
-                <div class="bg-slate-300 rounded p-3 font-bold">
-                    Aktion
+
+                <div class="flex flex-row w-full text-sky-600 font-bold border-b border-sky-600">
+                    <div class="w-1/3 px-2 ">
+                        Bezeichnung
+                    </div>
+                    <div class="w-1/3 px-2 ">
+                        Anzeigename
+                    </div>
+                    <div class="w-1/3 px-2 ">
+                        Aktion
+                    </div>
                 </div>
 
+                @foreach ($sortimente as $sortiment)
+                    <div class="flex flex-row items-center w-full hover:bg-ewe-ltgruen">
+                        <div class="w-1/3 px-2 py-1">{{ $sortiment->bezeichnung }}</div>
+                        <div class="w-1/3 px-2 py-1">{{ $sortiment->anzeigename }}</div>
+                        <div class="w-1/3 px-2 py-1  text-sm">
+                            <button wire:click="edit('{{ $sortiment->bezeichnung }}')">Bearbeiten</button> |
+                            <button wire:click="delete('{{ $sortiment->bezeichnung }}')">Löschen</button>
+                        </div>
+                    </div>
+                @endforeach
+                <div class="h-12 w-full border-t border-sky-600">
 
-                @foreach($sortimente as $sortiment)
-
-
-
-                    <div class="col-span-2 border px-1 py-1">{{ $sortiment->bezeichnung }}</div>
-                    <div class="border px-1 py-1">
-                        <button wire:click="edit('{{ $sortiment->bezeichnung }}')">Bearbeiten</button>
-                        <button wire:click="delete('{{ $sortiment->bezeichnung }}')">Löschen</button>
+                    <div x-data="{ show: false }" x-init="@this.on('status-updated', () => { show = true; setTimeout(() => show = false, 3000) })">
+                        @if ($statusMessage)
+                            <div x-show="show" x-transition class="bg-ewe-ltgruen text-sky-600 px-4 py-2 rounded">
+                                {{ $statusMessage }}
+                            </div>
+                        @endif
                     </div>
 
-                @endforeach
+
+                </div>
             </div>
         </div>
 
-        <div class="w-2/3 m-auto">
-            @if(!is_null($updateMode) && $updateMode)
-                @include('livewire.sortiment-edit')
-            @else
-                @include('livewire.sortiment-create')
-            @endif
+        <div x-show="showEditWindow">
+        @include('livewire.sortiment-edit')
         </div>
 
-    <div x-data="{ show: false }" x-init="@this.on('status-updated', () => { show = true; setTimeout(() => show = false, 3000) })">
-        @if ($statusMessage)
-            <div x-show="show" x-transition class="bg-green-500 text-white p-2 rounded">
-                {{ $statusMessage }}
-            </div>
-            {{ $statusMessage }}
-        @endif
     </div>
+
+
 </div>

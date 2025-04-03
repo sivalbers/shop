@@ -11,18 +11,23 @@ class SortimentComponent extends Component
     public $bezeichnung = '';
     public $updateMode = false;
     public $oldBezeichnung;
+    public $anzeigename;
     public $sortimente;
     public $statusMessage;
+    public $showEditWindow;
 
-    public function render()
-    {
-        $this->statusMessage = '';
-        $this->loadItems();
-        return view('livewire.sortiment-component');
+
+    public function mount(){
+        $this->showEditWindow = false ;
     }
 
 
+    public function render()
+    {
 
+        $this->loadItems();
+        return view('livewire.sortiment-component');
+    }
 
     private function loadItems(){
         $this->sortimente = Sortiment::all();
@@ -31,6 +36,26 @@ class SortimentComponent extends Component
     public function resetInputFields()
     {
         $this->bezeichnung = '';
+        $this->anzeigename = '';
+        $this->showEditWindow = false;
+    }
+
+
+    public function edit($bezeichnung)
+    {
+        $sortiment = Sortiment::findOrFail($bezeichnung);
+
+        $this->bezeichnung = $sortiment->bezeichnung;
+        $this->oldBezeichnung = $sortiment->bezeichnung;
+        $this->anzeigename = $sortiment->anzeigename;
+        $this->updateMode = true;
+        $this->showEditWindow = true;
+
+    }
+
+    public function create(){
+        $this->updateMode = false;
+        $this->showEditWindow = true;
     }
 
     public function store()
@@ -41,26 +66,19 @@ class SortimentComponent extends Component
 
         Sortiment::create([
             'bezeichnung' => $this->bezeichnung,
+            'anzeigename' => $this->anzeigename,
         ]);
 
         // session()->flash('message', 'Sortiment erfolgreich hinzugefügt.');
         $this->statusMessage = 'Sortiment erfolgreich hinzugefügt.';
+        $this->dispatch('status-updated');
+
         $this->resetInputFields();
     }
 
-    public function edit($bezeichnung)
-    {
-        $sortiment = Sortiment::findOrFail($bezeichnung);
-
-        $this->bezeichnung = $sortiment->bezeichnung;
-        $this->oldBezeichnung = $sortiment->bezeichnung;
-        $this->updateMode = true;
-
-    }
 
     public function update()
     {
-
         $this->validate([
             'bezeichnung' => 'required|string|max:20|unique:sortimente,bezeichnung,' . $this->oldBezeichnung . ',bezeichnung',
         ]);
@@ -69,13 +87,12 @@ class SortimentComponent extends Component
             $sortiment = Sortiment::find($this->oldBezeichnung);
             $sortiment->update([
                 'bezeichnung' => $this->bezeichnung,
+                'anzeigename' => $this->anzeigename,
             ]);
 
-
-
-
-            // session()->flash('message', 'Sortiment erfolgreich aktualisiert.');
             $this->statusMessage = 'Sortiment erfolgreich aktualisiert.';
+            $this->dispatch('status-updated');
+
 
             $this->resetInputFields();
             $this->updateMode = false;
@@ -88,8 +105,10 @@ class SortimentComponent extends Component
     {
         if ($bezeichnung) {
             Sortiment::where('bezeichnung', $bezeichnung)->delete();
-            //session()->flash('message', 'Sortiment erfolgreich gelöscht.');
+
             $this->statusMessage = 'Sortiment erfolgreich gelöscht.';
+            $this->dispatch('status-updated');
+
         }
     }
 
@@ -97,5 +116,6 @@ class SortimentComponent extends Component
         $this->resetInputFields();
         $this->updateMode = false;
         $this->statusMessage = 'Aktion abgebrochen.';
+        $this->dispatch('status-updated');
     }
 }
