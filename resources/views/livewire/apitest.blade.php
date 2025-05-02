@@ -298,7 +298,7 @@
 
 
 
-                    <div class="mb-2 flex flex-row items-center w-[97%] mb-2">
+                    <div class="mb-2 flex flex-row items-center w-[97%] ">
                         <div class="mr-2 w-48">Data:</div>
                         <div class="w-[50%] mr-4">
 
@@ -309,7 +309,7 @@
                             Löschen
                         </button>
                     </div>
-                    <div class="mb-2 flex flex-row items-center w-[97%] mb-2">
+                    <div class="mb-2 flex flex-row items-center w-[97%] ">
                         <div class="mr-2 w-48">Status:</div>
                         <div class="w-[50%] mr-4">
                             <input type="text" id="apiSampleStatus" wire:model="apiSampleStatus" class="border rounded p-1 w-full">

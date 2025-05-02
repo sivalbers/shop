@@ -18,6 +18,7 @@ use App\Livewire\AnschriftComponent;
 use App\Livewire\BestellungComponent;
 use App\Livewire\TestMainComponent;
 use App\Livewire\NachrichtComponent;
+use App\Livewire\NachrichtenListComponent;
 use App\Livewire\ApiLogComponent;
 use App\Livewire\ImportComponent;
 use App\Livewire\BelegarchivComponent;
@@ -29,6 +30,8 @@ use App\Http\Controllers\Punchout;
 
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\ApiLogMiddleware;
+
+use App\Livewire\ArtikelSuche;
 
 use App\Mail\ExampleMail;
 
@@ -66,6 +69,10 @@ Route::get('/nachrichten', NachrichtComponent::class)
     ->middleware(['auth'])
     ->name('nachrichten');
 
+Route::get('/news', NachrichtenListComponent::class)
+    ->middleware(['auth'])
+    ->name('news');
+
 
 Route::middleware([AdminMiddleware::class])->group(function(){
     Route::get('/artikels', ArtikelComponent::class)->middleware('auth')->name('artikel');
@@ -95,7 +102,7 @@ Route::middleware([AdminMiddleware::class])->group(function(){
 
 });
 
-
+Route::get('/suchtest', ArtikelSuche::class);
 Route::post('/punchout', [Punchout::class, 'handlePunchOut']);
 
 Route::view('/datenschutz', 'datenschutz')->name('datenschutz');

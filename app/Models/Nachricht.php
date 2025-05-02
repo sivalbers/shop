@@ -109,8 +109,11 @@ class Nachricht extends Model
 
 //        dd($this->bis);
         return ($this->bis < now());
+    }
 
-
+    public function userStatus()
+    {
+        return $this->hasMany(UserNachrichtenStatus::class);
     }
 
 }

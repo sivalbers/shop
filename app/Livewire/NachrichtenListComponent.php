@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
 
-class StartseiteNachrichtenComponent extends Component
+class NachrichtenListComponent extends Component
 {
     public $nachrichten;
 
@@ -42,7 +42,7 @@ class StartseiteNachrichtenComponent extends Component
     }
 
     public function render(){
-        return view('livewire.startseitenachrichten');
+        return view('livewire.nachrichten-list-component');
     }
 
 

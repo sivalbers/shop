@@ -34,7 +34,7 @@
                         {{ $slot }}
                     </div>
                     <div class="text-xl text-white">
-                        {{ $hinweis ?? 'Ihre Bestellbestätigung erhalten Sie in Kürze per Mail.' }}
+                        {{ $hinweis ?? 'Ihre Bestellbestätigung erhalten Sie in Kürze per E-Mail.' }}
                     </div>
                 </div>
                 <div class="w-1/6 text-right">

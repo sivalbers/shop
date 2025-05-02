@@ -16,6 +16,7 @@ use Livewire\Attributes\On;
 use App\Jobs\SendBestellungToErp;
 use App\Mail\BestellbestaetigungMail;
 
+
 use App\Repositories\BestellungRepository;
 
 class WarenkorbComponent extends Component
@@ -53,7 +54,9 @@ class WarenkorbComponent extends Component
         $this->kommission = $this->bestellung->kommission;
         $this->bemerkung = $this->bestellung->bemerkung;
         // $this->lieferdatum = $this->bestellung->lieferdatum ? $this->bestellung->lieferdatum->format('Y-m-d') : null;
-        $this->lieferdatum = optional($this->bestellung->lieferdatum)->format('Y-m-d');
+        if (empty($this->lieferdatum) | $this->lieferdatum == ''){
+            $this->lieferdatum = Bestellung::calcLFDate()->format('Y-m-d');
+        }
     }
 
 
@@ -145,7 +148,7 @@ class WarenkorbComponent extends Component
         $this->bestellung->kundenbestellnr = '';
         $this->bestellung->kommission = '';
         $this->bestellung->bemerkung = '';
-        $this->bestellung->lieferdatum = null;
+        $this->bestellung->lieferdatum = Bestellung::calcLFDate();
         $this->bestellung->save();
         $this->setData();
         $this->dispatch('updateNavigation');

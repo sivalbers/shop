@@ -1,6 +1,7 @@
 
 <div>
-    <div class="flex flex-col w-full overflow-y-hidden" id="top" x-data="{}"
+    <div class="flex flex-col w-full overflow-y-hidden" id="top"
+    x-data="{}"
     x-on:click.self="zeigeFavoritPosForm = false;"
     x-on:keydown.escape.window="zeigeFavoritPosForm = false;">
    <div class="text-sm text-sky-600">

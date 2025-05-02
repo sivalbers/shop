@@ -8,6 +8,8 @@ use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+
+
 use Livewire\Attributes\On;
 
 
@@ -53,9 +55,9 @@ class ShopComponent extends Component
 
     public $quantities = null; // Array zum Speichern der Mengen für jeden Artikel
 
-    public $activeTab = 'tab1';
+    public $activeTab = 'warengruppen';
 
-    protected $queryString = ['activeTab' => ['except' => 'tab1']];
+    protected $queryString = ['activeTab' => ['except' => 'warengruppen']];
 
     public $suchArtikelnr = '';
     public $suchBezeichnung = '';
@@ -68,8 +70,12 @@ class ShopComponent extends Component
 
     public $favoritenIDs = [];
 
+    public $pendingUpdateSuche;
+
     public function mount()
     {
+
+
 
         $this->showFavoritForm = false;
         $this->zeigeFavoritPosForm = false;
@@ -89,18 +95,35 @@ class ShopComponent extends Component
         }
 
         $this->updateQuery();
+
+        if (request()->has('artikel')) {
+            Log::info(['showArtikel' => request()->get('artikel')]);
+            $this->suchBezeichnung = request()->get('suchBezeichnung');
+            $this->pendingUpdateSuche = true; // Setze eine Flag
+            Log::info('ShopComponent.Mount()');
+            $this->dispatch('showArtikel', artikelnr: request()->get('artikel'));
+        }
+        request()->get('artikel');
     }
 
     public function render()
     {
 
-        if (($this->activeTab === 'tab1' && empty($this->warengruppen)) ||
-            ($this->activeTab === 'tab3' && empty($this->favoriten))
+        if (($this->activeTab === 'warengruppen' && empty($this->warengruppen)) ||
+            ($this->activeTab === 'favoriten' && empty($this->favoriten))
            ){
             $this->updateQuery();
         }
 
         $startTime = microtime(true);
+
+        if ($this->pendingUpdateSuche) {
+            Log::info('ShopComponent.render()');
+            $this->updateSuche();
+            $this->pendingUpdateSuche = false; // Flag zurücksetzen
+        }
+
+
         $view = view('livewire.shop.shopmain');
         $endTime = microtime(true);
 
@@ -114,7 +137,7 @@ class ShopComponent extends Component
     public function updateQuery(){
 
 
-        if ($this->activeTab === 'tab1') {
+        if ($this->activeTab === 'warengruppen') {
             $sortimentArray = explode ( ' ', $this->sortiment);
 
             if (is_null($this->quantities)){
@@ -157,8 +180,13 @@ class ShopComponent extends Component
             }
 
         }
-        elseif ($this->activeTab === 'tab3') {
+        elseif ($this->activeTab === 'favoriten') {
             $this->favoriten = Favorit::cFavoriten();
+            $fId = configGet('aktiveFavorites');
+            $this->dispatch('showFavoritMitID', [ 'favoritId' => $fId] );
+        }
+        elseif ($this->activeTab === 'suche') {
+            $this->updateSuche();
         }
     }
 
@@ -168,10 +196,7 @@ class ShopComponent extends Component
 
     public function updateSuche(){
 
-        if ($this->suchArtikelnr || $this->suchBezeichnung){
-
-            $this->dispatch('showArtikelsuche', $this->suchArtikelnr, $this->suchBezeichnung);
-        }
+        $this->dispatch('showArtikelsuche', $this->suchArtikelnr, $this->suchBezeichnung);
 
     }
 
@@ -207,18 +232,22 @@ class ShopComponent extends Component
 
     public function changeTab($tab){
 
+
+
         $oldTab = $this->activeTab;
 
         $this->activeTab = $tab;
         $this->session_put('changeTab', 'activeTab', $tab);
 
-        if ($tab === 'tab1'){
+        if ($tab === 'warengruppen'){
             $this->aktiveWarengruppe = configGet('aktiveWarengruppe');
         }
 
-        if ($tab === 'tab3'){
+        if ($tab === 'favoriten'){
             $this->aktiveFavorites = configGet('aktiveFavorites');
         }
+
+        $this->dispatch('clearArtikelliste', $this->activeTab);
 
         if ($oldTab !== $this->activeTab){
             $this->updateQuery();
@@ -357,16 +386,16 @@ class ShopComponent extends Component
 
 
         $bestellung = Bestellung::getBasket();
-        $this->activeTab = 'tab1';
+        $this->activeTab = 'warengruppen';
 
         if ($bestellung){
 
             $this->session_put('shopComponent_NeueBestellung', 'bestellnr', $bestellung->nr );
-            $this->session_put('shopComponent_NeueBestellung', 'activeTab', 'tab1' );
+            $this->session_put('shopComponent_NeueBestellung', 'activeTab', 'warengruppen' );
         }
 
         $this->dispatch('updateNavigation');
-        $this->dispatch('zeigeMessage', titel: "Bestellung wurde versendet!", hinweis: "Ihre Bestellbestätigung erhalten Sie in kürze per Mail.");
+        $this->dispatch('zeigeMessage', titel: "Bestellung wurde versendet!", hinweis: "Ihre Bestellbestätigung erhalten Sie in kürze per E-Mail.");
     }
 
     public function session_put($func, $name, $value){

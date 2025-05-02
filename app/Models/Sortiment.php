@@ -15,7 +15,12 @@ class Sortiment extends Model
 
     protected $fillable = [
         'bezeichnung',
-        'anzeigename'
+        'anzeigename',
+        'abholung'
+    ];
+
+    protected $casts = [
+        'abholung' => 'boolean',
     ];
 
     public static function getAnzeigeName($sortiment){

@@ -11,8 +11,10 @@ class SortimentComponent extends Component
     public $bezeichnung = '';
     public $updateMode = false;
     public $oldBezeichnung;
-    public $anzeigename;
+    public $edAnzeigename;
+    public $edAbholung;
     public $sortimente;
+
     public $statusMessage;
     public $showEditWindow;
 
@@ -36,7 +38,8 @@ class SortimentComponent extends Component
     public function resetInputFields()
     {
         $this->bezeichnung = '';
-        $this->anzeigename = '';
+        $this->edAnzeigename = '';
+        $this->edAbholung = true ;
         $this->showEditWindow = false;
     }
 
@@ -47,7 +50,8 @@ class SortimentComponent extends Component
 
         $this->bezeichnung = $sortiment->bezeichnung;
         $this->oldBezeichnung = $sortiment->bezeichnung;
-        $this->anzeigename = $sortiment->anzeigename;
+        $this->edAnzeigename = $sortiment->anzeigename;
+        $this->edAbholung = $sortiment->abholung;
         $this->updateMode = true;
         $this->showEditWindow = true;
 
@@ -66,7 +70,8 @@ class SortimentComponent extends Component
 
         Sortiment::create([
             'bezeichnung' => $this->bezeichnung,
-            'anzeigename' => $this->anzeigename,
+            'anzeigename' => $this->edAnzeigename,
+            'abholung' => $this->edAbholung,
         ]);
 
         // session()->flash('message', 'Sortiment erfolgreich hinzugefügt.');
@@ -87,7 +92,8 @@ class SortimentComponent extends Component
             $sortiment = Sortiment::find($this->oldBezeichnung);
             $sortiment->update([
                 'bezeichnung' => $this->bezeichnung,
-                'anzeigename' => $this->anzeigename,
+                'anzeigename' => $this->edAnzeigename,
+                'abholung' => $this->edAbholung,
             ]);
 
             $this->statusMessage = 'Sortiment erfolgreich aktualisiert.';

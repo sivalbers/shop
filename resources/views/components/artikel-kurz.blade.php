@@ -41,10 +41,10 @@
             <div class="flex flex-row items-center ml-auto">
                 <div class="flex-grow-0 w-auto">
                     <div class="basis-1 text-red-800 text-sm text-right">
-
                         {{ formatPreis( $pos['vkpreis']) }} € / {{ $pos['einheit'] }}
                     </div>
                 </div>
+
                 <div class="flex-grow-0 w-auto ml-2">
                     <div x-data="{ quantity: {{ $pos['menge'] }}, loop:0 }"
                         @basket-cleared.window="quantity = 0"
@@ -64,8 +64,13 @@
                         <!-- input type="hidden" name="artikelmenge[{{ $pos['artikelnr'] }}]" x-model="quantity" -->
                     </div>
                 </div>
+                <div class="flex-grow-0  px-1">
+                    <button type="submit" class="text-sky-600 pt-[4px] f" title="In den Warenkorb">
+                        <x-fluentui-shopping-bag-16-o class="h-6" />
+                    </button>
+                </div>
                 <div class="flex-grow-0 w-auto ml-2">
-                    
+
                     @if ($pos['bestand'] == 0)
                         <x-fluentui-vehicle-truck-profile-24-o class="h-7 text-red-500" />
                     @else

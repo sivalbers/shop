@@ -66,6 +66,7 @@ class ShopArtikellisteComponent extends Component
 
     public function mount()
     {
+        Log::info('ShopArtikellisteComponent.mount()');
         $this->listKurz =  Config::userString(self::CONFIG_LISTKURZ) === 'true';
         $this->myArtikels = collect();
 
@@ -78,16 +79,16 @@ class ShopArtikellisteComponent extends Component
     public function updateSelection(){
 
         $tab = session()->get('activeTab');
-        if ( $tab === 'tab1'){
+        if ( $tab === 'warengruppen'){
             $this->selectedTab = Tab::arWG;
         }
-        elseif ($tab === 'tab2'){
+        elseif ($tab === 'suche'){
             $this->selectedTab = Tab::arSuche;
         }
-        elseif ($tab === 'tab3'){
+        elseif ($tab === 'favoriten'){
             $this->selectedTab = Tab::arFavoriten;
         }
-        elseif ($tab === 'tab4'){
+        elseif ($tab === 'schnellerfassung'){
             $this->selectedTab = Tab::arSchnellerfassung;
         }
 
@@ -114,7 +115,7 @@ class ShopArtikellisteComponent extends Component
 
     public function render()
     {
-
+        Log::info('ShopArtikellisteComponent.render()');
         $artikels = $this->myArtikels;
 
         return view('livewire.shop.shopartikelliste', [ 'artikels' => $artikels ]);
@@ -132,6 +133,14 @@ class ShopArtikellisteComponent extends Component
             return false;
         }
     }
+
+    #[On('clearArtikelliste')]
+    public function clearArtikelliste($tab){
+        $this->aPositions = [];
+        $this->anzGefunden = 0 ;
+        $this->selectedTab = $tab;
+    }
+
 
     #[On('showArtikelWG')]
     public function selectWarengruppe($wgnr){
@@ -264,6 +273,16 @@ class ShopArtikellisteComponent extends Component
 
     #[On('showArtikelsuche')]
     public function showArtikelSuch($suchArtikelNr, $suchBezeichnung){
+
+
+        Log::info('showArtikelSuch angekommen');
+        if (empty($suchArtikelNr) && empty($suchBezeichnung)) {
+
+            $this->aPositions = [];
+            $this->anzGefunden = 0;
+            return;
+        }
+
 
         session()->put('suchArtikelNr', $suchArtikelNr);
         session()->put('suchBezeichnung', $suchBezeichnung);

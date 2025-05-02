@@ -24,22 +24,33 @@
                 </div>
 
                 <div class="flex flex-row w-full text-sky-600 font-bold border-b border-sky-600">
-                    <div class="w-1/3 px-2 ">
+                    <div class="w-1/4 px-2 ">
                         Bezeichnung
                     </div>
-                    <div class="w-1/3 px-2 ">
+                    <div class="w-1/4 px-2 ">
                         Anzeigename
                     </div>
-                    <div class="w-1/3 px-2 ">
+                    <div class="w-1/4 px-2 ">
+                        Abholung
+                    </div>
+                    <div class="w-1/4 px-2 ">
                         Aktion
                     </div>
                 </div>
 
                 @foreach ($sortimente as $sortiment)
                     <div class="flex flex-row items-center w-full hover:bg-ewe-ltgruen">
-                        <div class="w-1/3 px-2 py-1">{{ $sortiment->bezeichnung }}</div>
-                        <div class="w-1/3 px-2 py-1">{{ $sortiment->anzeigename }}</div>
-                        <div class="w-1/3 px-2 py-1  text-sm">
+                        <div class="w-1/4 px-2 py-1">{{ $sortiment->bezeichnung }}</div>
+                        <div class="w-1/4 px-2 py-1">{{ $sortiment->anzeigename }}</div>
+                        <div class="w-1/4 px-2 py-1">
+                            @if ($sortiment->abholung === true)
+
+                                <x-fluentui-checkbox-checked-16-o class="h-5" title="Wird abgeholt." />
+                            @else
+                                <x-fluentui-checkbox-unchecked-16-o class="h-5" title="Wird geliefert." />
+                            @endif
+                        </div>
+                        <div class="w-1/4 px-2 py-1  text-sm">
                             <button wire:click="edit('{{ $sortiment->bezeichnung }}')">Bearbeiten</button> |
                             <button wire:click="delete('{{ $sortiment->bezeichnung }}')">Löschen</button>
                         </div>

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
@@ -107,7 +108,8 @@ class Bestellung extends Model
                     'rechnungsadresse' => $ReAddr,
                     'lieferadresse' => $LfAddr,
                     'status_id' => 0,                  // Beispiel für einen Standardstatus (1 = 'offen' o.ä.)
-                    'gesamtbetrag' => 0.00,         // Standardwert für Gesamtbetrag (z.B. 0.00)
+                    'gesamtbetrag' => 0.00,         // Standardwert für Gesamtbetrag (z.B. 0.00)0
+                    'lieferdatum' => Bestellung::calcLFDatum(),
                 ]);
                 $result = $bestellung ;
             }
@@ -130,6 +132,10 @@ class Bestellung extends Model
     public function lieferDatumStr(){
         return $this->lieferdatum ? $this->lieferdatum->format('d.m.Y') : '';
 
+    }
+
+    public static function calcLFDate(){
+        return Carbon::now()->addDays(4);
     }
 
 

@@ -195,39 +195,45 @@ new class extends Component {
                     E-Mail-Adresse
                 </div>
                 <div class="w-1/12 text-center">
-                    Benutzer löschen
+                    @if ($rolle === 1)
+                        Benutzer löschen
+                    @endif
                 </div>
             </div>
-            @foreach ($users as $user)
+            @foreach ($users as $iUser)
                 <div class="flex flex-row items-center gap-4 hover:bg-ewe-ltgruen">
                     <div class="w-1/12">
-                        @if ($user->rolle === 1)
+                        @if ($iUser->rolle === 1)
                             <x-fluentui-key-16-o class="h-5 w-6" title="Hauptbenutzer" />
                         @else
                         @endif
                     </div>
                     <div class="w-5/12">
-                        {{ $user->user->name }} @if ($user->user->email === Auth::user()->email)
+                        {{ $iUser->user->name }} @if ($iUser->user->email === Auth::user()->email)
                             (angemeldet)
                         @endif
                     </div>
                     <div class="w-5/12">
-                        {{ $user->user->email }}
+                        {{ $iUser->user->email }}
                     </div>
                     <div class="w-1/12 text-center">
-                        @if ($user->user->email != Auth::user()->email)
-                            <button wire:click="btnDelete('{{ $user->user->email }}')"
-                                class=" border border-red-400 text-white rounded-md px-2 w-10"
-                                title="Nach Rückfrage wird der Zugang von '{{ $user->user->email }}' für diesen Debitor gelöscht.">
-                                <x-fluentui-shopping-bag-dismiss-20-o class="h-5 text-red-500" />
-                            </button>
+                        @if ($iUser->user->email != Auth::user()->email)
+                            @if ($rolle === 1)
+                                <button wire:click="btnDelete('{{ $user->user->email }}')"
+                                    class=" border border-red-400 text-white rounded-md px-2 w-10"
+                                    title="Nach Rückfrage wird der Zugang von '{{ $iUser->user->email }}' für diesen Debitor gelöscht.">
+                                    <x-fluentui-shopping-bag-dismiss-20-o class="h-5 text-red-500" />
+                                </button>
+                            @endif
                         @endif
                     </div>
                 </div>
             @endforeach
+            @if ($rolle === 1)
             <div class="flex flex-row border-t items-end gap-4 justify-end">
                 <button wire:click="neuerBenutzer" class="mt-2 border border-sky-600 bg-sky-600 text-white rounded shadow-md px-4">Benutzer erstellen</button>
             </div>
+            @endif
         </div>
 
 

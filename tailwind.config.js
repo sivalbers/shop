@@ -10,9 +10,6 @@ export default {
         './resources/views/emails/**/*.blade.php',
         './app/Helpers/*.php'
     ],
-    safelist: [
-        'text-red-500', 'bg-blue-100', 'p-4', 'font-bold' // Übernahme der Klassen für E-Mails
-    ],
     theme: {
         extend: {
             fontFamily: {
@@ -28,5 +25,24 @@ export default {
             },
         },
     },
+
+    safelist: [
+        'text-red-500',
+        'bg-blue-100',
+        'p-4',
+        'font-bold',
+        'hover:bg-pink-100',
+        'hover:bg-green-500',
+        'hover:bg-yellow-100',
+        'hover:bg-blue-500',
+        'hover:bg-orange-500',
+        'hover:bg-gray-100',
+        'hover:bg-gray-500',
+        'bg-ewe-gruen',
+        'bg-blue-500',
+        'bg-pink-500',
+        'bg-orange-500',
+        'bg-green-500',
+    ],
     plugins: [forms],
 };

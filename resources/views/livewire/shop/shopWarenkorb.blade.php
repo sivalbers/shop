@@ -89,9 +89,9 @@
 
 
             </div>
-            <div class="flex flex-row items-center relative">
+            <div class="flex flex-row justify-end">
                 <div>
-                    <button type="submit" class="mt-2 px-4 py-2 bg-sky-600 text-white rounded-md shadow-md shadow-gray-400">
+                    <button type="submit" class="flex mt-2 px-4 py-2 bg-sky-600 text-white rounded-md shadow-md shadow-gray-400 justify-right">
                         Speichern
                     </button>
                 </div>
@@ -108,16 +108,21 @@
         <div class="p-4"> Mit klick auf "Leeren ..." werden nach Rückfrage alle Positionen und Kundenfelder der
             aktuellen Bestellung unwiederruflich gelöscht!</div>
 
-        <button x-show="showEmptyButton === false" type="button" @click="showEmptyButton = true";
-            class="mt-2 px-4 py-2 bg-red-600 text-white rounded-md w-auto flex flex-row items-center shadow-md shadow-gray-400"><x-fluentui-delete-28-o
-                class="h-6 pr-2" />Leeren ... </button>
+        <div class="flex justify-end">
+            <button x-show="showEmptyButton === false" type="button" @click="showEmptyButton = true";
+                class="flex flex-row mt-2 px-4 py-2 bg-red-600 text-white rounded-md w-auto  items-center shadow-md shadow-gray-400">
+                    <x-fluentui-delete-28-o class="h-6 pr-2" />
+                    Leeren ...
+            </button>
 
-        <div x-show="showEmptyButton" x-cloak>
-            <button @click="showEmptyButton = false";
-                class="mt-2 px-4 py-2 text-black bg-[#CDD503] rounded-md shadow-md shadow-gray-400">Abbrechen?</button>
-            <button wire:click="doEmpty; showEmptyButton = false"
-                class="mt-2 px-4 py-2 bg-red-600 text-white rounded-md shadow-md shadow-gray-400">Wirklich
-                leeren?</button>
+            <div x-show="showEmptyButton" x-cloak>
+                <button wire:click="doEmpty; showEmptyButton = false"
+                    class="mt-2 px-4 py-2 bg-red-600 text-white rounded-md shadow-md shadow-gray-400">Wirklich
+                    leeren?</button>
+                <button @click="showEmptyButton = false";
+                    class="mt-2 px-4 py-2 text-black bg-[#CDD503] rounded-md shadow-md shadow-gray-400">Abbrechen?</button>
+
+            </div>
         </div>
     </div>
 

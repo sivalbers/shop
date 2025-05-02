@@ -11,13 +11,15 @@
         x-init="$el.addEventListener('keydown', handleKeydown)"
         >
         <div class="text-sm">
-            Sie haben hier die Möglichkeit Ihre Aritkel mit Menge direkt über die Zwischenablage einzufügen.
+            Sie haben hier die Möglichkeit Ihre Artikel mit Menge direkt über die Zwischenablage einzufügen.
             <br>
             Die Spalten müssen durch Tabulatoren, Semikolon oder Komma getrennt werden.
 
         </div>
         <textarea wire:model="inText" class="w-full h-32 border rounded-md p-2"></textarea>
+        <div class="flex justify-end">
         <button type="submit" x-ref="submitButton" class="mt-2 px-4 py-2 bg-sky-600 text-white rounded-md">Verarbeiten</button>
+        </div>
 
     </div>
 

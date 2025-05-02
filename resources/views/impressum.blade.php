@@ -40,29 +40,10 @@
                 <p class="mt-2">
                     Die Inhalte dieser Website wurden mit größter Sorgfalt erstellt. Dennoch übernehmen wir keine Gewähr für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte. Die bereitgestellten Informationen dienen lediglich zur allgemeinen Information und stellen keine verbindliche Beratung dar.
                 </p>
-
-
-
-                <!-- Nö, kein Google Analytics
-                <h3 class="text-lg font-semibold mt-6">Google Analytics</h3>
-                <p class="mt-2">
-                    Diese Website nutzt Google Analytics, einen Webanalysedienst von Google Inc. („Google“). Google Analytics verwendet sogenannte Cookies, die auf Ihrem Gerät gespeichert werden und eine Analyse der Nutzung der Website ermöglichen. Die durch Cookies erzeugten Informationen werden in der Regel an Server von Google in den USA übertragen und dort gespeichert.
-                </p>
-                <p class="mt-2">
-                    Sie können die Speicherung von Cookies durch eine entsprechende Einstellung Ihres Browsers verhindern oder das
-                    <a href="https://tools.google.com/dlpage/gaoptout?hl=de" class="text-blue-500 hover:underline">Google Opt-Out-Plugin</a> verwenden.
-                </p>
-
-                <h3 class="text-lg font-semibold mt-6">Weitere Informationen</h3>
-                <p class="mt-2">
-                    Weitere Details zu Datenschutz und Nutzungsbedingungen finden Sie auf
-                    <a href="https://www.google.de/intl/de/policies/" class="text-blue-500 hover:underline">Googles Datenschutzseite</a>.
-                </p>
-                -->
             </div>
 
             <div class="text-center mt-6">
-                <a href="/" class="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600 transition">
+                <a href="/" class="bg-sky-600 text-white px-6 py-2 rounded-md hover:font-bold transition">
                     Zurück zur Startseite
                 </a>
             </div>

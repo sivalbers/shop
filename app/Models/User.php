@@ -10,6 +10,7 @@ use App\Models\Debitor;
 use App\Models\UserDebitor;
 
 
+
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;

@@ -21,6 +21,30 @@ class SortimentHelper
         'wn' => 'bg-green-500',
     ];
 
+    protected static $textBgFarben = [
+        'ewe' => 'text-sky-600',
+        'oowv' => 'text-white',
+        'tk' => 'text-white',
+        'be' => 'text-white',
+        'wn' => 'text-white',
+    ];
+
+    protected static $gradientFarben = [
+        'ewe' => 'from-ewe-gruen/100 to-ewe-gruen/0',
+        'oowv' => 'from-blue-500/100 to-blue-500/0',
+        'tk' => 'from-pink-500/70 to-pink-500/0',
+        'be' => 'from-orange-500/100 to-orange-500/0',
+        'wn' => 'from-green-500/100 to-green-500/0',
+    ];
+
+    protected static $gradientFarbenAsc = [
+        'ewe' => 'from-ewe-gruen/0 to-ewe-gruen/70',
+        'oowv' => 'from-blue-500/0 to-blue-500/70',
+        'tk' => 'from-pink-500/0 to-pink-500/70',
+        'be' => 'from-orange-500/0 to-orange-500/70',
+        'wn' => 'from-green-500/0 to-green-500/70',
+    ];
+
 
     /**
      * Gibt die passenden Farbkategorien für ein Sortiment zurück
@@ -29,23 +53,69 @@ class SortimentHelper
      */
     public static function getColorClass(string $sortiment): string
     {
-        // Zerlege mögliche zusammengesetzte Werte ("EWE BE") in Einzelteile
         $teile = explode(' ', strtolower($sortiment));
 
-        // Ordne die Farben zu und verbinde sie mit Leerzeichen
-        $farben = array_map(fn($teil) => self::$farben[$teil] ?? 'text-gray-500', $teile);
+        foreach ($teile as $teil) {
+            if (isset(self::$farben[$teil])) {
+                return self::$farben[$teil];
+            }
+        }
 
-        return implode(' ', $farben);
+        return 'text-gray-500'; // Fallback
     }
 
     public static function getBGColorClass(string $sortiment): string
     {
+        $teile = explode(' ', strtolower($sortiment));
+
+        foreach ($teile as $teil) {
+            if (isset(self::$bgFarben[$teil])) {
+                return self::$bgFarben[$teil];
+            }
+        }
+
+        return 'bg-gray-500'; // Fallback
+    }
+
+    public static function getTextZuBGColorClass(string $sortiment): string
+    {
         // Zerlege mögliche zusammengesetzte Werte ("EWE BE") in Einzelteile
         $teile = explode(' ', strtolower($sortiment));
 
-        // Ordne die Farben zu und verbinde sie mit Leerzeichen
-        $farben = array_map(fn($teil) => self::$bgFarben[$teil] ?? 'bg-gray-500', $teile);
+        foreach ($teile as $teil) {
+            if (isset(self::$textBgFarben[$teil])) {
+                return self::$textBgFarben[$teil];
+            }
+        }
 
-        return implode(' ', $farben);
+        return 'bg-gray-500'; // Fallback
+    }
+
+    public static function getGradientBG(string $sortiment): string
+    {
+        $teile = explode(' ', strtolower($sortiment));
+
+        foreach ($teile as $teil) {
+            if (isset(self::$gradientFarben[$teil])) {
+                return self::$gradientFarben[$teil];
+            }
+        }
+
+        return 'from-gray-500/100 to-gray-500/0'; // Fallback
+
+    }
+
+    public static function getGradientBGAsc(string $sortiment): string
+    {
+        $teile = explode(' ', strtolower($sortiment));
+
+        foreach ($teile as $teil) {
+            if (isset(self::$gradientFarbenAsc[$teil])) {
+                return self::$gradientFarbenAsc[$teil];
+            }
+        }
+
+        return 'from-gray-500/100 to-gray-500/0'; // Fallback
+
     }
 }

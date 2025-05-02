@@ -3,10 +3,12 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use App\Models\Nachricht;
+use App\Models\UserNachrichtenStatus;
 
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+
 
 class NachrichtComponent extends Component
 {
@@ -90,9 +92,11 @@ class NachrichtComponent extends Component
 
         //dd($validatedData);
         // Erstellen oder Aktualisieren der Nachricht
-        Nachricht::updateOrCreate(['id' => $this->nachrichtId], $validatedData);
+        $nachricht = Nachricht::updateOrCreate(['id' => $this->nachrichtId], $validatedData);
 
         $this->loadData();
+
+        UserNachrichtenStatus::createNachricht($nachricht);
 
         // Felder zurücksetzen
         $this->resetInputFields();

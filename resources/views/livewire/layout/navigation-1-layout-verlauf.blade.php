@@ -1,66 +1,68 @@
 <nav x-data="{ open: false }" class="bg-white ">
     <!-- Primary Navigation Menu -->
 
-    @livewire('UserNachrichten')
 
 
+    <span class="hidden hover:bg-ewe-gruen hover:bg-green-500 hover:bg-pink-100 hover:bg-pink-500 hover:bg-blue-500 hover:bg-orange-500 hover:bg-gray-100 hover:bg-yellow-100"></span>
+    <div class="">
     <div class="flex flex-row w-full ">
-
         <div class="flex w-full h-24  ">
-            <div class="flex h-28"> <!-- Anzahl und preis -->
-                <div class="flex flex-col">
-                        <div class="h-12 w-8"></div>
-                        <div class="h-12 w-8 bg-ewe-gruen"> </div>
-                </div>
-            </div>
+            <div class="flex-grow justify-between"><!-- zeile oben logo - suche - zeugnisarchiv -->
+                <div class="flex items-center w-full">
+                    <div class="flex flex-col w-full">
+                        <div class=" h-12">
+                            <div class="flex flex-row items-center justify-between">
 
-            <div class="flex-grow justify-between " ><!-- zeile oben logo - suche - zeugnisarchiv -->
+                                <div class="flex shrink sm:min-w-40 min-w-28"> <!-- SM Logo min -->
+                                    <a href="{{ route('startseite') }}">
+                                        <x-ewe-logo class="h-14 " />
+                                    </a>
+                                </div>
 
-                <div class="flex flex-col w-full">
-                    <div class=" h-12 w-full">
-                        <div class="flex flex-row">
-                            <div class="flex flex-none sm:min-w-40 min-w-28 border-blue-500"> <!-- SM Logo min -->
-                                <a href="{{ route('startseite') }}">
-                                    <x-ewe-logo class="h-14 " />
-                                </a>
-                            </div>
+                                <div class="flex flex-row w-56">
+                                    <livewire:artikel-suche :key="'suchtest'" />
+                                </div>
 
-                            <div class="flex flex-row w-full  border-pink-500">
-                                <livewire:artikel-suche :key="'suchtest'" />
+                                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex text-xs">
+                                    <x-nav-link
+                                        class="text-xs"
+                                        href="https://zeugnisse.netzmaterialonline.de"
+                                        target="_blank"
+                                        rel="noopener"
+                                        :compact="true">
+                                        <x-fluentui-link-16-o class="w-6 h-6 mr-1" />
+                                        {{ __('Zeugnisarchiv') }}
+                                    </x-nav-link>
+                                </div>
+
                             </div>
                         </div>
-                    </div>
+                        <div class="h-12 py-4 space-x-8 flex text-white justify-end ">
 
-                    <div class="flex flex-row bg-ewe-gruen text-gray-500">
-                        <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex text-xs">
-                            <x-nav-link
-                                class="text-xs"
-                                href="https://zeugnisse.netzmaterialonline.de"
-                                target="_blank"
-                                rel="noopener"
-                                :compact="true">
-                                <x-fluentui-link-16-o class="w-6 h-6 mr-1" />
-                                {{ __('Zeugnisarchiv') }}
-                            </x-nav-link>
-                        </div>
-
-                        <div class=" h-12 space-x-8 flex justify-end w-full text-gray-600">
-
-
+                            <div class="space-x-8 flex">
                                 <x-nav-link
-
                                     :href="route('shop')"
-                                    :active="request()->routeIs('shop') | request()->routeIs('startseite')"
-                                    wire:navigate
-                                    rel="noopener"
-                                    :compact="true">
+                                    :active="request()->routeIs('shop')"
+                                    wire:navigate>
                                     <x-fluentui-building-shop-16-o class="w-5 h-5 mr-1" />
                                     {{ __('Shop') }}
                                 </x-nav-link>
+                            </div>
 
 
+                            <div class="space-x-8 flex">
+                                <x-nav-link :href="route('news')" :active="request()->routeIs('news')" wire:navigate>
+
+                                    <x-fluentui-news-20-o class="w-6 h-6 mr-1" />
+                                    <div class="font-bold flex flex-row items-center">
+                                        {{ __('Nachrichten') }} (3)<!-- /*  ###########################  */ -->
+                                    </div>
+
+                                </x-nav-link>
+                            </div>
 
 
+                            <div class="space-x-8 flex">
                                 <x-nav-link :href="route('bestellungen')" :active="request()->routeIs('bestellungen')" wire:navigate>
 
                                     <x-fluentui-text-bullet-list-square-clock-20-o class="w-6 h-6 mr-1" />
@@ -68,30 +70,31 @@
                                     {{ __('Bestellungen') }} <!-- /*  ###########################  */ -->
 
                                 </x-nav-link>
-
+                            </div>
 
                         </div>
+
+                        <!-- include('livewire.layout.navigation-admin') -->
+
                     </div>
-                    <!-- include('livewire.layout.navigation-admin') -->
-
                 </div>
-
             </div>
 
-            <div class="flex h-28  pb-4"> <!-- Nachrichten -->
+
+            <div class="flex h-28 mx-8 px-4 pb-4"> <!-- Anzahl und preis -->
                 <div class="flex flex-row justify-between w-full">
-                    <div class="inline-flex flex-col sm:items-center ">
-                        <x-nav-link :href="route('news')" :active="request()->routeIs('news')" wire:navigate class=" h-12 px-4 pt-2">
-                            <x-fluentui-news-20-o class="w-8 h-8  text-gray-600" />
-                            <div class="text-2xl text-sky-600">{{ $anzNachrichten > 0 ? $anzNachrichten : '' }}</div>
+                    <div class="inline-flex flex-row sm:items-center">
+                        <x-nav-link :href="route('shop', ['activeTab' => 'warenkorb'])" wire:navigate class=" h-12">
+                            <x-fluentui-shopping-bag-20-o class="w-8 h-8" />
+                            <div class="text-5xl text-sky-600">{{ $bestellung->anzpositionen }}</div>
                         </x-nav-link>
                         <!-- Preis-Anzeige -->
-                        <div class="h-12 w-full bg-ewe-gruen">
+                        <div class="h-12 w-full">
                             <div class="text-xs
-                                text-sky-600
-                                 w-full text-right  px-4">
+                                {{ \App\Helpers\SortimentHelper::getTextZuBGColorClass($sortiment) }}
+                                {{ \App\Helpers\SortimentHelper::getBGColorClass($sortiment) }} w-full text-right pr-1">
 
-
+                                {{ formatGPreis($bestellung->gesamtbetrag) }} €
                             </div>
                         </div>
 
@@ -99,52 +102,22 @@
                 </div>
             </div>
 
-            <div class="flex h-28  pb-4"> <!-- Anzahl und preis -->
-                <div class="flex flex-row justify-between w-full">
-                    <div class="inline-flex flex-col sm:items-center ">
-                        <x-nav-link :href="route('shop', ['activeTab' => 'warenkorb'])" :active="request('activeTab') === 'warenkorb'" wire:navigate class=" h-12 px-4">
-                            <x-fluentui-shopping-bag-20-o class="w-8 h-8 text-gray-600" />
-                            <div class="text-5xl text-sky-600">{{ !empty($bestellung) ? $bestellung->anzpositionen : '' }}</div>
-                        </x-nav-link>
-                        <!-- Preis-Anzeige -->
-                        <div class="h-12 w-full bg-ewe-gruen">
-                            <div class="text-xs
-                                text-sky-600
-                                 w-full text-right  px-4">
-
-                                {{ !empty($bestellung) ? formatGPreis($bestellung->gesamtbetrag) : '' }} €
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
 
 
             <div class="flex flex-col h-28 ">
                 <div class="h-12 flex  w-full bg-opacity-50 "> <!-- Zeile mit Name -->
-                    @if ( !empty(Auth::user()) && auth()->user()->isAdmin())
+                    @if (auth()->user()->isAdmin())
                         <x-dropdown align="right">
                             <x-slot name="trigger">
                                 <button
                                     class="flex flex-row p-2 text-sm text-gray-500
                                         focus:outline-none transition ease-in-out duration-150 ">
-                                    <div class="flex flex-row w-full text-left items-center">
-                                        <div>
-                                            <x-fluentui-person-16-o class="w-8 h-8" />
-                                        </div>
-                                        <div class="text-sky-600">
-                                            {{ Auth::user()->name }}
-                                        </div>
-
-                                        @if (auth()->user()->isAdmin())
-                                        <div>
-                                            <x-dropdown-svg />
-                                        </div>
-                                        @endif
-
+                                    <div class="w-full text-left ">
+                                        Hallo {{ Auth::user()->name }}
                                     </div>
-
+                                    @if (auth()->user()->isAdmin())
+                                    <x-dropdown-svg />
+                                    @endif
                                 </button>
                             </x-slot>
 
@@ -176,14 +149,8 @@
 
                         </x-dropdown>
                     @else
-                    <div class="flex flex-row p-2 text-sm  w-full text-left items-center">
-                        <div>
-                            <x-fluentui-person-16-o class="w-8 h-8 text-gray-600" />
-                        </div>
-                        <div class="text-sky-600">
-                            {{ !empty(Auth::user()) ? Auth::user()->name : '' }}
-                        </div>
-
+                    <div class="flex flex-row p-2 text-sm text-gray-500 w-full text-left ">
+                        Hallo {{ Auth::user()->name }}
                     </div>
 
                     @endif
@@ -192,13 +159,15 @@
                 <div class="h-12 w-full">
                     <x-dropdown align="right">
                         <x-slot name="trigger">
-                            <button class="inline-flex items-center pl-2 pt-2 text-sm focus:outline-none transition ease-in-out duration-150 w-full
-                                bg-ewe-gruen">
-                                <div class=" text-start text-gray-600">
+                            <button class="inline-flex items-center pl-2 pt-2 text-sm focus:outline-none transition ease-in-out duration-150 w-full">
+                                <div class="text-gray-500 text-start">
 
                                     <div>{{ $debitornr }} - {{ $firma }}</div>
-                                    <div class="flex flex-row items-center text-sm ">
-                                        <div class="">- {{ $sortimentName }}</div>
+                                    <div class="flex flex-row items-center mb-1 text-sm ">
+                                        <div class="{{ \App\Helpers\SortimentHelper::getColorClass($sortiment) }} pr-1">
+                                            <x-fluentui-checkbox-indeterminate-16-o class="h-5" />
+                                        </div>
+                                        <div class="">{{ $sortimentName }}</div>
                                     </div>
                                 </div>
 
@@ -209,23 +178,29 @@
                         </x-slot>
 
                         <x-slot name="content">
-                                @if (!empty($kunden) && count($kunden) > 1)
-                                <div class="text-xl -mt-1 rounded-t-md pl-2 h-11 pt-2
-                                    text-sky-600
-                                    bg-ewe-gruen">
+
+                                    <div class="text-xl -mt-2 rounded-t-md pl-2 h-11 pt-2
+                                    {{ \App\Helpers\SortimentHelper::getTextZuBGColorClass($sortiment) }}
+                                    {{ \App\Helpers\SortimentHelper::getBGColorClass($sortiment) }}">
                                     Mandantenauswahl:
                                 </div>
                                 <x-dropdown-hr />
+                                @php
+                                    $hover = 'hover:' . \App\Helpers\SortimentHelper::getBGColorClass($sortiment);
+                                @endphp
+                                {{-- Tailwind-Klassen für den Purge-Prozess sichtbar machen --}}
+
+
 
                                 @foreach ($kunden as $kunde)
 
                                     <x-dropdown-link wire:click="changeDebitor({{ $kunde->nr }})" href="#"
-
+                                        :hover-class="$hover"
                                         >
                                         <div class="inline-flex flex-col items-start px-2 py-1 whitespace-nowrap">
                                             <div class="flex flex-row items-center space-x-2">
                                                 @if ($kunde->nr === $this->debitornr)
-                                                    <div class="text-ewe-gruen">
+                                                    <div class="{{ \App\Helpers\SortimentHelper::getColorClass($sortiment) }}">
                                                         <x-fluentui-checkbox-checked-24 class='h-5' />
                                                     </div>
                                                 @else
@@ -238,11 +213,11 @@
                                                     {{ $kunde->nr }} {{ $kunde->name }}
                                                 </div>
                                             </div>
-                                            <div class="flex flex-row items-center mt-1 text-sm ml-6 ">
+                                            <div class="flex flex-row items-center mt-1 text-sm ml-6">
                                                 <div class="{{ \App\Helpers\SortimentHelper::getColorClass($kunde->sortiment) }} pr-1">
                                                     <x-fluentui-checkbox-indeterminate-16-o class="h-5" />
                                                 </div>
-                                                <div class="">- {{ $kunde->sortimentName() }}</div>
+                                                <div class="">{{ $kunde->sortimentName() }}</div>
                                             </div>
                                         </div>
 
@@ -250,17 +225,18 @@
                                     <x-dropdown-hr />
 
                                 @endforeach
-                                @endif
-                                <div class="text-xl mt-2 pl-2 h-8 pt-1 text-sky-600 bg-ewe-gruen px-8">
+                                <div class="text-xl mt-2 pl-2 h-8 pt-1
+                                {{ \App\Helpers\SortimentHelper::getTextZuBGColorClass($sortiment) }}
+                                {{ \App\Helpers\SortimentHelper::getBGColorClass($sortiment) }}">
                                 Benutzer:
                             </div>
-                                <x-dropdown-link :href="route('profile')" wire:navigate>
+                                <x-dropdown-link :href="route('profile')" wire:navigate :hover-class="$hover">
                                     {{ __('auth.Profile') }}
                                 </x-dropdown-link>
 
                                 <!-- Authentication -->
                                 <button wire:click="logout" class="w-full text-start">
-                                    <x-dropdown-link >
+                                    <x-dropdown-link :hover-class="$hover">
                                         {{ __('auth.Log Out') }}
                                     </x-dropdown-link>
                                 </button>
@@ -277,13 +253,6 @@
 
 
             </div>
-            <div class="flex h-28"> <!-- Anzahl und preis -->
-                <div class="flex flex-col">
-                        <div class="h-12 w-8"></div>
-                        <div class="h-12 w-8 bg-ewe-gruen"> </div>
-                </div>
-            </div>
-
         </div>
 
         <!-- Hamburger -->
@@ -299,8 +268,10 @@
             </button>
         </div>
     </div>
-
-
+    <div class="h-2 mt-0.5 w-full bg-gradient-to-t {{ \App\Helpers\SortimentHelper::getGradientBG($sortiment) }}" >
+        &nbsp;
+    </div>
+    </div>
 
 
     @include('livewire.layout.navigation-response')

@@ -7,7 +7,18 @@
         showFavoritForm: @entangle('showFavoritForm'),
         zeigeFavoritPosForm: @entangle('zeigeFavoritPosForm'),
         zeigeMessage: @entangle('zeigeMessage'),
+        pending: @js($pendingUpdateSuche)
     }"
+
+    
+    x-init="
+        document.addEventListener('livewire:load', () => {
+            if (pending) {
+                console.log('Pending-Suche erkannt → dispatching updateSuche');
+                @this.dispatch('updateSuche')
+            }
+        });
+    "
         x-on:click.self="showForm = false; showFavoritForm = false; zeigeFavoritPosForm = false; "
         x-on:keydown.escape.window="showForm = false; showFavoritForm = false; zeigeFavoritPosForm = false;">
 
@@ -24,24 +35,24 @@
                         -->
 
                         <div class="flex flex-row mr-4 mb-2">
-                            <button wire:click="changeTab('tab1')"
-                                class="@if ($activeTab === 'tab1') tabNewActive @else tabNew @endif">
+                            <button wire:click="changeTab('warengruppen')"
+                                class="@if ($activeTab === 'warengruppen') tabNewActive @else tabNew @endif">
                                 Warengruppen
                             </button>
-                            <button wire:click="changeTab('tab2')"
-                                class="@if ($activeTab === 'tab2') tabNewActive @else tabNew @endif">
+                            <button wire:click="changeTab('suche')"
+                                class="@if ($activeTab === 'suche') tabNewActive @else tabNew @endif">
                                 Suche
                             </button>
-                            <button wire:click="changeTab('tab3')"
-                                class="@if ($activeTab === 'tab3') tabNewActive @else tabNew @endif">
+                            <button wire:click="changeTab('favoriten')"
+                                class="@if ($activeTab === 'favoriten') tabNewActive @else tabNew @endif">
                                 Favoriten
                             </button>
-                            <button wire:click="changeTab('tab4')"
-                                class="@if ($activeTab === 'tab4') tabNewActive @else tabNew @endif">
+                            <button wire:click="changeTab('schnellerfassung')"
+                                class="@if ($activeTab === 'schnellerfassung') tabNewActive @else tabNew @endif">
                                 Schnellerfassung
                             </button>
-                            <button wire:click="changeTab('tab5')"
-                                class="@if ($activeTab === 'tab5') tabNewActive @else tabNew @endif">
+                            <button wire:click="changeTab('warenkorb')"
+                                class="@if ($activeTab === 'warenkorb') tabNewActive @else tabNew @endif">
                                 <div class="flex flex-row items-center ">
                                     <x-fluentui-shopping-bag-20-o class="h-6" />
 
@@ -78,7 +89,7 @@
                             ****************************************************************************
                             -->
 
-                            @if ($activeTab === 'tab1') <!-- Warengruppen -->
+                            @if ($activeTab === 'warengruppen') <!-- Warengruppen -->
                                 <div class="p-3 w-full md:w-1/3 flatwhite bg-red-400 h-[calc(100vh-245px)] overflow-hidden">
 
                                     <div class="text-base font-bold  text-sky-600 border-b border-sky-600 h-6 flex items-center">
@@ -131,8 +142,8 @@
                                 </div>
                             @endif
 
-                            @if ($activeTab === 'tab2') <!-- Suche -->
-                                <div class="p-2 mb-4 align-top flatwhite w-full md:w-1/3 h-[calc(100vh-245px)] overflow-hidden">
+                            @if ($activeTab === 'suche') <!-- Suche -->
+                                <div class="p-2 mb-4 align-top flatwhite w-full md:w-1/3 h-[calc(100vh-245px)] overflow-y-auto">
                                     <div class="text-base font-bold text-sky-600 border-b border-sky-600 mb-4">
                                         Suche
                                     </div>
@@ -204,7 +215,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="text-sm" x-show="expanded" x-cloak>
+                                        <div class="text-sm " x-show="expanded" x-cloak>
                                             <p class="py-2">Ein oder mehr Suchbegriffe (Zahlen oder Text) können auch
                                                 in Teilen eingegeben werden. Suchbegriffe werden duch Leerzeichen
                                                 getrennt. </p>
@@ -256,7 +267,7 @@
                                 </div>
                             @endif
 
-                            @if ($activeTab === 'tab3') <!-- Favoriten -->
+                            @if ($activeTab === 'favoriten') <!-- Favoriten -->
                                 <div class=" p-3 mb-4 align-top flatwhite w-full md:w-1/3 h-[calc(100vh-245px)] overflow-hidden">
                                     <div
                                         class="flex flex-row justify-between font-bold text-sky-600 border-b border-sky-600">
@@ -322,7 +333,7 @@
 
                             @endif
 
-                            @if ($activeTab === 'tab4') <!-- Schnellerfassung -->
+                            @if ($activeTab === 'schnellerfassung') <!-- Schnellerfassung -->
                                 <div class="p-3 mb-4 align-top  flatwhite w-full md:w-1/3 h-[calc(100vh-245px)] overflow-hidden">
                                     <div class="text-base font-bold text-sky-600 border-b border-sky-600">
                                         Schnellerfassung</div>
@@ -330,7 +341,7 @@
                                 </div>
                             @endif
 
-                            @if ($activeTab === 'tab5') <!-- Warenkorb -->
+                            @if ($activeTab === 'warenkorb') <!-- Warenkorb -->
                                 <div class="w-full md:w-1/3">
 
                                     @livewire('warenkorb-component', ['sortiment' => $sortiment])
@@ -341,7 +352,7 @@
 
                             <!-- SPALTE 2 -->
 
-                            @if ($activeTab != 'tab5') <!-- Alle Menüpunkte aus Warenkorb -->
+                            @if ($activeTab != 'warenkorb') <!-- Alle Menüpunkte aus Warenkorb -->
                             <div class="w-full md:w-2/3 md:ml-2 flatwhite h-[calc(100vh-245px)] overflow-hidden">
                                 <div class="flex flex-col " id="tab5">
                                     <!-- Enthält die Komponente -->

@@ -27,20 +27,36 @@
 
                     <div class="flex flex-row items-center w-full py-1">
                         <div class="pl-2 w-1/3">
-                            <label for="anzeigename">Anzeigename</label>
+                            <label for="edAnzeigename">Anzeigename</label>
                         </div>
 
                         <div class="w-2/3 pr-2">
-                            <input type="text" wire:model="anzeigename" id="anzeigename" class="w-full">
+                            <input type="text" wire:model="edAnzeigename" id="edAnzeigename" class="w-full">
                             <div>
-                                @error('anzeigename')
+                                @error('edAnzeigename')
                                     <span>{{ $message }}</span>
                                 @enderror
                             </div>
 
                         </div>
-
                     </div>
+
+                    <div class="flex flex-row items-center w-full py-1">
+                        <div class="pl-2 w-1/3">
+                            <label for="edAbholung">Abholung</label>
+                        </div>
+
+                        <div class="w-2/3 pr-2">
+                            <input type="checkbox" wire:model="edAbholung" id="edAbholung" class="">
+                            <div>
+                                @error('edAbholung')
+                                    <span>{{ $message }}</span>
+                                @enderror
+                            </div>
+
+                        </div>
+                    </div>
+
                     <div class="flex flex-row items-center w-full justify-between p-8 py-4">
                         <div class="">
                             <button class="border  rounded px-2 py-1 bg-ewe-ltgruen" type="button" wire:click="cancel">Abbrechen</button>

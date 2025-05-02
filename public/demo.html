@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Meine erste Webseite</title>
+  <style>
+	#flex-container{
+		border: 1px solid gray;
+		display: flex;
+	}
+	.punkt{
+		flex: auto;
+	}
+
+	#punkt1{
+		flex: 1;
+		background-color: LightGreen;
+	}
+	
+	#punkt2{
+		flex: 2;
+		background-color: rgb(250,160,0);
+	}
+	
+	.zeilenweise{
+		flex: col
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Mein Hobby: Gitarre spielen</h1>
+    <nav>
+      <a href="index.html">Start</a> |
+      <a href="kontakt.html">Kontakt</a>
+    </nav>
+  </header>
+  <main>
+    <section>
+      <h2>Meine Instrumente</h2>
+      <p>Ich spiele eine Akustik- und eine E-Gitarre.</p>
+    </section>
+    <aside>
+      <p>Wusstest du? Die erste E-Gitarre wurde 1931 gebaut.</p>
+    </aside>
+	
+  <div id="flex-container">
+	  <div class="punkt" id="punkt1">Punkt 1</div>
+	  <div class="punkt" id="punkt2">Punkt 2</div>
+	  <div class="punkt" id="punkt3">Punkt 3</div>
+	  <div class="punkt" id="punkt4">Punkt 4</div>
+	  <div class="punkt" id="punkt5">Punkt 5</div>
+	  <div class="punkt" id="punkt6">Punkt 6</div>
+  </div>	
+  </main>
+  <footer>
+    <p>&copy; 2025 Max Mustermann</p>
+  </footer>
+</body>
+
+</html>

@@ -1,4 +1,5 @@
 <x-layouts.app>
-    @livewire('startseite-nachrichten-component')
+    
+    @livewire('shop-component')
 </x-layouts.app>
 
