@@ -19,4 +19,9 @@ class Warengruppe extends Model
     {
         return $this->hasMany(Artikel::class, 'wgnr', 'wgnr');
     }
+
+    public static function getBezeichnung($wgNr){
+        $mWg = Warengruppe::where('wgnr', $wgNr)->first();
+        return $mWg->bezeichnung;
+    }
 }

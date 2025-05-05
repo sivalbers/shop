@@ -10,7 +10,7 @@
         pending: @js($pendingUpdateSuche)
     }"
 
-    
+
     x-init="
         document.addEventListener('livewire:load', () => {
             if (pending) {
@@ -456,7 +456,7 @@
 
         <x-my-form class="max-h-[70vh] z-50 overflow-scroll">
 
-            <form class="">
+            <form class="" wire:submit.prevent="InBasket">
                 @csrf
 
                 @if ($mArtikel && $mArtikel->artikelnr)
@@ -484,7 +484,7 @@
 
 
                             </div>
-                            Warengruppe: {{ $aktiveWarengruppeBezeichung }}<br>
+                            Warengruppe: {{  $aktiveWarengruppeBezeichung }}<br>
 
 
                             <br>
@@ -499,23 +499,36 @@
                                     {{ number_format($mArtikel->vkpreis, 2, ',', '.') }} € / {{ $mArtikel->einheit }}
                                 </div>
                                 <br>
-                                <div class="basis-1 text-xs">
-                                    Lagergestand:
-                                    <!-- livewire('ShopArtikelBestandComponent', ['artikelnr' => $artikel->artikelnr ]) -->
-                                    0 {{ $mArtikel->einheit }}
-                                </div>
-                                <br>
-                                <div class="basis-1 text-center flex items-center">
-                                    <div x-data="{ quantity: 0 }"
-                                        class="flex items-center border border-gray-300 rounded-md overflow-hidden w-24 ">
-                                        <button type="button" @click="quantity > 0 ? quantity-- : 0"
-                                            class="flex-1 bg-gray-200 text-gray-700 py-1 hover:bg-gray-300">-</button>
-                                        <input type="text" x-model="quantity"
-                                            class="w-10 text-center border-none outline-none" readonly>
-                                        <button type="button" @click="quantity++"
-                                            class="flex-1 bg-gray-200 text-gray-700 py-1 hover:bg-gray-300">+</button>
+
+                                <div class="flex flex-row">
+                                    <div class="basis-1 text-center flex ">
+                                        <div x-data="{ quantity: @entangle('quantity') }"
+                                            @basket-cleared.window="quantity = 0"
+                                            class="flex  border border-gray-300 rounded-md overflow-hidden w-24 ">
+                                            <button type="button" @click="quantity > 0 ? quantity-- : 0"
+                                                class="flex-1 bg-gray-200 text-gray-700 py-1 hover:bg-gray-300">-</button>
+                                            <input type="text" x-model="quantity"
+                                                class="w-10 text-center border-none outline-none" readonly>
+                                            <button type="button" @click="quantity++"
+                                                class="flex-1 bg-gray-200 text-gray-700 py-1 hover:bg-gray-300">+</button>
+                                        </div>
+                                    </div>
+                                    <div class="basis-1 text-xs pt-2 pl-2">
+
+                                        @if ($mArtikel->bestand == 0)
+                                            <x-fluentui-vehicle-truck-profile-24-o class="h-7 text-red-500" />
+                                        @else
+                                            <x-fluentui-vehicle-truck-profile-24 class="h-7 text-[#CDD503]" />
+                                        @endif
+
                                     </div>
                                 </div>
+                                <div>
+                                    <button type="submit" class="w-40 bg-sky-600 text-white mt-2 py-2 rounded-md hover:font-bold shadow-md">
+                                        In den Warenkorb
+                                    </button>
+                                </div>
+
                             </div>
                         </div>
                     </div>

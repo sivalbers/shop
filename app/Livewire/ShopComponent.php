@@ -19,6 +19,7 @@ use App\Models\Artikel;
 use App\Models\Warengruppe;
 use App\Models\Sortiment;
 use App\Models\Bestellung;
+use App\Models\BestellungPos;
 use App\Models\Anschrift;
 use App\Models\Position;
 use App\Models\Favorit;
@@ -71,6 +72,7 @@ class ShopComponent extends Component
     public $favoritenIDs = [];
 
     public $pendingUpdateSuche;
+    public $quantity;
 
     public function mount()
     {
@@ -84,6 +86,8 @@ class ShopComponent extends Component
 
         $this->sortiment = $this->session_get('mount', 'sortiment');
         $this->aktiveWarengruppe = configGet('aktiveWarengruppe' );
+        $this->aktiveWarengruppeBezeichung = Warengruppe::getBezeichnung($this->aktiveWarengruppe);
+
         $this->aktiveFavorites = configGet('aktiveFavorites');
 
 
@@ -166,16 +170,12 @@ class ShopComponent extends Component
             if (empty($this->aktiveWarengruppe) || $this->aktiveWarengruppe === ''){
 
                 $this->aktiveWarengruppe = $this->warengruppen[0]['wgnr'];
+                $this->aktiveWarengruppeBezeichung = Warengruppe::getBezeichnung($this->aktiveWarengruppe);
                 configSet('aktiveWarengruppe', $this->aktiveWarengruppe);
 
             }
 
             if ($this->aktiveWarengruppe){
-
-                if (is_array($this->aktiveWarengruppe)){
-                    dd($this->aktiveWarengruppe);
-                }
-
                 $this->dispatch('showArtikelWG', $this->aktiveWarengruppe );
             }
 
@@ -202,21 +202,13 @@ class ShopComponent extends Component
 
     public function clickWarengruppe($wg){
 
+
         $this->aktiveWarengruppe = $wg;
-        // $this->session_put('clickWarengruppe', session()->get('debitornr').'.aktiveWarengruppe', $this->aktiveWarengruppe);
+        $this->aktiveWarengruppeBezeichung = Warengruppe::getBezeichnung($wg);
+
         configSet('aktiveWarengruppe', $this->aktiveWarengruppe);
 
-
-
-        $xxWG = configGet('aktiveWarengruppe');
-
-        $mWg = Warengruppe::where('wgnr', $wg)->first();
-        $this->aktiveWarengruppeBezeichung = $mWg->bezeichnung;
-
-
-        if (is_array($wg)){
-            dd($wg);
-        }
+        Log::info(['aktiveWarengruppeBezeichnung' =>$this->aktiveWarengruppeBezeichung] );
 
         $this->dispatch('showArtikelWG', $wg );
 
@@ -225,7 +217,7 @@ class ShopComponent extends Component
     #[On('showArtikel')]
     public function showArtikel($artikelnr){
         $this->mArtikel = Artikel::where('artikelnr', $artikelnr)->first();
-
+        $this->quantity = 0;
         $this->showForm = true ;
 
     }
@@ -241,6 +233,7 @@ class ShopComponent extends Component
 
         if ($tab === 'warengruppen'){
             $this->aktiveWarengruppe = configGet('aktiveWarengruppe');
+            $this->aktiveWarengruppeBezeichung = Warengruppe::getBezeichnung($this->aktiveWarengruppe);
         }
 
         if ($tab === 'favoriten'){
@@ -408,6 +401,35 @@ class ShopComponent extends Component
         $value = session()->get($name);
         // Log::info([$func => 'session()->get(', $name => $value] );
         return $value ;
+    }
+
+    public function InBasket(){
+        Log::info('ShopComponent.InBasket');
+        $bestellung = Bestellung::getBasket();
+        if ($bestellung) {
+            $bestellung->datum = now();
+            $bestellung->save();
+
+
+
+                if ($this->quantity>0) {
+                    BestellungPos::Create([
+                        'bestellnr' => $bestellung->nr,
+                        'artikelnr' => $this->mArtikel->artikelnr,
+                        'menge' => $this->quantity,
+                        'epreis' => $this->mArtikel->vkpreis,
+                        'steuer' => $this->mArtikel->steuer,
+                        'sort' => 0,
+                    ]);
+                }
+
+
+
+
+            $this->dispatch('updateNavigation');
+            $this->dispatch('basket-cleared');
+
+        }
     }
 
 

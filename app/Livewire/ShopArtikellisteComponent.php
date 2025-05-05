@@ -512,8 +512,9 @@ class ShopArtikellisteComponent extends Component
     }
 */
 
-    public function InBasket(){
 
+    public function InBasket(){
+        Log::info('ShopArtikellisteComponent.InBasket');
         $bestellung = Bestellung::getBasket();
         if ($bestellung) {
             $bestellung->datum = now();
