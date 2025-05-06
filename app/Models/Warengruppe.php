@@ -22,6 +22,11 @@ class Warengruppe extends Model
 
     public static function getBezeichnung($wgNr){
         $mWg = Warengruppe::where('wgnr', $wgNr)->first();
-        return $mWg->bezeichnung;
+        if (!empty($mWg)){
+            return $mWg->bezeichnung;
+        }
+        else{
+            return '';
+        }
     }
 }
