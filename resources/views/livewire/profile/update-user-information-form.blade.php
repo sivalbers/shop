@@ -219,7 +219,7 @@ new class extends Component {
                     <div class="w-1/12 text-center">
                         @if ($iUser->user->email != Auth::user()->email)
                             @if ($rolle === 1)
-                                <button wire:click="btnDelete('{{ $user->user->email }}')"
+                                <button wire:click="btnDelete('{{ $iUser->user->email }}')"
                                     class=" border border-red-400 text-white rounded-md px-2 w-10"
                                     title="Nach Rückfrage wird der Zugang von '{{ $iUser->user->email }}' für diesen Debitor gelöscht.">
                                     <x-fluentui-shopping-bag-dismiss-20-o class="h-5 text-red-500" />
