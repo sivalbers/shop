@@ -55,7 +55,7 @@ class WarenkorbComponent extends Component
         $this->bemerkung = $this->bestellung->bemerkung;
         // $this->lieferdatum = $this->bestellung->lieferdatum ? $this->bestellung->lieferdatum->format('Y-m-d') : null;
         if (empty($this->lieferdatum) | $this->lieferdatum == ''){
-            $this->lieferdatum = Bestellung::calcLFDate()->format('Y-m-d');
+            $this->lieferdatum = Bestellung::calcLFDatum()->format('Y-m-d');
         }
     }
 
