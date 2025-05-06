@@ -134,7 +134,7 @@ class Bestellung extends Model
 
     }
 
-    public static function calcLFDate(){
+    public static function calcLFDatum(){
         return Carbon::now()->addDays(4);
     }
 

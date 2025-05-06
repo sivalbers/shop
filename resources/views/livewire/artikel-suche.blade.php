@@ -1,8 +1,8 @@
 <div x-data="{ offen: false }" class="relative w-full">
-    <div class="flex items-center border border-gray-300 rounded-2xl px-2 py-2 w-full bg-white h-8 m-2">
+    <div class="flex items-center border border-gray-300 rounded-2xl px-2 py-2 w-full h-8 m-2 bg-gray-200">
         <input type="text"
             wire:model.live.debounce.500ms="suchbegriff"
-            class="flex-grow bg-transparent outline-none ring-0 text-sm placeholder-gray-500 border-none focus:outline-none focus:ring-0"
+            class="flex-grow bg-transparent outline-none ring-0 text-sm placeholder-gray-500 border-none font-bold focus:outline-none focus:ring-0"
             placeholder="Artikel suchen..."
             @focus="offen = true"
             @click.away="offen = false"
@@ -15,7 +15,7 @@
                     <x-fluentui-thumb-like-16 class="text-ewe-gruen w-5" title='{{ sprintf(">= %d Ergebnisse", count($ergebnisse)) }} ' />
                 @endif
             @else
-                <x-fluentui-search-16-o class="w-5 text-gray-500" title=""/>
+                <x-fluentui-search-16-o class="w-5 " title=""/>
             @endif
         </div>
     </div>

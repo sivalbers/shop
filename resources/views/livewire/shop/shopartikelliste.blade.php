@@ -4,7 +4,7 @@
     x-data="{}"
     x-on:click.self="zeigeFavoritPosForm = false;"
     x-on:keydown.escape.window="zeigeFavoritPosForm = false;">
-    <div wire:loading.delay.shortest>
+    <div wire:loading>
         <div class="z-50 w-full h-full fixed inset-0 flex items-center justify-center">
             <svg class="w-20 h-20 text-[#CDD503] animate-spin"
                 xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
