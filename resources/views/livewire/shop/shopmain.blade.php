@@ -507,8 +507,14 @@
                                             class="flex  border border-gray-300 rounded-md overflow-hidden w-24 ">
                                             <button type="button" @click="quantity > 0 ? quantity-- : 0"
                                                 class="flex-1 bg-gray-200 text-gray-700 py-1 hover:bg-gray-300">-</button>
-                                            <input type="text" x-model="quantity"
-                                                class="w-10 text-center border-none outline-none" readonly>
+
+                                            <!-- input type="text" x-model="quantity"
+                                                class="w-10 text-center border-none outline-none" readonly -->
+
+                                            <input type="number" min="1" max="1000000" step="1" x-model="quantity" wire:model="quantity"
+                                            class="InputMenge px-1 w-14 text-center border-none outline-none text-xs "
+                                            @focus="$event.target.select()">
+
                                             <button type="button" @click="quantity++"
                                                 class="flex-1 bg-gray-200 text-gray-700 py-1 hover:bg-gray-300">+</button>
                                         </div>

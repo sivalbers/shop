@@ -89,3 +89,18 @@ select.suchFilter{
 }
 
 
+.InputMenge::-webkit-outer-spin-button,
+.InputMenge::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.InputMenge:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+
+.InputMenge[type=number] {
+    -moz-appearance: textfield;
+}

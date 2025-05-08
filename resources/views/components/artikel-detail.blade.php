@@ -60,8 +60,8 @@
                 <button type="button" @click="quantity = Math.max(0, quantity - 1); $wire.set('aPositions.{{ $loop->index }}.menge', quantity)"
                     class="flex-1 bg-gray-200 text-gray-700 py-0.5 hover:bg-blue-200 h-full border-r border-r-gray-400">-</button>
 
-                <input type="text" x-model="quantity" wire:model="aPositions.{{ $loop->index }}.menge"
-                    class="w-14 text-center border-none outline-none text-xs"
+                <input type="number" min="1" max="1000000" step="1" x-model="quantity" wire:model="aPositions.{{ $loop->index }}.menge"
+                    class="InputMenge w-14 text-center border-none outline-none text-xs"
                     @focus="$event.target.select()">
 
                 <button type="button" @click="quantity++; $wire.set('aPositions.{{ $loop->index }}.menge', quantity)"
