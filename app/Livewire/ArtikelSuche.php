@@ -38,9 +38,10 @@ class ArtikelSuche extends Component
                                 ->take(200)->toArray();
 */
             $this->ergebnisse = $query->whereIn('artikelnr', ArtikelSortiment::whereIn('sortiment', $sortiment)->pluck('artikelnr'))
-            ->limit(1000)
+            ->limit(100)
             ->get()
             ->toArray();
+
 
 /*
 
