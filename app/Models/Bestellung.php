@@ -135,7 +135,16 @@ class Bestellung extends Model
     }
 
     public static function calcLFDatum(){
-        return Carbon::now()->addDays(4);
+        //return Carbon::now()->addDays(4);
+
+        $date = Carbon::now()->addDays(4);
+
+        // Falls der Tag ein Wochenende ist (Samstag oder Sonntag), weiter auf Montag
+        while ($date->isWeekend()) {
+            $date->addDay();
+        }
+
+        return $date;
     }
 
 

@@ -61,7 +61,7 @@
                         <label for="lieferdatum">Lieferdatum:</label>
                     </div>
                     <div class="w-2/3 md:w-full lg:w-2/3">
-                        <input type="date" wire:model="lieferdatum" id="lieferdatum"
+                        <input type="date" wire:model="lieferdatum" min="{{ $minLieferdatum }}" id="lieferdatum"
                             class="basketInput {{ $fldClass }} w-full">
                     </div>
                 </div>

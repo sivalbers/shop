@@ -30,12 +30,13 @@ class Debitor extends Model
     public function sortimentName()
     {
         $arr = explode(" ", $this->sortiment);
-        $s = "";
-        foreach($arr as $sortiment){
-            $name = Sortiment::getAnzeigeName($sortiment);
-            $s = sprintf("%s %s",$s, $name);
+        $namen = [];
+
+        foreach ($arr as $sortiment) {
+            $namen[] = Sortiment::getAnzeigeName($sortiment);
         }
-        return $s;
+
+        return implode(' | ', $namen);
     }
 
 

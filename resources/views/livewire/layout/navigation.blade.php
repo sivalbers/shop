@@ -242,7 +242,7 @@
                                                 <div class="{{ \App\Helpers\SortimentHelper::getColorClass($kunde->sortiment) }} pr-1">
                                                     <x-fluentui-checkbox-indeterminate-16-o class="h-5" />
                                                 </div>
-                                                <div class="">- {{ $kunde->sortimentName() }}</div>
+                                                <div class="">{{ $kunde->sortimentName() }}</div>
                                             </div>
                                         </div>
 
