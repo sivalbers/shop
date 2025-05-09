@@ -411,7 +411,7 @@
         </div>
 
         <x-modal-bestaetigung
-            text='Soll die Favoritenliste "{{ $favorit["name"] }}" gelöscht werden?'
+            text='Soll die Favoritenliste  gelöscht werden?'
             onJa="jaBestaetigt"
         />
 
