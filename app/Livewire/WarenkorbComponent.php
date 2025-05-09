@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use Closure;
+use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -27,6 +28,7 @@ class WarenkorbComponent extends Component
     public $bemerkung;
     public $lieferdatum;
     public $minLieferdatum;
+    public $lieferdatumError;
     public $bestellung;
     public $rechnungsadresse;
     public $lieferadresse;
@@ -60,7 +62,7 @@ class WarenkorbComponent extends Component
         if (empty($this->lieferdatum) | $this->lieferdatum == ''){
             $this->lieferdatum = Bestellung::calcLFDatum()->format('Y-m-d');
         }
-        
+
     }
 
 
@@ -157,5 +159,27 @@ class WarenkorbComponent extends Component
         $this->setData();
         $this->dispatch('updateNavigation');
         $this->dispatch('doRefreshPositionen');
+    }
+
+
+    public function updatedLieferdatum(){
+
+        Log::info('updatedLieferdatum');
+        if ($this->minLieferdatum > $this->lieferdatum){
+            $this->lieferdatumError = 'Lieferdatum nicht möglich! - Datum wurde korrigiert.' ;
+            $this->lieferdatum = $this->minLieferdatum;
+        }
+        else
+            $this->lieferdatumError = '';
+
+        $date = Carbon::parse($this->lieferdatum);
+        if ($date->isWeekend()) {
+            $this->lieferdatumError = 'Samstag und Sonntag sind nicht erlaubt. - Datum wurde korrigiert.';
+            while ($date->isWeekend()) {
+                $date->addDay();
+            }
+            $this->lieferdatum = $date->format('Y-m-d');
+        }
+
     }
 }
