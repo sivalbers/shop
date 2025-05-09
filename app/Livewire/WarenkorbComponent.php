@@ -164,7 +164,7 @@ class WarenkorbComponent extends Component
 
     public function updatedLieferdatum(){
 
-        Log::info('updatedLieferdatum');
+        
         if ($this->minLieferdatum > $this->lieferdatum){
             $this->lieferdatumError = 'Lieferdatum nicht möglich! - Datum wurde korrigiert.' ;
             $this->lieferdatum = $this->minLieferdatum;

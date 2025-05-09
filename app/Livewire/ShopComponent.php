@@ -73,6 +73,7 @@ class ShopComponent extends Component
 
     public $pendingUpdateSuche;
     public $quantity;
+    public $zeigeModal;
 
     public function mount()
     {
@@ -308,6 +309,27 @@ class ShopComponent extends Component
         $this->showFavoritForm = true ;
     }
 
+    public function abfrageLoeschungFavorit($id)
+    {
+
+        $this->isModified = true ;
+        $favorit = Favorit::where('id', $id)->first();
+        Log::info([ 'abfrageLoeschungFavorit' => $id ]);
+        $this->favoritId = $favorit->id;
+        $this->favoritName = $favorit->name;
+
+        $this->zeigeModal = true;
+        Log::info([ 'ZeigeModal' => $this->zeigeModal ]);
+    }
+
+
+    public function jaBestaetigt()
+    {
+        $this->deleteFavorit($this->favoritId);
+        $this->zeigeModal = false;
+        session()->flash('message', 'Favorit wurde gelöscht.');
+    }
+
 
     #[On('showFavoritPosForm')]
     public function showFavoritPosForm($artikelnr){
@@ -431,6 +453,7 @@ class ShopComponent extends Component
 
         }
     }
+
 
 
 }

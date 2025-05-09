@@ -268,33 +268,50 @@
                             @endif
 
                             @if ($activeTab === 'favoriten') <!-- Favoriten -->
-                                <div class=" p-3 mb-4 align-top flatwhite w-full md:w-1/3 h-[calc(100vh-245px)] overflow-hidden">
+                                <div x-data="{ openSetting : false }" class=" p-3 mb-4 align-top flatwhite w-full md:w-1/3 h-[calc(100vh-245px)] overflow-hidden">
                                     <div
-                                        class="flex flex-row justify-between font-bold text-sky-600 border-b border-sky-600">
+                                        class="flex flex-row justify-between font-bold text-sky-600 border-b border-sky-60 items-center">
                                         <div class="text-base">
                                             Favoriten
                                         </div>
-                                        <div class="flex flex-row">
+                                        <div class="flex flex-row space-x-2 text-sm text-sky-500">
+                                            <a href="#" wire:click="neuerFavorit" class="hover:bg-[#e3e692] hover:text-sky-600">
+                                                <div class="flex flex-row mx-2 items-center space-x-1">
+                                                    <div>
+                                                        <x-fluentui-quiz-new-20-o class="h-5" />
+                                                    </div>
+                                                    <div>
+                                                        Neu
+                                                    </div>
+                                                </div>
+                                            </a>
 
-                                            <div>
-                                                <a href="#" wire:click="neuerFavorit">
-                                                    <x-fluentui-quiz-new-20-o class="h-5" />
+                                            <div class="text-sky-500 "> | </div>
+
+
+                                                <a href="#" @click="openSetting = !openSetting" class="hover:bg-[#e3e692] hover:text-sky-600">
+                                                    <div class="flex flex-row mx-2 items-center space-x-1 text-sky-500">
+                                                        <div>
+                                                            <x-fluentui-settings-16-o class="h-5" />
+                                                        </div>
+                                                        <div>
+                                                            Bearbeiten
+                                                        </div>
+                                                        </div>
                                                 </a>
-                                            </div>
-                                            <div>
-                                                <a href="#" wire:click="neuerFavorit">
-                                                    NEU
-                                                </a>
-                                            </div>
+
+
+
+
                                         </div>
                                     </div>
 
                                     <div class="flex flex-col mt-3 ">
 
                                         @foreach ($favoriten as $key => $favorit)
-                                            <div class="flex flex-row items-center justify-between h-full ">
+                                            <div class="flex flex-row items-center justify-between h-full hover:underline hover:font-bold hover:bg-[#e3e692] hover:text-sky-600 ">
                                                 <div
-                                                    class="flex flex-row h-14 w-full items-center hover:underline hover:font-bold hover:bg-[#e3e692] hover:text-sky-600">
+                                                    class="flex flex-row w-full items-center ">
                                                     <a href="#" wire:click="selectFavorit({{ $key }})"
                                                         class="h-full flex flex-row w-full items-center">
                                                         <div class="pl-1 pr-2">
@@ -316,11 +333,24 @@
                                                         </div>
                                                     </a>
                                                 </div>
-                                                <div class="h-full flex flex-row">
+                                                <div class="h-full flex flex-row items-center space-x-2" :class="openSetting ? 'block' : 'hidden'">
+                                                    <div class="">
+                                                        <a href="#"
+
+                                                            wire:click="abfrageLoeschungFavorit({{ $key }})"
+                                                            class="hover:bg-[#e3e692] hover:text-sky-600"
+                                                            title="'{{ $favorit['name'] }}' löschen">
+                                                            <x-fluentui-delete-16-o class="h-5" />
+                                                        </a>
+                                                    </div>
+                                                    <div>
+
+                                                    </div>
                                                     <div class="">
                                                         <a href="#"
                                                             wire:click="editFavorit({{ $key }})"
-                                                            class="hover:bg-[#e3e692] hover:text-sky-600">
+                                                            class="hover:bg-[#e3e692] hover:text-sky-600"
+                                                            title="'{{ $favorit['name'] }}' bearbeiten">
                                                             <x-fluentui-settings-16-o class="h-6" />
                                                         </a>
                                                     </div>
@@ -380,6 +410,12 @@
             </div>
         </div>
 
+        <x-modal-bestaetigung
+            text='Soll die Favoritenliste "{{ $favorit["name"] }}" gelöscht werden?'
+            onJa="jaBestaetigt"
+        />
+
+
         <x-my-message :titel="$messageTitel" :hinweis="$messageHinweis"/>
 
 
@@ -422,16 +458,7 @@
                         </div>
                     </div>
 
-                    @if ($favoritId > -1)
-                        <div class="h-full flex flex-row">
-                            <div class="">
-                                <a href="#" wire:click="editFavorit({{ $favoritId }})"
-                                    class="hover:bg-[#e3e692] hover:text-sky-600">
-                                    <x-fluentui-settings-16-o class="h-6" />
-                                </a>
-                            </div>
-                        </div>
-                    @endif
+
 
 
                     <div class="flex flex-row items-center">
