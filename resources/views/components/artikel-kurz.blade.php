@@ -6,6 +6,15 @@
     <div class="basis-4/6 px-1 {{ $abstand }}">
         <span class="text-sm flex flex-row">
 
+            <div class="mr-2">
+                <a href="#"
+
+
+                    class="hover:bg-[#e3e692] ">
+
+                    <x-fluentui-delete-16-o class="h-5" />
+                </a>
+            </div>
 
             <span class="relative group text-gray-300 pr-2 hover:text-yellow-500">
                 <a href="#" wire:click.prevent="showFavoritPosForm('{{ $pos['artikelnr'] }}')" class="hover:underline">
