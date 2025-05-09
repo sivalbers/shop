@@ -54,13 +54,13 @@ class WarenkorbComponent extends Component
         $this->kundenbestellnr = $this->bestellung->kundenbestellnr;
         $this->kommission = $this->bestellung->kommission;
         $this->bemerkung = $this->bestellung->bemerkung;
-        Log::info([ '1 Lieferdatum' => $this->bestellung->lieferdatum->format('Y-m-d')] );
+
         $this->lieferdatum = $this->bestellung->lieferdatum ? $this->bestellung->lieferdatum->format('Y-m-d') : null;
         $this->minLieferdatum = Bestellung::calcLFDatum()->format('Y-m-d');
         if (empty($this->lieferdatum) | $this->lieferdatum == ''){
             $this->lieferdatum = Bestellung::calcLFDatum()->format('Y-m-d');
         }
-        Log::info([ '2 Lieferdatum' => $this->lieferdatum ] );
+        
     }
 
 
