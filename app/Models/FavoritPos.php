@@ -79,6 +79,12 @@ class FavoritPos extends Model
     }
 
 
+    public function artikel()
+    {
+        return $this->belongsTo(Artikel::class, 'artikelnr', 'artikelnr');
+        // currentModel.foreignKey, relatedModel.primaryKey
+    }
+
     public static function getFavoritenIDs($artikelnr){
         return FavoritPos::where('artikelnr', $artikelnr)->pluck('favoriten_id')->toArray();
     }

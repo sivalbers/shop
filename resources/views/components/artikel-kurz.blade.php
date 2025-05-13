@@ -1,3 +1,5 @@
+@props(['pos', 'loop', 'tabFavoritActive' => false, 'favoritenActiveId', ])
+
 <div class="flex flex-row w-full hover:bg-[#e3e692] items-center">
    @php
        $abstand = 'py-0.5';
@@ -6,8 +8,9 @@
     <div class="basis-4/6 px-1 {{ $abstand }}">
         <span class="text-sm flex flex-row">
 
+            @if ($tabFavoritActive) <!-- Favoriten -->
             <div class="mr-2">
-                <a href="#"
+                <a href="#"  wire:click.prevent="favoritArtikelDelete( '{{ $pos['id'] }}')"
 
 
                     class="hover:bg-[#e3e692] ">
@@ -15,9 +18,10 @@
                     <x-fluentui-delete-16-o class="h-5" />
                 </a>
             </div>
+            @endif
 
             <span class="relative group text-gray-300 pr-2 hover:text-yellow-500">
-                <a href="#" wire:click.prevent="showFavoritPosForm('{{ $pos['artikelnr'] }}')" class="hover:underline">
+                <a href="#" wire:click.prevent="favoritArtikelForm( '{{ $pos['artikelnr'] }}')" class="hover:underline">
                     @if ($pos['is_favorit'])
                     <x-fluentui-star-emphasis-20 class="text-yellow-500 w-5" />
                     @else
@@ -63,7 +67,7 @@
                         <button type="button" @click="quantity = Math.max(0, quantity - 1); $wire.set('aPositions.{{ $loop->index }}.menge', quantity)"
                             class="flex-1 bg-gray-200 text-gray-700 py-0.5 hover:bg-blue-200 h-7 border-r border-r-gray-400">-</button>
 
-                        <input type="number" min="1" max="1000000" step="1" x-model="quantity" wire:model="aPositions.{{ $loop->index }}.menge"
+                        <input type="number" min="0" max="1000000" step="1" x-model="quantity" wire:model="aPositions.{{ $loop->index }}.menge"
                             class="InputMenge px-1 w-14 text-center border-none outline-none text-xs h-7"
                             @focus="$event.target.select()">
 

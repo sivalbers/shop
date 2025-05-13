@@ -52,6 +52,7 @@ class ShopArtikellisteComponent extends Component
     public $artikelnr;
     public $favoriten = [];
     public $favoritenIDs = [];
+    public $favoritenActiveId = 0;
 
     public $isModified = false ;
     public $artikel = null ;
@@ -449,6 +450,7 @@ class ShopArtikellisteComponent extends Component
 
     #[On('showFavoritMitID')]
     public function showFavoritMitID($favoritId){
+        $this->favoritenActiveId = $favoritId;
 
         $this->selectedTab = Tab::arFavoriten;
 
@@ -462,7 +464,8 @@ class ShopArtikellisteComponent extends Component
             ->where('f.id', $favoritId)
             ->whereIn('s.sortiment', $sortimentArray)
             ->where('artikel.gesperrt', '=', false)
-            ->select('artikel.*', \DB::raw('true as is_favorit'));
+            ->select('p.id', 'artikel.*', \DB::raw('true as is_favorit'))
+            ->orderBy('p.sort', 'asc');
 
 
         Log::info($qu->toRawSql());
@@ -475,7 +478,7 @@ class ShopArtikellisteComponent extends Component
 
             $this->aPositions[] = [
                 'uid' => md5($artikel->artikelnr . now()),
-                'id' => 0,
+                'id' => $artikel->id,
                 'menge' => 0,
                 'artikelnr' => $artikel->artikelnr,
                 'bezeichnung' => $artikel->bezeichnung,
@@ -556,8 +559,12 @@ class ShopArtikellisteComponent extends Component
     }
 
 
-    public function showFavoritPosForm($artikelnr){
-        $this->dispatch('showFavoritPosForm', $artikelnr);
+    public function favoritArtikelForm($artikelnr){
+        $this->dispatch('favoritArtikelForm', $artikelnr);
+    }
+
+    public function favoritArtikelDelete($id){
+        $this->dispatch('favoritArtikelDelete', $id);
     }
 
 }

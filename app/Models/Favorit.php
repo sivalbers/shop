@@ -119,11 +119,12 @@ class Favorit extends Model
                 ->where(function ($query) use ($userID) {
                     $query->where('user_id', 0)
                           ->orWhere('user_id', $userID);
-                });
+                })->orderBy('user_id' ,'desc');
 
             Log::info([ 'favoriten' => $fav->toRawSql()]);
 
             $favoriten = $fav->get(['id', 'name', 'user_id'])
+
                 ->keyBy('id')
                 ->toArray();
             // Log::info(var_dump($favoriten));

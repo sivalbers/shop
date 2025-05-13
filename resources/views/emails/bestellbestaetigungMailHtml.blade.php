@@ -226,19 +226,19 @@
             <td width="33%" padding-top="5px" valign="top" style="margin-right: 10px; ">
                 <br>
                 LAGER OLDENBURG:<br>
-Bloher Landstraße 33<br>26160 Bad Zwischenahn<br>Telefon: 04 41 / 3 61 08 8 -100 oder -101 <br>Fax: 04 41 / 3 61 08 8 -195<br>
+Bloher Landstraße 33<br>26160 Bad Zwischenahn<br>Telefon: 04 41 / 3 61 08 8 -100 oder -101 <br>
 E-Mail: lageroldenburg@ewe-netz.de
             </td>
             <td width="33%" valign="top"  style="margin-left: 2px; margin-right: 10px; margin-right: 10px; ">
                 <br>
                 LAGER BREMEN:<br>
-                Am Gasgraben 4 - 28197 Bremen<br>Telefon: 04 21 / 3 59 46 46<br>Fax: 04 21 / 3 59 47 22<br>
+                Am Gasgraben 4 - 28197 Bremen<br>Telefon: 04 21 / 3 59 46 46<br>
                 E-Mail: lagerbremen@ewe-netz.de
             </td>
             <td width="33%" valign="top"  style="margin-left: 2px; margin-right: 10px">
                 <br>
                 LAGER BRANDENBURG:<br>
-Ahornallee 8 - 16356 Werneuchen<br>Telefon: 03 33 98 / 8 99 80 <br>Fax: 03 33 98 / 89 98 29<br>
+Ahornallee 8 - 16356 Werneuchen<br>Telefon: 03 33 98 / 8 99 80 <br>
 E-Mail: lagerwerneuchen@ewe-netz.de
             </td>
 

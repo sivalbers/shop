@@ -69,7 +69,9 @@
        <form wire:submit.prevent="InBasket">
            @csrf
 
-
+            @php
+                $tabFavoritActive = $selectedTab === Tab::arFavoriten;
+            @endphp
 
 
            @foreach ($aPositions as $index => $position)
@@ -77,7 +79,7 @@
                     @if (!$listKurz)
                         <x-artikel-detail :pos="$position" :loop="$loop" />
                     @else
-                        <x-artikel-kurz :pos="$position" :loop="$loop" />
+                        <x-artikel-kurz :pos="$position" :loop="$loop" :tabFavoritActive="$tabFavoritActive" :favoritenActiveId="$favoritenActiveId" />
                     @endif
                 </div>
             @endforeach

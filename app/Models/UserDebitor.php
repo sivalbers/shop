@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class UserDebitor extends Model
 {
@@ -31,4 +33,6 @@ class UserDebitor extends Model
     {
         return $this->belongsTo(Debitor::class, 'debitor_nr', 'nr');
     }
+
+
 }

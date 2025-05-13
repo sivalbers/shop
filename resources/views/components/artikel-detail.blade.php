@@ -4,7 +4,7 @@
     <div class="flex flex-col w-8/12 pr-1">
         <div class="flex flex-row items-center border-b border-gray-200">
             <div class="relative group text-gray-300 pr-1 hover:text-yellow-500">
-                <a href="#" wire:click.prevent="showFavoritPosForm('{{ $pos['artikelnr'] }}')" class="hover:underline">
+                <a href="#" wire:click.prevent="favoritArtikelForm('{{ $pos['artikelnr'] }}')" class="hover:underline">
                     @if ($pos['is_favorit'])
                     <x-fluentui-star-emphasis-20 class="text-yellow-500 w-5" />
                     @else
@@ -60,7 +60,7 @@
                 <button type="button" @click="quantity = Math.max(0, quantity - 1); $wire.set('aPositions.{{ $loop->index }}.menge', quantity)"
                     class="flex-1 bg-gray-200 text-gray-700 py-0.5 hover:bg-blue-200 h-full border-r border-r-gray-400">-</button>
 
-                <input type="number" min="1" max="1000000" step="1" x-model="quantity" wire:model="aPositions.{{ $loop->index }}.menge"
+                <input type="number" min="0" max="1000000" step="1" x-model="quantity" wire:model="aPositions.{{ $loop->index }}.menge"
                     class="InputMenge w-14 text-center border-none outline-none text-xs"
                     @focus="$event.target.select()">
 

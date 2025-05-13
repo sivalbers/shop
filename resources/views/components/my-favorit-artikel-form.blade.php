@@ -1,12 +1,12 @@
 <div class="flex fixed top-0 bg-opacity-60 item-center w-full h-full bg-slate-100 backdrop-blur-[2px]"
-    x-show="zeigeFavoritPosForm" x-cloak x-on:click.self="zeigeFavoritPosForm = false"
-    x-on:keydown.escape.window="zeigeFavoritPosForm = false"> <!-- gesamtes Fenster backdrop-blur-[2px] -->
+    x-show="showFavoritArtikelForm" x-cloak x-on:click.self="showFavoritArtikelForm = false"
+    x-on:keydown.escape.window="showFavoritArtikelForm = false"> <!-- gesamtes Fenster backdrop-blur-[2px] -->
 
     <div class="w-4/12 m-auto flatwhite" x-data="{ isDisabled: true }" x-init="$watch('$wire.isModified', value => isDisabled = false);">
         <!-- Abfragefenster Fenster -->
 
         <div class="m-2">
-            <form wire:submit.prevent="saveFavoritPos">
+            <form wire:submit.prevent="saveFavoritArtikel">
                 @csrf
                 <input id="favoritId" type="hidden" wire:model="artikelnr">
                 <div class="flex flex-col space-y-2">

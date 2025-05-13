@@ -4,8 +4,8 @@
     <div class="w-11/12 m-auto" x-data="{
         expanded: @entangle('expanded'),
         showForm: @entangle('showForm'),
-        showFavoritForm: @entangle('showFavoritForm'),
-        zeigeFavoritPosForm: @entangle('zeigeFavoritPosForm'),
+        showFavoritBearbeitenForm: @entangle('showFavoritBearbeitenForm'),
+        showFavoritArtikelForm: @entangle('showFavoritArtikelForm'),
         zeigeMessage: @entangle('zeigeMessage'),
         pending: @js($pendingUpdateSuche)
     }"
@@ -19,8 +19,8 @@
             }
         });
     "
-        x-on:click.self="showForm = false; showFavoritForm = false; zeigeFavoritPosForm = false; "
-        x-on:keydown.escape.window="showForm = false; showFavoritForm = false; zeigeFavoritPosForm = false;">
+        x-on:click.self="showForm = false; showFavoritBearbeitenForm = false; showFavoritArtikelForm = false; "
+        x-on:keydown.escape.window="showForm = false; showFavoritBearbeitenForm = false; showFavoritArtikelForm = false;">
 
         <div class="z-0 ">
 
@@ -299,17 +299,13 @@
                                                         </div>
                                                         </div>
                                                 </a>
-
-
-
-
                                         </div>
                                     </div>
 
-                                    <div class="flex flex-col mt-3 ">
+                                    <div class="flex flex-col mt-3  ">
 
                                         @foreach ($favoriten as $key => $favorit)
-                                            <div class="flex flex-row items-center justify-between h-full hover:underline hover:font-bold hover:bg-[#e3e692] hover:text-sky-600 ">
+                                            <div class="flex flex-row items-center justify-between h-full hover:underline hover:font-bold hover:bg-[#e3e692] hover:text-sky-600 py-1">
                                                 <div
                                                     class="flex flex-row w-full items-center ">
                                                     <a href="#" wire:click="selectFavorit({{ $key }})"
@@ -334,18 +330,20 @@
                                                     </a>
                                                 </div>
                                                 <div class="h-full flex flex-row items-center space-x-2" :class="openSetting ? 'block' : 'hidden'">
+
+                                                @php
+                                                    $rolle = session()->get('rolle');
+                                                @endphp
+                                                @if ( $rolle === 1 || ( $rolle === 0 && Auth::id() === $favorit['user_id']))
                                                     <div class="">
                                                         <a href="#"
-
                                                             wire:click="abfrageLoeschungFavorit({{ $key }})"
                                                             class="hover:bg-[#e3e692] hover:text-sky-600"
                                                             title="'{{ $favorit['name'] }}' löschen">
                                                             <x-fluentui-delete-16-o class="h-5" />
                                                         </a>
                                                     </div>
-                                                    <div>
-
-                                                    </div>
+                                                    @endif
                                                     <div class="">
                                                         <a href="#"
                                                             wire:click="editFavorit({{ $key }})"
@@ -354,6 +352,32 @@
                                                             <x-fluentui-settings-16-o class="h-6" />
                                                         </a>
                                                     </div>
+                                                @if ($rolle === 1)
+                                                    <div class="">
+                                                        <a href="#"
+
+                                                            wire:click="favoritenDownload({{ $key }})"
+                                                            class="hover:bg-[#e3e692] hover:text-sky-600"
+                                                            title="'{{ $favorit['name'] }}' favoriten herunterladen">
+                                                            <x-fluentui-arrow-circle-down-right-24-o class="h-6" />
+                                                        </a>
+                                                    </div>
+
+                                                    <div class="">
+                                                        <a href="#"
+                                                            x-data
+                                                            @click="
+                                                                $wire.set('favoritId', {{ $favorit['id'] }});
+                                                                $wire.set('showFavoritenPosImportModal', true);
+                                                            "
+                                                             title="'{{ $favorit['name'] }}' favoriten hochladen"
+                                                            class="hover:bg-[#e3e692] hover:text-sky-600">
+
+                                                            <x-fluentui-arrow-circle-up-left-24-o class="h-6" />
+
+                                                        </a>
+                                                    </div>
+                                                @endif
                                                 </div>
                                             </div>
                                         @endforeach
@@ -410,78 +434,36 @@
             </div>
         </div>
 
-        <x-modal-bestaetigung
-            text='Soll die Favoritenliste  gelöscht werden?'
+
+        <!-- Ja oder Nein Abfrage
+            zeigeJaNeinAbfrage = true
+        -->
+        <x-modal-ja-nein-abfrage
+            text='Soll die Favoritenliste "{{ $favoritName }}" gelöscht werden?'
+            comment='Rückgängig ist nicht möglich!'
             onJa="jaBestaetigt"
+            onNein="neinBestaetigt"
         />
 
+        <x-favoriten-pos-import-modal />
 
-        <x-my-message :titel="$messageTitel" :hinweis="$messageHinweis"/>
+        <x-my-message :titel="$messageTitel" :hinweis="$messageHinweis" />
 
-
-        <x-my-favoritposform :mArtikel="$mArtikel" :favoriten="$favoriten" :aktiveFavorites="$aktiveFavorites" />
-
-
-        <x-my-favoritform class="z-11" :width="'w-4/12'">
-
-            <form wire:submit.prevent="saveFavorit">
-                @csrf
-                <input id="favoritId" type="hidden" wire:model="favoritId">
-                <div class="flex flex-col space-y-2">
-                    <div class="font-bold text-xl border-b-2 border-b-[#CDD503]">
-                        @if ($this->isModified)
-                            Favorit bearbeiten:
-                        @else
-                            Favorit anlegen:
-                        @endif
-                    </div>
+        <!-- Artikel zu favorit hinzufügen
+            showFavoritArtikelForm = true
+        -->
+        <x-my-favorit-artikel-form :mArtikel="$mArtikel" :favoriten="$favoriten" :aktiveFavorites="$aktiveFavorites" />
 
 
-                    <div class="mt-4 flex flex-col items-center justify-between h-full space-y-2">
-                        <div class="flex flex-row h-8 w-full items-center">
-                            <div class="w-2/6">
-                                Name:
-                            </div>
-                            <div class="w-4/6">
-                                <input type="text" wire:model="favoritName"
-                                    class="w-full h-6 border border-gray-500 rounded bg-white">
-                            </div>
-                        </div>
-
-                        <div class="flex flex-row h-8 w-full items-center">
-                            <div class="w-2/6">
-                                Nur für mich:
-                            </div>
-                            <div class="w-4/6">
-                                <input type="checkbox" wire:model="favoritUser">
-                            </div>
-                        </div>
-                    </div>
+        <!-- Favoriten bearbeiten / anlegen
+            showFavoritBearbeitenForm = true
+        -->
+        <x-my-favorit-bearbeiten-form class="z-11" :width="'w-4/12'" />
 
 
 
 
-                    <div class="flex flex-row items-center">
-                        <div class="w-2/6">
-                            &nbsp;
-                        </div>
-                        <div class="w-4/6">
-                            <button type="submit" class="py-2 px-4 border border-gray-400 bg-ewe-gruen rounded-md">
-
-                                @if ($this->isModified)
-                                    Ändern
-                                @else
-                                    Speichern
-                                @endif
-                            </button>
-                        </div>
-                    </div>
-
-                </div>
-            </form>
-        </x-my-favoritform>
-
-        <x-my-form class="max-h-[70vh] z-50 overflow-scroll">
+        <x-my-form :isModified="$isModified" class="max-h-[70vh] z-50 overflow-scroll">
 
             <form class="" wire:submit.prevent="InBasket">
                 @csrf

@@ -4,6 +4,9 @@ namespace App\Livewire;
 
 
 use Livewire\Component;
+use App\Services\FavoritenPosImporter;
+use Livewire\WithFileUploads;
+
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -12,7 +15,7 @@ use Illuminate\Support\Facades\Auth;
 
 use Livewire\Attributes\On;
 
-
+use App\Services\FavoritenPosExporter;
 
 
 use App\Models\Artikel;
@@ -24,13 +27,14 @@ use App\Models\Anschrift;
 use App\Models\Position;
 use App\Models\Favorit;
 use App\Models\FavoritPos;
+
 use PhpParser\Node\Stmt\Foreach_;
 
 use function PHPUnit\Framework\isEmpty;
 
 class ShopComponent extends Component
 {
-
+    use WithFileUploads;
     /**
      * Get the view / contents that represent the component.
      */
@@ -41,8 +45,8 @@ class ShopComponent extends Component
     public $aktiveWarengruppeBezeichung = '';
     public $aktiveFavorites;
     public $showForm;
-    public $showFavoritForm;
-    public $zeigeFavoritPosForm = false;
+    public $showFavoritBearbeitenForm;
+    public $showFavoritArtikelForm = false;
     public $zeigeMessage = false ;
     public $messageTitel;
     public $messageHinweis;
@@ -64,7 +68,9 @@ class ShopComponent extends Component
     public $suchBezeichnung = '';
     public $expanded = false ;
 
-    public $favoritId;
+
+    public int|string|null $favoritId = null;
+
     public $favoritName;
     public $favoritUser;
     public $favoriten = [];
@@ -73,15 +79,18 @@ class ShopComponent extends Component
 
     public $pendingUpdateSuche;
     public $quantity;
-    public $zeigeModal;
+    public $zeigeJaNeinAbfrage;
 
-    public function mount()
-    {
+    public $importFile;
+    public $showFavoritenPosImportModal = false;
+    public $importOverride = false;
 
 
 
-        $this->showFavoritForm = false;
-        $this->zeigeFavoritPosForm = false;
+    public function mount(){
+
+        $this->showFavoritBearbeitenForm = false;
+        $this->showFavoritArtikelForm = false;
         $this->suchArtikelnr = '';
         $this->suchBezeichnung = '';
 
@@ -90,6 +99,7 @@ class ShopComponent extends Component
         $this->aktiveWarengruppeBezeichung = Warengruppe::getBezeichnung($this->aktiveWarengruppe);
 
         $this->aktiveFavorites = configGet('aktiveFavorites');
+        $this->favoritName = '';
 
 
         $tab = request()->query('tab', '');
@@ -111,8 +121,7 @@ class ShopComponent extends Component
         request()->get('artikel');
     }
 
-    public function render()
-    {
+    public function render(){
 
         if (($this->activeTab === 'warengruppen' && empty($this->warengruppen)) ||
             ($this->activeTab === 'favoriten' && empty($this->favoriten))
@@ -137,7 +146,6 @@ class ShopComponent extends Component
 
         return $view;
     }
-
 
     public function updateQuery(){
 
@@ -184,13 +192,12 @@ class ShopComponent extends Component
         elseif ($this->activeTab === 'favoriten') {
             $this->favoriten = Favorit::cFavoriten();
             $fId = configGet('aktiveFavorites');
-            $this->dispatch('showFavoritMitID', [ 'favoritId' => $fId] );
+            $this->dispatch('showFavoritMitID', $fId );
         }
         elseif ($this->activeTab === 'suche') {
             $this->updateSuche();
         }
     }
-
 
     public function updatedSuchText($value){
     }
@@ -250,10 +257,11 @@ class ShopComponent extends Component
     }
 
     public function neuerFavorit(){
-        $this->showFavoritForm = true ;
+        $this->showFavoritBearbeitenForm = true ;
         $this->favoritId = -1;
         $this->favoritName = '';
         $this->favoritUser = false;
+        $this->isModified = false ;
     }
 
     public function saveFavorit(){
@@ -278,19 +286,17 @@ class ShopComponent extends Component
 
         $this->favoriten = Favorit::cFavoriten(true);
 
-        $this->showFavoritForm = false ;
+        $this->showFavoritBearbeitenForm = false ;
         $this->isModified = false ;
     }
-
 
     public function selectFavorit($id){
 
         $this->aktiveFavorites = $id;
         configSet('aktiveFavorites', $this->aktiveFavorites);
 
-        $this->dispatch('showFavoritMitID', [ 'favoritId' => $id] );
+        $this->dispatch('showFavoritMitID', $id );
     }
-
 
     public function editFavorit($id){
         $this->isModified = true ;
@@ -299,44 +305,80 @@ class ShopComponent extends Component
         $this->favoritName = $favorit->name;
         $this->favoritUser = $favorit->user_id;
 
-        $this->showFavoritForm = true ;
+        $this->showFavoritBearbeitenForm = true ;
     }
 
     public function deleteFavorit($id){
-        $this->isModified = true ;
-        FavoritPos::where('favorit_id', $id)->delete();
+        FavoritPos::where('favoriten_id', $id)->delete();
         Favorit::where('id', $id)->delete();
-        $this->showFavoritForm = true ;
     }
 
-    public function abfrageLoeschungFavorit($id)
-    {
-
-        $this->isModified = true ;
+    public function abfrageLoeschungFavorit($id){
         $favorit = Favorit::where('id', $id)->first();
-        Log::info([ 'abfrageLoeschungFavorit' => $id ]);
+
         $this->favoritId = $favorit->id;
         $this->favoritName = $favorit->name;
 
-        $this->zeigeModal = true;
-        Log::info([ 'ZeigeModal' => $this->zeigeModal ]);
+        $this->zeigeJaNeinAbfrage = true;
+
     }
 
-
-    public function jaBestaetigt()
-    {
+    public function jaBestaetigt(){
         $this->deleteFavorit($this->favoritId);
-        $this->zeigeModal = false;
-        session()->flash('message', 'Favorit wurde gelöscht.');
+        $this->zeigeJaNeinAbfrage = false;
+        $this->favoriten = Favorit::cFavoriten(true);
+
+       //  $this->dispatch('zeigeMessage', titel: "Favorit bearbeiten", hinweis: "Favorit wurde gelöscht.");
+        // session()->flash('message', 'Favorit wurde gelöscht.');
+    }
+    public function neinBestaetigt(){
+
+        $this->zeigeJaNeinAbfrage = false;
+
     }
 
+    public function favoritenDownload($favoritenId)
+    {
+        $favorit = Favorit::findOrFail($favoritenId);
 
-    #[On('showFavoritPosForm')]
-    public function showFavoritPosForm($artikelnr){
+        $fileName = sprintf('favoriten_%s_%s.csv', $favorit->name, now()->format('Ymd_His') );
+
+        $exporter = new FavoritenPosExporter();
+
+        return response()->streamDownload(function () use ($exporter, $favoritenId) {
+            $handle = fopen('php://output', 'w');
+            $exporter->exportSingle($favoritenId, $handle);
+            fclose($handle);
+        }, $fileName, [
+            'Content-Type' => 'text/csv',
+        ]);
+    }
+
+    public function favoritenPosImport()
+    {
+        Log::info('favoritenPosImport');
+        $this->validate([
+            'importFile' => 'required|file|mimes:csv,txt',
+        ]);
+
+        $importer = new FavoritenPosImporter();
+        $importer->importFromFile($this->favoritId, $this->importOverride, $this->importFile->getRealPath());
+
+        $this->reset('importFile', 'showFavoritenPosImportModal', 'importFile', 'importOverride');
+
+        session()->flash('success', 'Import erfolgreich!');
+
+        $this->dispatch('showFavoritMitID', $this->favoritId );
+
+
+    }
+
+    #[On('favoritArtikelForm')]
+    public function favoritArtikelForm($artikelnr){
 
         /*
             Formular mit der Auswahl in welche Favoriten der Artikel vorhanden sein soll, wird angezeigt.
-            $this->dispatch('showFavoritPosForm' , ['artikelnr' => $artikelnr ]);
+            $this->dispatch('favoritArtikelForm' , ['artikelnr' => $artikelnr ]);
         */
 
 
@@ -359,12 +401,23 @@ class ShopComponent extends Component
             $this->favoritenIDs[$key] = in_array($key, $favIDs);
         }
 
-        $this->zeigeFavoritPosForm = true ;
+        $this->showFavoritArtikelForm = true ;
         $this->isModified = false ;
 
     }
 
-    public function saveFavoritPos(){
+    #[On('favoritArtikelDelete')]
+    public function favoritArtikelDelete($id){
+
+        $favoritPos = FavoritPos::where('id', $id)->first();
+
+        $favoritId = $favoritPos->favoriten_id;
+
+        $favoritPos->delete();
+        $this->dispatch('showFavoritMitID', $favoritId );
+    }
+
+    public function saveFavoritArtikel(){
 
         Foreach ($this->favoritenIDs as $key => $favorit){
             if ($this->favoritenIDs[$key] === false){
@@ -381,7 +434,7 @@ class ShopComponent extends Component
             }
         }
         $this->dispatch('renderShopArtikellisteComponent');
-        $this->zeigeFavoritPosForm = false ;
+        $this->showFavoritArtikelForm = false ;
         $this->isModified = false ;
 
     }
@@ -394,9 +447,7 @@ class ShopComponent extends Component
 
     }
 
-
     #[On('ShopComponent_NeueBestellung')]
-
     public function shopComponent_NeueBestellung(){
 
 
