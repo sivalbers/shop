@@ -57,7 +57,12 @@ class Artikel extends Model
      */
     public function ersatzArtikel()
     {
-        return $this->hasMany(Ersatzartikel::class, 'artikelnr', 'artikelnr');
+        return $this->hasMany(ErsatzArtikel::class, 'artikelnr', 'artikelnr');
+    }
+
+    public function zubehoerArtikel()
+    {
+        return $this->hasMany(ZubehoerArtikel::class, 'artikelnr', 'artikelnr');
     }
 
 

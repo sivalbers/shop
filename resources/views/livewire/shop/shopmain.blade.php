@@ -571,24 +571,35 @@
                     </div>
                     @if (count($aPositions) > 1)
                         <div class="flex flex-col mb-4  w-full">
-                            <div class="text-base text-gray-600 border-b border-sky-600">Ersatzartikel
 
-                            </div>
-                            <div>
                                 @php
                                     $tabFavoritActive = false; // $selectedTab === Tab::arFavoriten;
                                     $favoritenActiveId = 0;
+                                    $lastArt = '';
                                 @endphp
+
+
                                 @foreach ($aPositions as $index => $position)
                                     @if ($loop->index === 0)
                                         @continue
                                     @endif
+
+                                    @if ($lastArt != $position['art'])
+                                        <div class="text-base text-gray-600 border-b border-sky-600">
+                                            {{ $position['art'] }}
+                                        </div>
+
+                                    @endif
+                                    @php
+
+                                        $lastArt = $position['art'];
+                                    @endphp
                                     <div wire:key="pos-{{ $position['uid'] }}">
                                         <x-artikel-kurz :pos="$position" :loop="$loop" :tabFavoritActive="$tabFavoritActive" :favoritenActiveId="$favoritenActiveId" />
                                     </div>
                                 @endforeach
-                            </div>
                         </div>
+
                     @endif
                 @else
                     <span class="text-base">Kein Artikel ausgewählt</span><br>

@@ -116,7 +116,6 @@ class ShopArtikellisteComponent extends Component
 
     public function render()
     {
-        Log::info('ShopArtikellisteComponent.render()');
         $artikels = $this->myArtikels;
 
         return view('livewire.shop.shopartikelliste', [ 'artikels' => $artikels ]);

@@ -226,7 +226,7 @@ class ShopComponent extends Component
 
     #[On('showArtikel')]
     public function showArtikel($artikelnr){
-        $this->mArtikel = Artikel::with('ersatzArtikel')->where('artikelnr', $artikelnr)->first();
+        $this->mArtikel = Artikel::with('ersatzArtikel')->with('zubehoerArtikel')->where('artikelnr', $artikelnr)->first();
         $artikel = $this->mArtikel;
 
         $this->aPositions = [];
@@ -245,18 +245,26 @@ class ShopComponent extends Component
             'is_favorit' => $artikel->is_favorit,
         ] ;
 
-/*
-selectRaw("CASE WHEN EXISTS (
-            SELECT 1
-            FROM favoriten_pos f_p
-            JOIN favoriten f ON f.id = f_p.favoriten_id
 
-            WHERE f_p.artikelnr = artikel.artikelnr
-              AND f.kundennr = ?
-              AND (f.user_id = 0 OR f.user_id = ?)
-            ) THEN 1 ELSE 0 END AS is_favorit", [$kundennr, $userId])
 
-*/
+        foreach($this->mArtikel->zubehoerArtikel as $zubehoerArtikel){
+
+            $this->aPositions[] = [
+                'uid' => md5($zubehoerArtikel->zubehoerArtikel->artikelnr . now()),
+                'id' => 0,
+                'menge' => 0,
+                'artikelnr' => $zubehoerArtikel->zubehoerartikelnr,
+                'bezeichnung' => $zubehoerArtikel->zubehoerArtikel->bezeichnung,
+                'vkpreis' => $zubehoerArtikel->zubehoerArtikel->vkpreis,
+                'einheit' => $zubehoerArtikel->zubehoerArtikel->einheit,
+                'steuer' => $zubehoerArtikel->zubehoerArtikel->steuer,
+                'bestand' =>  $zubehoerArtikel->zubehoerArtikel->bestand,
+                'langtext' =>  $zubehoerArtikel->zubehoerArtikel->langtext,
+                'is_favorit' => false,
+                'art' => 'Zubehörartikel',
+            ] ;
+        }
+
 
         foreach($this->mArtikel->ersatzArtikel as $ersatzartikel){
             $this->aPositions[] = [
@@ -270,13 +278,59 @@ selectRaw("CASE WHEN EXISTS (
                 'steuer' => $ersatzartikel->ersatzArtikel->steuer,
                 'bestand' =>  $ersatzartikel->ersatzArtikel->bestand,
                 'langtext' =>  $ersatzartikel->ersatzArtikel->langtext,
-                'is_favorit' => $ersatzartikel->ersatzArtikel->is_favorit,
+                'is_favorit' => false,
+                'art' => 'Ersatzartikel',
             ] ;
-
         }
+
 
         $this->quantity = 0;
         $this->showForm = true ;
+        $this->refreshArtikelDetailFavoriten();
+
+    }
+
+    public function refreshArtikelDetailFavoriten(){
+        if (!$this->showForm)
+          return;
+
+        $artikelNr = [];
+        foreach($this->aPositions as $pos){
+            $artikelNr[] =  $pos['artikelnr'];
+        }
+
+        $kundennr = session()->get('debitornr');
+        $userId = Auth::id();
+
+        $favoriten = DB::table('favoriten_pos as f_p')
+            ->leftJoin('favoriten as f', function ($join) use ($kundennr, $userId) {
+                $join->on('f.id', '=', 'f_p.favoriten_id')
+                    ->where('f.kundennr', '=', $kundennr)
+                    ->where(function ($query) use ($userId) {
+                        $query->where('f.user_id', '=', 0)
+                            ->orWhere('f.user_id', '=', $userId);
+                    });
+            })
+            ->select('f_p.artikelnr', DB::raw('COUNT(f.id) > 0 AS is_favorit'))
+            ->whereIn('f_p.artikelnr', $artikelNr)
+            ->groupBy('f_p.artikelnr');
+
+    //Log::info($favoriten->toRawSql());
+
+        $favoriten = $favoriten->get();
+
+        $favoritenMap = collect($favoriten)->keyBy('artikelnr');
+
+        // 2. Durch aPositions iterieren und 'is_favorit' setzen
+        foreach ($this->aPositions as &$pos) {
+            $artikelnr = $pos['artikelnr'];
+            $pos['is_favorit'] = false;
+            if ($favoritenMap->has($artikelnr)) {
+                $pos['is_favorit'] = (bool)$favoritenMap[$artikelnr]->is_favorit;
+            }
+        }
+
+        return $favoriten;
 
     }
 
@@ -484,7 +538,7 @@ selectRaw("CASE WHEN EXISTS (
         $this->dispatch('renderShopArtikellisteComponent');
         $this->showFavoritArtikelForm = false ;
         $this->isModified = false ;
-
+        $this->refreshArtikelDetailFavoriten();
     }
 
     #[On('zeigeMessage')]
