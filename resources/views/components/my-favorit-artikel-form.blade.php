@@ -1,4 +1,4 @@
-<div class="flex fixed top-0 bg-opacity-60 item-center w-full h-full bg-slate-100 backdrop-blur-[2px]"
+<div class="flex fixed top-0 bg-opacity-60 item-center w-full h-full bg-slate-100 backdrop-blur-[2px] z-50"
     x-show="showFavoritArtikelForm" x-cloak x-on:click.self="showFavoritArtikelForm = false"
     x-on:keydown.escape.window="showFavoritArtikelForm = false"> <!-- gesamtes Fenster backdrop-blur-[2px] -->
 

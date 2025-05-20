@@ -71,6 +71,7 @@ class ShopComponent extends Component
 
     public int|string|null $favoritId = null;
 
+    public $favArtikel;
     public $favoritName;
     public $favoritUser;
     public $favoriten = [];
@@ -85,7 +86,7 @@ class ShopComponent extends Component
     public $showFavoritenPosImportModal = false;
     public $importOverride = false;
 
-
+    public $aPositions = [];
 
     public function mount(){
 
@@ -225,7 +226,55 @@ class ShopComponent extends Component
 
     #[On('showArtikel')]
     public function showArtikel($artikelnr){
-        $this->mArtikel = Artikel::where('artikelnr', $artikelnr)->first();
+        $this->mArtikel = Artikel::with('ersatzArtikel')->where('artikelnr', $artikelnr)->first();
+        $artikel = $this->mArtikel;
+
+        $this->aPositions = [];
+
+        $this->aPositions[] = [
+            'uid' => md5($artikel->artikelnr . now()),
+            'id' => 0,
+            'menge' => 0,
+            'artikelnr' => $artikel->artikelnr,
+            'bezeichnung' => $artikel->bezeichnung,
+            'vkpreis' => $artikel->vkpreis,
+            'einheit' => $artikel->einheit,
+            'steuer' => $artikel->steuer,
+            'bestand' =>  $artikel->bestand,
+            'langtext' =>  $artikel->langtext,
+            'is_favorit' => $artikel->is_favorit,
+        ] ;
+
+/*
+selectRaw("CASE WHEN EXISTS (
+            SELECT 1
+            FROM favoriten_pos f_p
+            JOIN favoriten f ON f.id = f_p.favoriten_id
+
+            WHERE f_p.artikelnr = artikel.artikelnr
+              AND f.kundennr = ?
+              AND (f.user_id = 0 OR f.user_id = ?)
+            ) THEN 1 ELSE 0 END AS is_favorit", [$kundennr, $userId])
+
+*/
+
+        foreach($this->mArtikel->ersatzArtikel as $ersatzartikel){
+            $this->aPositions[] = [
+                'uid' => md5($ersatzartikel->ersatzArtikel->artikelnr . now()),
+                'id' => 0,
+                'menge' => 0,
+                'artikelnr' => $ersatzartikel->ersatzartikelnr,
+                'bezeichnung' => $ersatzartikel->ersatzArtikel->bezeichnung,
+                'vkpreis' => $ersatzartikel->ersatzArtikel->vkpreis,
+                'einheit' => $ersatzartikel->ersatzArtikel->einheit,
+                'steuer' => $ersatzartikel->ersatzArtikel->steuer,
+                'bestand' =>  $ersatzartikel->ersatzArtikel->bestand,
+                'langtext' =>  $ersatzartikel->ersatzArtikel->langtext,
+                'is_favorit' => $ersatzartikel->ersatzArtikel->is_favorit,
+            ] ;
+
+        }
+
         $this->quantity = 0;
         $this->showForm = true ;
 
@@ -338,8 +387,7 @@ class ShopComponent extends Component
 
     }
 
-    public function favoritenDownload($favoritenId)
-    {
+    public function favoritenDownload($favoritenId) {
         $favorit = Favorit::findOrFail($favoritenId);
 
         $fileName = sprintf('favoriten_%s_%s.csv', $favorit->name, now()->format('Ymd_His') );
@@ -355,8 +403,7 @@ class ShopComponent extends Component
         ]);
     }
 
-    public function favoritenPosImport()
-    {
+    public function favoritenPosImport(){
         Log::info('favoritenPosImport');
         $this->validate([
             'importFile' => 'required|file|mimes:csv,txt',
@@ -384,7 +431,7 @@ class ShopComponent extends Component
 
 
         $this->artikelnr = $artikelnr;
-        $this->mArtikel = Artikel::where('artikelnr', $artikelnr)->first();
+        $this->favArtikel = Artikel::where('artikelnr', $artikelnr)->first();
         $this->favoriten = Favorit::cFavoriten();
         if (count($this->favoriten)===0){
             $user = Auth::user();
@@ -403,7 +450,7 @@ class ShopComponent extends Component
         }
 
         $this->showFavoritArtikelForm = true ;
-        $this->isModified = false ;
+        // $this->isModified = false ;
 
     }
 
@@ -485,19 +532,25 @@ class ShopComponent extends Component
             $bestellung->save();
 
 
+            foreach ($this->aPositions as $key => $pos) {
+                if ($pos['menge'] >0) {
 
-                if ($this->quantity>0) {
-                    BestellungPos::Create([
-                        'bestellnr' => $bestellung->nr,
-                        'artikelnr' => $this->mArtikel->artikelnr,
-                        'menge' => $this->quantity,
-                        'epreis' => $this->mArtikel->vkpreis,
-                        'steuer' => $this->mArtikel->steuer,
-                        'sort' => 0,
-                    ]);
+                    if ($pos['id'] == 0){
+                        BestellungPos::Create([
+                            'bestellnr' => $bestellung->nr,
+                            'artikelnr' => $pos['artikelnr'],
+                            'menge' => $pos['menge'],
+                            'epreis' => $pos['vkpreis'],
+                            'steuer' => $pos['steuer'],
+                            'sort' => 0,
+                        ]);
+
+                        $this->aPositions[$key]['menge'] = 0;
+
+                    }
                 }
 
-
+            }
 
 
             $this->dispatch('updateNavigation');

@@ -44,14 +44,21 @@ class Artikel extends Model
         return $result; // Ausgabe: 123.00
     }
 
-// NICHT GETESTEST
-    public function getBildUrlAttribute()
-{
-    return asset('storage/artikelbilder/' . $this->bilddatei);
-}
+    // NICHT GETESTEST
+        public function getBildUrlAttribute()
+    {
+        return asset('storage/artikelbilder/' . $this->bilddatei);
+    }
 
-    /* Getter und Setter */
+        /* Getter und Setter */
 
+    /*
+     * Artikel hat mehrere Ersatzartikel (alte Artikel → neue Artikel)
+     */
+    public function ersatzArtikel()
+    {
+        return $this->hasMany(Ersatzartikel::class, 'artikelnr', 'artikelnr');
+    }
 
 
 }
