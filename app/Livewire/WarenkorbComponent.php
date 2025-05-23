@@ -65,7 +65,6 @@ class WarenkorbComponent extends Component
 
     }
 
-
     private function getNachrichten(){
 
         $isAuth = Auth::check();
@@ -79,6 +78,11 @@ class WarenkorbComponent extends Component
             $query->where('von', '<=', $today)
                     ->orWhereNull('von');
         })
+        ->where(function ($query) use ($today) {
+            $query->where('bis', '>=', $today)
+                  ->orWhereNull('bis');
+        })
+
         ->where('mail', 1)
         ->where(function ($query) use ($isAuth) {
             $query->where('mitlogin', false)
@@ -164,7 +168,7 @@ class WarenkorbComponent extends Component
 
     public function updatedLieferdatum(){
 
-        
+
         if ($this->minLieferdatum > $this->lieferdatum){
             $this->lieferdatumError = 'Lieferdatum nicht möglich! - Datum wurde korrigiert.' ;
             $this->lieferdatum = $this->minLieferdatum;

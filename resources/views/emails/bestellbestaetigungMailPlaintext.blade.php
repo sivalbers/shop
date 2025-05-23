@@ -103,7 +103,7 @@ Telefon: 04 21 / 3 59 46 46
 E-Mail: lagerbremen@ewe-netz.de
 
 
-LAGER BRANDENBURG:
+LAGER WERNEUCHEN:
 Ahornallee 8
 16356 Werneuchen
 Telefon: 03 33 98 / 8 99 80

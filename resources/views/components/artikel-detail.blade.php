@@ -1,8 +1,21 @@
+@props(['pos', 'loop', 'tabFavoritActive' => false, 'favoritenActiveId', ])
+
 <div class="flex flex-row mt-2 border-b-2 border-sky-600 w-full ">
 
     <!-- Spalte 1 -->
     <div class="flex flex-col w-8/12 pr-1">
         <div class="flex flex-row items-center border-b border-gray-200">
+            @if ($tabFavoritActive) <!-- Favoriten -->
+            <div class="mr-2">
+                <a href="#"  wire:click.prevent="favoritArtikelDelete( '{{ $pos['id'] }}')"
+
+
+                    class="hover:bg-[#e3e692] ">
+
+                    <x-fluentui-delete-16-o class="h-5" />
+                </a>
+            </div>
+            @endif
             <div class="relative group text-gray-300 pr-1 hover:text-yellow-500">
                 <a href="#" wire:click.prevent="favoritArtikelForm('{{ $pos['artikelnr'] }}')" class="hover:underline">
                     @if ($pos['is_favorit'])

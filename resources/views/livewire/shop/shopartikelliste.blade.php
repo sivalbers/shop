@@ -77,7 +77,7 @@
            @foreach ($aPositions as $index => $position)
                 <div wire:key="pos-{{ $position['uid'] }}">
                     @if (!$listKurz)
-                        <x-artikel-detail :pos="$position" :loop="$loop" />
+                        <x-artikel-detail :pos="$position" :loop="$loop" :tabFavoritActive="$tabFavoritActive" :favoritenActiveId="$favoritenActiveId" />
                     @else
                         <x-artikel-kurz :pos="$position" :loop="$loop" :tabFavoritActive="$tabFavoritActive" :favoritenActiveId="$favoritenActiveId" />
                     @endif

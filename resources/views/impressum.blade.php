@@ -22,7 +22,7 @@
                 <p><strong>Fax:</strong> 0421 / 359 47 22</p>
                 <p><strong>E-Mail:</strong> <a href="mailto:lagerbremen@ewe-netz.de" class="text-blue-500 hover:underline">lagerbremen@ewe-netz.de</a></p>
 
-                <h3 class="text-lg font-semibold mt-4 text-sky-600">Lager Brandenburg</h3>
+                <h3 class="text-lg font-semibold mt-4 text-sky-600">Lager Werneuchen</h3>
                 <p>Ahornallee 8</p>
                 <p>16356 Werneuchen</p>
                 <p><strong>Telefon:</strong> 033398 / 899 80</p>

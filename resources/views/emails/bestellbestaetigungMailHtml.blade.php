@@ -237,7 +237,7 @@ E-Mail: lageroldenburg@ewe-netz.de
             </td>
             <td width="33%" valign="top"  style="margin-left: 2px; margin-right: 10px">
                 <br>
-                LAGER BRANDENBURG:<br>
+                LAGER WERNEUCHEN:<br>
 Ahornallee 8 - 16356 Werneuchen<br>Telefon: 03 33 98 / 8 99 80 <br>
 E-Mail: lagerwerneuchen@ewe-netz.de
             </td>

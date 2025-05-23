@@ -41,21 +41,23 @@
     <!-- Grid Rows -->
 
     @if (!empty($positionen))
-        <div class="flex flex-col">
-            @foreach ($positionen as $position)
-                <div class="flex flex-row py-0.5">
-                    <div class=" text-left  w-[13vH] pl-2">
-                        <input type="checkbox" wire:model.live="markiertePositionen" value="{{ $position->id }}">
-                        &nbsp; {{ $position->artikelnr }}
-                    </div>
-                    <div class=" text-left  w-[47vH] truncate">{{ (!empty($position->artikel->bezeichnung)) ? $position->artikel->bezeichnung : 'n.v.' }}</div>
-                    <div class=" text-right w-[7vH] pr-1">{{ number_format($position->menge, 0, ',', '.') }}</div>
-                    <div class=" text-left  w-[5vH]">{{ (!empty($position->artikel->einheit)) ? $position->artikel->einheit : 'n.v.' }}</div>
-                    <div class=" text-right w-[13vH]">{{ number_format($position->epreis, 2, ',', '.') }} €</div>
-                    <div class=" text-right w-[15vH] pr-2">{{ number_format($position->gpreis, 2, ',', '.') }} €</div>
+        <div class="overflow-y-auto max-h-[calc(100vh-426px)]">
+            <div class="flex flex-col">
+                @foreach ($positionen as $position)
+                    <div class="flex flex-row py-0.5">
+                        <div class=" text-left  w-[13vH] pl-2">
+                            <input type="checkbox" wire:model.live="markiertePositionen" value="{{ $position->id }}">
+                            &nbsp; {{ $position->artikelnr }}
+                        </div>
+                        <div class=" text-left  w-[47vH] truncate">{{ (!empty($position->artikel->bezeichnung)) ? $position->artikel->bezeichnung : 'n.v.' }}</div>
+                        <div class=" text-right w-[7vH] pr-1">{{ number_format($position->menge, 0, ',', '.') }}</div>
+                        <div class=" text-left  w-[5vH]">{{ (!empty($position->artikel->einheit)) ? $position->artikel->einheit : 'n.v.' }}</div>
+                        <div class=" text-right w-[13vH]">{{ number_format($position->epreis, 2, ',', '.') }} €</div>
+                        <div class=" text-right w-[15vH] pr-2">{{ number_format($position->gpreis, 2, ',', '.') }} €</div>
 
-                </div>
-            @endforeach
+                    </div>
+                @endforeach
+            </div>
         </div>
     @else
         <div class="m-4 text-center">
