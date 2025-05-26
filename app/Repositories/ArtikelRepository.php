@@ -97,7 +97,7 @@ class ArtikelRepository
         }
     }
 
-    public function update($id, array $data){
+    public function update($id, array $data): bool{
         Log::info([ 'data' => $data]);
         try {
             $artikel = Artikel::findOrFail($id);
@@ -118,7 +118,8 @@ class ArtikelRepository
 
         try {
             if ($this->validateRec($artikel) && $artikel->save()){
-                return $artikel;
+                return true;
+                //return $artikel;
             }
             else{
                 return false;

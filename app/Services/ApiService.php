@@ -167,7 +167,7 @@ class ApiService
                 $response = [
                     'Version' => 1.7,
                     'request' => [
-                          'status' => ($result === true) ? 'warning' : 'error'
+                          'status' => ($result === true) ? 'ok' : 'warning'
                         ],
                   'response' => [
                       'result' => null,
