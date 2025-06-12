@@ -463,7 +463,7 @@
 
 
 
-        <x-my-form :isModified="$isModified" class="max-h-[70vh] z-40 overflow-hidden">
+        <x-my-form :isModified="$isModified" class="min-h-[30vh] max-h-[70vh] z-40 overflow-hidden">
 
             <form class="" wire:submit.prevent="InBasket">
                 @csrf
@@ -588,7 +588,6 @@
                                         <div class="text-base text-gray-600 border-b border-sky-600">
                                             {{ $position['art'] }}
                                         </div>
-
                                     @endif
                                     @php
 

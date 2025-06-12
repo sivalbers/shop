@@ -16,7 +16,7 @@
                 <p><strong>E-Mail:</strong> <a href="mailto:lageroldenburg@ewe-netz.de" class="text-blue-500 hover:underline">lageroldenburg@ewe-netz.de</a></p>
 
                 <h3 class="text-lg font-semibold mt-4 text-sky-600">Lager Bremen</h3>
-                <p>Am Gasgraben 4</p>
+                <p>Am Gaswerkgraben 4</p>
                 <p>28197 Bremen</p>
                 <p><strong>Telefon:</strong> 0421 / 359 46 46</p>
                 <p><strong>Fax:</strong> 0421 / 359 47 22</p>
