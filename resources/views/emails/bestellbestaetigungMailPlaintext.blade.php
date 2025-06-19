@@ -97,7 +97,7 @@ E-Mail: lageroldenburg@ewe-netz.de
 
 
 LAGER BREMEN:
-Am Gasgraben 4
+Am Gaswerkgraben 4
 28197 Bremen
 Telefon: 04 21 / 3 59 46 46
 E-Mail: lagerbremen@ewe-netz.de

@@ -463,7 +463,7 @@
 
 
 
-        <x-my-form :isModified="$isModified" class="min-h-[30vh] max-h-[70vh] z-40 overflow-hidden">
+        <x-my-form :isModified="$isModified" class="min-h-[30vh] max-h-[70vh] z-40 overflow-y-auto">
 
             <form class="" wire:submit.prevent="InBasket">
                 @csrf
@@ -527,35 +527,34 @@
                                 </div>
                                 <br>
 
-                                <div class="flex flex-row">
+                                <div class="flex flex-row items-center">
                                     <div class="basis-1 text-center flex ">
 
 
                                         <div x-data="{ quantity: {{ $pos['menge'] }}, loop:0 }"
                                             @basket-cleared.window="quantity = 0"
                                             x-init="quantity = {{ $pos['menge'] }}"
-                                            class="flex items-center overflow-hidden w-24 py-0 border border-gray-400 rounded">
+                                            class="flex items-center overflow-hidden w-24 py-0 border border-gray-400 rounded h-9">
 
                                             <button type="button" @click="quantity = Math.max(0, quantity - 1); $wire.set('aPositions.0.menge', quantity)"
-                                                class="flex-1 bg-gray-200 text-gray-700 py-0.5 hover:bg-blue-200 h-7 border-r border-r-gray-400">-</button>
+                                                class="flex-1 bg-gray-200 text-gray-700  hover:bg-blue-200 border-r border-r-gray-400 w-9 h-9">-</button>
 
                                             <input type="number" min="0" max="1000000" step="1" x-model="quantity" wire:model="aPositions.0.menge"
-                                                class="InputMenge px-1 w-14 text-center border-none outline-none text-xs h-7"
+                                                class="InputMenge px-1 w-14 text-center border-none outline-none text-xs w-9 h-9"
                                                 @focus="$event.target.select()">
 
                                             <button type="button" @click="quantity++; $wire.set('aPositions.0.menge', quantity)"
-                                                class="flex-1 bg-gray-200 text-gray-700 py-0.5 hover:bg-blue-200 h-7 border-l border-l-gray-400">+</button>
+                                                class="flex-1 bg-gray-200 text-gray-700 hover:bg-blue-200 border-l border-l-gray-400 w-9 h-9">+</button>
 
-                                            <!-- input type="hidden" name="artikelmenge[{{ $pos['artikelnr'] }}]" x-model="quantity" -->
                                         </div>
 
                                     </div>
-                                    <div class="basis-1 text-xs pt-2 pl-2">
+                                    <div class="basis-1 text-xs pl-2">
 
                                         @if ($mArtikel->bestand == 0)
-                                            <x-fluentui-vehicle-truck-profile-24-o class="h-7 text-red-500" />
+                                            <x-fluentui-vehicle-truck-profile-24-o class="h-8 text-red-500" />
                                         @else
-                                            <x-fluentui-vehicle-truck-profile-24 class="h-7 text-[#CDD503]" />
+                                            <x-fluentui-vehicle-truck-profile-24 class="h-8 text-[#CDD503]" />
                                         @endif
 
                                     </div>
@@ -564,13 +563,26 @@
                                     <button type="submit" class="w-40 bg-sky-600 text-white mt-2 py-2 rounded-md hover:font-bold shadow-md">
                                         In den Warenkorb
                                     </button>
+
+                                </div>
+                                <div class="text-xs mt-5">
+                                    @if (count($aPositions) > 1)
+                                        <div class="flex flex-row items-center">
+                                            <div class="mr-2">
+                                                <x-fluentui-link-square-12-o class="w-5" />
+                                            </div>
+                                            <div>
+                                                <a href="#zusatz" class="hover:text-sky-600 hover:underline">Zubehör-/Ersatzartikel</a>
+                                            </div>
+                                        </div>
+                                    @endif
                                 </div>
 
                             </div>
                         </div>
                     </div>
                     @if (count($aPositions) > 1)
-                        <div class="flex flex-col mb-4  w-full">
+                        <div class="flex flex-col mb-4 w-full " id="zusatz">
 
                                 @php
                                     $tabFavoritActive = false; // $selectedTab === Tab::arFavoriten;
