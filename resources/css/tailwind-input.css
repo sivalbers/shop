@@ -1,5 +1,7 @@
-@import 'lightbox2/dist/css/lightbox.css';
+@config "../../tailwind.config.js";
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@import 'lightbox2/dist/css/lightbox.css' layer(base);
+
+

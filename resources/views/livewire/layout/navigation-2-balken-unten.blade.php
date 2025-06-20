@@ -104,7 +104,7 @@
 
 
             <div class="flex flex-col h-28 ">
-                <div class="h-12 flex  w-full bg-opacity-50 "> <!-- Zeile mit Name -->
+                <div class="h-12 flex  w-full bg-inherit/50 "> <!-- Zeile mit Name -->
                     @if (auth()->user()->isAdmin())
                         <x-dropdown align="right">
                             <x-slot name="trigger">

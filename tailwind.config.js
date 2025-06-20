@@ -8,7 +8,9 @@ export default {
         './storage/framework/views/*.php',
         './resources/views/**/*.blade.php',
         './resources/views/emails/**/*.blade.php',
-        './app/Helpers/*.php'
+        './app/Helpers/*.php',
+        './resources/js/**/*.js',
+        './resources/js/**/*.vue', // falls du Vue nutzt
     ],
     theme: {
         extend: {

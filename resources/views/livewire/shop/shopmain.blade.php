@@ -90,7 +90,7 @@
                             -->
 
                             @if ($activeTab === 'warengruppen') <!-- Warengruppen -->
-                                <div class="p-3 w-full md:w-1/3 flatwhite bg-red-400 h-[calc(100vh-245px)] overflow-hidden">
+                                <div class="p-3 w-full md:w-1/3 flatwhite h-[calc(100vh-245px)] overflow-hidden">
 
                                     <div class="text-base font-bold  text-sky-600 border-b border-sky-600 h-6 flex items-center">
                                         <span

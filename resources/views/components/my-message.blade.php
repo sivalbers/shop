@@ -1,6 +1,6 @@
 @props(['titel', 'hinweis', 'dauer' => 5000]) {{-- Dauer in Millisekunden, Standard: 5000ms (5 Sekunden) --}}
 
-<div class="fixed inset-0 flex items-center justify-center bg-opacity-60 w-full h-full bg-slate-100 backdrop-blur-[2px]"
+<div class="fixed inset-0 flex items-center justify-center w-full h-full bg-slate-100/60 backdrop-blur-[2px]"
      x-show="zeigeMessage"
      x-cloak
      x-on:click.self="zeigeMessage = false"
@@ -24,7 +24,7 @@
      ">
 
     <!-- Dialog -->
-    <div class="w-6/12 m-auto text-center bg-opacity-0">
+    <div class="w-6/12 m-auto text-center ">
         <div class="m-4 p-4 border rounded-md border-sky-600 bg-sky-600 shadow-md">
 
             <div class="flex flex-row items-center w-full">

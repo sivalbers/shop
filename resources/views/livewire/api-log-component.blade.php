@@ -47,7 +47,7 @@
 
     <!-- Formular -->
     <div class="w-full relative z-50">
-        <div class="flex fixed top-0 bg-opacity-60 item-center w-full h-full bg-slate-100 backdrop-blur-[2px]"
+        <div class="flex fixed top-0 item-center w-full h-full bg-slate-100/60 backdrop-blur-[2px]"
             x-show="showApiLogEdit" x-on:click.self="showApiLogEdit = false">
             <div class="w-10/12 m-auto flatwhite">
                 <div class="flex flex-row m-2 font-bold text-xl text-sky-600">

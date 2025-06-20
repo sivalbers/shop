@@ -287,7 +287,7 @@ new class extends Component {
 
     </section>
 
-    <div class="z-50 flex items-center justify-center fixed inset-0 bg-opacity-60 item-center w-full h-full bg-slate-100 backdrop-blur-[2px]"
+    <div class="z-50 flex items-center justify-center fixed inset-0 item-center w-full h-full bg-slate-100/60 backdrop-blur-[2px]"
         x-show="showAbfrage" x-cloak x-on:click.self="showAbfrage = false, showForm = false"
         x-on:keydown.escape.window="showAbfrage = false, showForm = false">
         <form class="border border-sky-600 rounded-md shadow-md bg-slate-100 p-8">

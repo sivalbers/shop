@@ -122,7 +122,8 @@
 
 
             <div class="flex flex-col h-28 ">
-                <div class="h-12 flex  w-full bg-opacity-50 "> <!-- Zeile mit Name -->
+                <div class="h-12 flex  w-full bg-inherit/50"> <!-- Zeile mit Name -->
+
                     @if ( !empty(Auth::user()) && auth()->user()->isAdmin())
                         <x-dropdown align="right">
                             <x-slot name="trigger">
@@ -210,7 +211,7 @@
 
                         <x-slot name="content">
                                 @if (!empty($kunden) && count($kunden) > 1)
-                                <div class="text-xl -mt-1 rounded-t-md pl-2 h-11 pt-2
+                                <div class="text-xl  rounded-t-md pl-2 -mt-1 pt-1 h-12 flex items-center
                                     text-sky-600
                                     bg-ewe-gruen">
                                     Mandantenauswahl:
@@ -251,9 +252,9 @@
 
                                 @endforeach
                                 @endif
-                                <div class="text-xl mt-2 pl-2 h-8 pt-1 text-sky-600 bg-ewe-gruen px-8">
-                                Benutzer:
-                            </div>
+                                <div class="text-xl mt-0 pl-2 pt-1 text-sky-600 bg-ewe-gruen px-8 border-b border-gray-600 h-12 flex items-center">
+                                    Benutzer:
+                                </div>
                                 <x-dropdown-link :href="route('profile')" wire:navigate>
                                     {{ __('auth.Profile') }}
                                 </x-dropdown-link>
@@ -264,13 +265,6 @@
                                         {{ __('auth.Log Out') }}
                                     </x-dropdown-link>
                                 </button>
-
-
-
-
-
-
-
                         </x-slot>
                     </x-dropdown>
                 </div>

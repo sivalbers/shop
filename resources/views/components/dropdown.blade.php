@@ -33,7 +33,7 @@ $width = match ($width) {
                 class="absolute z-50 ml-20 -mt-2  {{ $width }} rounded-md shadow-lg {{ $alignmentClasses }}"
                 style="display: none;"
                 @click="open = false">
-            <div class="rounded-md ring-1 ring-black ring-opacity-5 border border-gray-600 {{ $contentClasses }}">
+            <div class="rounded-md  border border-gray-600 {{ $contentClasses }}">
                 {{ $content }}
             </div>
         </div>

@@ -39,7 +39,7 @@
         }" x-init="startTimer()" x-show="open" x-transition.opacity.duration.500ms
             x-on:click.self="if (canClose()) open = false" x-on:keydown.escape.window="if (canClose()) open = false"
             x-on:keydown.right.window="nextMessage()" x-on:keydown.left.window="prevMessage()"
-            class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+            class="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
             <!-- Äußerer Container: volle Höhe -->
             <div class="flex flex-col h-full max-h-[85vh] bg-white rounded shadow-lg w-full max-w-4xl overflow-hidden">
 
@@ -65,7 +65,7 @@
                     <div class="flex justify-between items-center mb-2">
                         <template x-if="currentIndex > 0">
                             <button @click="prevMessage()"
-                                
+
                                 :class="progress < 100 ? 'bg-gray-300 text-gray-500 cursor-not-allowed' :
                                     'bg-sky-600 text-white hover:bg-sky-700'"
                                 class="px-4 py-1 rounded transition-colors"

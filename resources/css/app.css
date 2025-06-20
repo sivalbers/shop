@@ -1,17 +1,27 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@import 'lightbox2/dist/css/lightbox.css' layer(base);
+
+@config "../../tailwind.config.js";
+
+@layer components{
+    .flatwhite
+        {
+            @apply border border-gray-200 rounded-md bg-white shadow-gray-300 shadow-md
+        }
+
+}
 
 .suchFilter{
-    @apply  h-4 bg-slate-200 focus:outline-none focus:border-none text-xs text-gray-500 font-normal rounded
+    @apply  h-4 bg-slate-200 focus:outline-hidden focus:border-none text-xs text-gray-500 font-normal rounded-xs
 }
 
 select.suchFilter{
-    @apply  h-4 bg-slate-200 focus:outline-none focus:border-none text-xs text-gray-500 font-normal px-1 py-0 w-20
+    @apply  h-4 bg-slate-200 focus:outline-hidden focus:border-none text-xs text-gray-500 font-normal px-1 py-0 w-20
 }
 
-.tabNew{
-    @apply h-8 px-2 mr-2 w-36  flatwhite
+.tabNew {
+    @apply h-8 px-2 mr-2 w-36 border border-gray-200 rounded-md bg-white shadow-gray-300 shadow-md;
 }
 
 .tabNewActive{
@@ -40,21 +50,17 @@ select.suchFilter{
 }
 
 .basketInput{
-    @apply  h-6 border border-slate-500 rounded
+    @apply  h-6 border border-slate-500 rounded-xs
 }
 
 .basketTextarea{
-    @apply h-28 border border-slate-500 rounded
+    @apply h-28 border border-slate-500 rounded-xs
 }
 
 .basketLieferdatum{
-    @apply w-4/12 h-6 border border-slate-500 rounded
+    @apply w-4/12 h-6 border border-slate-500 rounded-xs
 }
 
-.flatwhite
-{
-    @apply border border-gray-200 rounded-md bg-white shadow-gray-300 shadow-md
-}
 
 .prio_normal{
     @apply bg-inherit

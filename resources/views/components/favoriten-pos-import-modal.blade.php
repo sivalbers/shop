@@ -1,5 +1,5 @@
 <div
-    class="flex fixed top-0 bg-opacity-60 items-center justify-center w-full h-full bg-slate-100 backdrop-blur-[2px] "
+    class="flex fixed top-0 items-center justify-center w-full h-full bg-slate-100/60 backdrop-blur-[2px] "
     x-data="importModal(@entangle('showFavoritenPosImportModal'))"
     x-show="offen"
     x-cloak
