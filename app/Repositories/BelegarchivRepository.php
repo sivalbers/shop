@@ -10,7 +10,8 @@ use Exception;
 
 class BelegarchivRepository
 {
-    private string $apiUrl = "https://veo-services.gws-cloud.de/osg/v1/documents";
+    private string $apiUrl = "https://veo-services.gws-cloud.de/osg/v1/order";
+    // private string $apiUrl = "https://veo-services.gws-cloud.de/osg/v1/documents";
 
     private string $customerId = "b3030cc0-c234-4b69-8b04-a67ef021faf3";
     private string $subscriptionKey = "cd8a3a82b46446b9a8dfb5adf2589211";

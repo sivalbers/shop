@@ -158,7 +158,7 @@ class WarenkorbComponent extends Component
         $this->bestellung->kundenbestellnr = '';
         $this->bestellung->kommission = '';
         $this->bestellung->bemerkung = '';
-        $this->bestellung->lieferdatum = Bestellung::calcLFDate();
+        $this->bestellung->lieferdatum = Bestellung::calcLFDatum();
         $this->bestellung->save();
         $this->setData();
         $this->dispatch('updateNavigation');
