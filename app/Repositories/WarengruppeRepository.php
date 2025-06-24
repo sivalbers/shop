@@ -83,12 +83,16 @@ private function logMessage(string $level, string $message, array $context = [])
     public function create($wgHelper)
     {
         $wg = new Warengruppe();
+        // Log::info(sprintf('wgHelper->wg:%s ->sortiment', $wgHelper->warengruppe, $wgHelper->sortiment )) ;
+        Log::info('wgHelper: ' . json_encode($wgHelper));
+        // Log::info('wgHelper:', print_r($wgHelper, true));
+
 
         try {
             $wg = $this->updateRecFromData($wg, $wgHelper);
         } catch (\Throwable $e) {
             // Fehler beim Speichern behandeln
-            $this->logMessage('error', 'Create:: Fehler beim konvertieren der Warengruppe: ' . $e->getMessage(), ['data' => $data]);
+            $this->logMessage('error', 'Create:: Fehler beim konvertieren der Warengruppe: ' . $e->getMessage(), []);
             return false;
         }
 
@@ -103,11 +107,11 @@ private function logMessage(string $level, string $message, array $context = [])
             }
 
             // Optional: Loggen, falls Speichern nicht erfolgreich war, ohne Exception
-            $this->logMessage('warning', 'Warengruppe konnte nicht gespeichert werden.', ['data' => $data]);
+            $this->logMessage('warning', 'Warengruppe konnte nicht gespeichert werden.', []);
             return false;
 
         } catch (\Exception $e) {
-            $this->logMessage('error', 'Warengruppe: Fehler beim Speichern des Artikels: ' . $e->getMessage(), ['data' => $data]);
+            $this->logMessage('error', 'Warengruppe: Fehler beim Speichern des Artikels: ' . $e->getMessage(), []);
             return false;
         }
     }

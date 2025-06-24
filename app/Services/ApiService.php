@@ -102,6 +102,7 @@ class ApiService
             }
 
             case 'categories':
+                
                 return $this->warengruppeRepository->create($request->all());
             case 'users': {
                   $debitor = $this->userRepository->create($request->all());

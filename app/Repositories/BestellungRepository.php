@@ -12,8 +12,10 @@ use App\Services\BestellungToXMLService;
 class BestellungRepository
 {
     private string $apiUrl = "https://veo-services.gws-cloud.de/osg/v1/orders";
-    private string $customerId = "b3025cc0-c234-4b69-8b04-a67ef013faf3";
+    private string $customerId = "b3030cc0-c234-4b69-8b04-a67ef021faf3";
     private string $subscriptionKey = "cd8a3a82b46446b9a8dfb5adf2589211";
+
+
 
     public function sendToERP(Bestellung $bestellung)
     {
