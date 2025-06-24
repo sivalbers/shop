@@ -123,12 +123,23 @@ class UserRepository
             if (!$this->validateUser($user)) {
                 return false;
             }
+            else {
+                Log::info('validateUser = gültig.');
+            }
             if (!$this->validateUserDebitor($userDebitor)) {
                 return false;
             }
+            else {
+                Log::info('validateUserDebitor = gültig.');
+            }
+
             if (!$this->validateDebitor($debitor)) {
                 return false;
             }
+            else {
+                Log::info('validateDebitor = gültig.');
+            }
+
             Log::info([ 'Suche nach E-Mail' => $user->email]);
 
             $found = User::where('email', $user->email)->exists();
@@ -141,17 +152,9 @@ class UserRepository
 
             }
             else{
-                Log::info('Es wurde kein neuer Benutzer angelegt');
+                Log::info('Benutzer existiert. Es wurde kein neuer Benutzer angelegt');
             }
 
-            $found = UserDebitor::where('email', $user->email)->where('debitor_nr', $debitor->nr)->exists();
-            if ($found === false) {
-                $userDebitor->save();
-                $this->logMessage('debug', 'Neue UserDebitor-ID: ', ['userDebitor->id' => $userDebitor->id]);
-            }
-            else{
-                Log::info('Es wurde kein neuer UserDebitor angelegt');
-            }
 
             $found = Debitor::where('nr', $debitor->nr)->exists();
             if ($found === false) {
@@ -160,14 +163,21 @@ class UserRepository
                 return $debitor->nr;
             }
             else{
-                Log::info('Es wurde kein neuer Debitor angelegt');
+                Log::info('Debitor existiert. Es wurde kein neuer Debitor angelegt');
             }
 
-
+            $found = UserDebitor::where('email', $user->email)->where('debitor_nr', $debitor->nr)->exists();
+            if ($found === false) {
+                $userDebitor->save();
+                $this->logMessage('debug', 'Neue UserDebitor-ID: ', ['userDebitor->id' => $userDebitor->id]);
+            }
+            else{
+                Log::info('User_Debitor existiert. Es wurde kein neuer UserDebitor angelegt');
+            }
 
             // Optional: Loggen, falls Speichern nicht erfolgreich war, ohne Exception
-            $this->logMessage('warning', 'Benutzer konnte nicht gespeichert werden.', ['data' => $data]);
-            return false;
+            // $this->logMessage('warning', 'Benutzer konnte nicht gespeichert werden.', ['data' => $data]);
+            return true;
 
         } catch (\Exception $e) {
             $this->logMessage('error', 'Create: Fehler beim Speichern des Benutzers: ' . $e->getMessage(), ['data' => $data]);

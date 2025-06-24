@@ -71,6 +71,7 @@ class AnschriftComponent extends Component
             $query->where('kundennr', 'like', '%'.$this->kundennrFilter.'%');
         }
 
+
         if (!empty($this->artFilter)) {
             $query->where('art', $this->art);
         }
@@ -82,13 +83,13 @@ class AnschriftComponent extends Component
         if (!empty($this->firma1Filter)) {
             $query->where('firma1', 'like', '%'.$this->firma1Filter.'%');
         }
+
         if (!empty($this->firma2Filter)) {
             $query->where('firma2', 'like', '%'.$this->firma2Filter.'%');
         }
 
-
-
         $this->anschriften = $query->get();
+
     }
 
     public function save()

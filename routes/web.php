@@ -77,9 +77,9 @@ Route::get('/news', NachrichtenListComponent::class)
 Route::middleware([AdminMiddleware::class])->group(function(){
     Route::get('/artikels', ArtikelComponent::class)->middleware('auth')->name('artikel');
     Route::get('/sortimente', SortimentComponent::class)->middleware('auth')->name('sortimente');
-    Route::get('/artikel-sortimente', ArtikelSortimentComponent::class)->middleware('auth');
+    Route::get('/artikel-sortimente', ArtikelSortimentComponent::class)->middleware('auth'); // Fehler
     Route::get('/warengruppen', WarengruppeComponent::class)->middleware('auth')->name('warengruppen');
-    Route::get('/apilog', ApiLogComponent::class)->middleware('auth')->name('apilog');
+
 
     Route::get('/import-odata/artikel', [ODataController::class, 'importArtikel'])->name('importArtikel');
     Route::get('/import-odata/wg', [ODataController::class, 'importWarengruppe'])->name('importWG');
@@ -91,18 +91,17 @@ Route::middleware([AdminMiddleware::class])->group(function(){
 
     Route::get('/import', ImportComponent::class)->name('import');
 
-
+    Route::get('/apilog', ApiLogComponent::class)->middleware('auth')->name('apilog');
     Route::view('/apitest', 'apitest')->name('apitest');
-
     Route::get('/logs', function() {
         return view('logs');
     })->name('logs');
 
-    Route::get('/belegarchiv', BelegarchivComponent::class)->name('belegarchiv');
+    Route::get('/belegarchiv', BelegarchivComponent::class)->name('belegarchiv'); // Fehler beim holen der Belege ...
 
 });
 
-Route::get('/suchtest', ArtikelSuche::class);
+// Route::get('/suchtest', ArtikelSuche::class); // Funktioniert, aber ausgeklammert. Bildet die Artikelsuche ab.
 Route::post('/punchout', [Punchout::class, 'handlePunchOut']);
 
 Route::view('/datenschutz', 'datenschutz')->name('datenschutz');
