@@ -177,7 +177,7 @@ class UserRepository
 
             // Optional: Loggen, falls Speichern nicht erfolgreich war, ohne Exception
             // $this->logMessage('warning', 'Benutzer konnte nicht gespeichert werden.', ['data' => $data]);
-            return true;
+            return $debitor->nr;
 
         } catch (\Exception $e) {
             $this->logMessage('error', 'Create: Fehler beim Speichern des Benutzers: ' . $e->getMessage(), ['data' => $data]);
