@@ -226,7 +226,7 @@ class UserRepository
 
 
     function updateUserFromData(&$user, &$debitor, &$userDebitor, $data) {
-        // Mapping der Spalten von `data` zu `Artikel`
+        // Mapping der Spalten von `data` zu `Users`
 
         $mapping = [
             'customer_number'          => 'kundennr', // $debitor->nr, $userDebitor->debitor_nr

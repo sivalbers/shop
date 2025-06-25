@@ -102,7 +102,7 @@ class ApiService
             }
 
             case 'categories':
-                
+
                 return $this->warengruppeRepository->create($request->all());
             case 'users': {
                   $debitor = $this->userRepository->create($request->all());
@@ -200,7 +200,7 @@ class ApiService
                 }
             case 'categories':
                 return $this->warengruppeRepository->delete($request->id);
-            case 'kunden':
+            case 'users':
                 return $this->userRepository->delete($request->id);
             default:
                 return ['error' => 'Unbekannte API-Ressource'];
