@@ -220,8 +220,14 @@ class UserRepository
 
     public function delete($id)
     {
-        $user = User::findOrFail($id);
-        $user->delete();
+        try{
+            $user = User::findOrFail($id);
+            $user->delete();
+            return true;
+        }
+        catch(\Exception $e){
+            return true;
+        }
     }
 
 
