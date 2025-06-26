@@ -36,12 +36,13 @@ class AnschriftRepository
             'error'   => 3,
         ];
 
-        return $allowedLogLevels[$level] >= $allowedLogLevels[$this->logLevel];
+        return $allowedLogLevels[$level] <= $allowedLogLevels[$this->logLevel];
     }
 
     private function logMessage(string $level, string $message, array $context = []): void
     {
-        if ($this->shouldLog($level)) {
+        if ($this->shouldLog($level))
+        {
             Log::$level($message, $context);
         }
     }
@@ -96,7 +97,6 @@ class AnschriftRepository
             $this->logMessage('error', 'Create:: Fehler beim konvertieren der Anschrift: ' . $e->getMessage(), ['data' => $data]);
             return false;
         }
-
         try {
             // Validierung des Datensatzes
             if (!$this->validateRec($anschrift)) {
@@ -119,8 +119,7 @@ class AnschriftRepository
         }
     }
 
-    public function update($kundennr, array $data)
-    {
+    public function update($kundennr, array $data){
         Log::info([ 'data' => $data]);
         try {
             $anschrift = Anschrift::findOrFail($kundennr);
@@ -132,7 +131,7 @@ class AnschriftRepository
         }
 
         try {
-            $artikel = $this->updateArtikelFromData($anschrift, $data);
+            $anschrift = $this->updateAnschriftFromData($anschrift, $data);
         } catch (\Throwable $e) {
             // Fehler beim Speichern behandeln
             $this->logMessage('error', 'Create:: Fehler beim konvertieren der anschrift: ' . $e->getMessage(), ['data' => $data]);
@@ -152,9 +151,7 @@ class AnschriftRepository
         }
     }
 
-
-    public function delete($kundennr)
-    {
+    public function delete($kundennr){
         Log::info(['delete'=> $kundennr]);
 
         try {
@@ -181,12 +178,13 @@ class AnschriftRepository
 
     function updateAnschriftFromData($rec, $data) {
 
-        $rec->kundenr           = $data['user_id'];
+        $rec->kundennr          = $data['user_id'];
         $rec->kurzbeschreibung  = $data['company'];
         $rec->firma1            = $rec->kurzbeschreibung;
         $rec->strasse           = $data['street'];
         $rec->plz               = $data['zipcode'];
         $rec->stadt             = $data['city'];
+        $rec->land              = '';
         if ($data['billing'] && $data['delivery']){
             $rec->art = '';
         }
@@ -198,7 +196,7 @@ class AnschriftRepository
                 if ($data['billing']){
                     $rec->art = 'Lieferadresse';
                 }
-        Log::info($rec);
+
         return $rec;
     }
 
