@@ -105,11 +105,13 @@ class UserRepository
     }
 
     public function create(array $data){
+        $result = 0 ;
         $user = new User();
         $debitor = new Debitor();
         $userDebitor = new UserDebitor();
         try {
             $this->updateUserFromData($user, $debitor, $userDebitor, $data);
+
 
 
         } catch (\Throwable $e) {
@@ -124,27 +126,30 @@ class UserRepository
                 return false;
             }
             else {
-                Log::info('validateUser = gültig.');
-            }
-            if (!$this->validateUserDebitor($userDebitor)) {
-                return false;
-            }
-            else {
-                Log::info('validateUserDebitor = gültig.');
+                Log::info('Prüfung User => Okay.');
             }
 
             if (!$this->validateDebitor($debitor)) {
                 return false;
             }
             else {
-                Log::info('validateDebitor = gültig.');
+                Log::info('Prüfung Debitor => Okay.');
             }
 
-            Log::info([ 'Suche nach E-Mail' => $user->email]);
+            if (!$this->validateUserDebitor($userDebitor)) {
+                return false;
+            }
+            else {
+                Log::info('Prüfung user_debitor => Okay.');
+            }
+
+
+
+            // Log::info([ 'Suche nach Users über E-Mail: ' => $user->email]);
 
             $found = User::where('email', $user->email)->exists();
 
-            Log::info(['User Found' => $found, 'email' => $user->email]);
+            // Log::info(['User Found' => $found, 'email' => $user->email]);
 
             if ($found === false) {
                 $user->save();
@@ -155,16 +160,18 @@ class UserRepository
                 Log::info('Benutzer existiert. Es wurde kein neuer Benutzer angelegt');
             }
 
-
+            //  Log::info([ 'Suche nach Debitor über Nr: ' => $debitor->nr ]);
             $found = Debitor::where('nr', $debitor->nr)->exists();
             if ($found === false) {
                 $debitor->save();
                 $this->logMessage('debug', 'Neue debitor-ID: ', ['debitor->nr' => $debitor->nr]);
-                return $debitor->nr;
+                $result = $debitor->nr;
             }
             else{
+                $result = $debitor->nr;
                 Log::info('Debitor existiert. Es wurde kein neuer Debitor angelegt');
             }
+
 
             $found = UserDebitor::where('email', $user->email)->where('debitor_nr', $debitor->nr)->exists();
             if ($found === false) {
@@ -177,7 +184,7 @@ class UserRepository
 
             // Optional: Loggen, falls Speichern nicht erfolgreich war, ohne Exception
             // $this->logMessage('warning', 'Benutzer konnte nicht gespeichert werden.', ['data' => $data]);
-            return $debitor->nr;
+            return $result;
 
         } catch (\Exception $e) {
             $this->logMessage('error', 'Create: Fehler beim Speichern des Benutzers: ' . $e->getMessage(), ['data' => $data]);
