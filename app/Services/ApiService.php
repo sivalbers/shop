@@ -201,7 +201,20 @@ class ApiService
             case 'categories':
                 return $this->warengruppeRepository->delete($request->id);
             case 'users':
-                return $this->userRepository->delete($request->id);
+                $result = $this->userRepository->delete($request->id);
+
+
+                $response = [
+                    'Version' => 1.7,
+                    'request' => [
+                          'status' => ($result === true) ? 'ok' : 'warning'
+                        ],
+                  'response' => [
+                      'result' => null,
+                      'errors' => [[]]
+                    ]
+                  ];
+                return $response;
             default:
                 return ['error' => 'Unbekannte API-Ressource'];
         }
