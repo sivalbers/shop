@@ -112,8 +112,6 @@ class UserRepository
         try {
             $this->updateUserFromData($user, $debitor, $userDebitor, $data);
 
-
-
         } catch (\Throwable $e) {
             // Fehler beim Speichern behandeln
             $this->logMessage('error', 'Create:: Fehler beim konvertieren des Benutzers: ' . $e->getMessage(), ['data' => $data]);
@@ -143,8 +141,6 @@ class UserRepository
                 Log::info('Prüfung user_debitor => Okay.');
             }
 
-
-
             // Log::info([ 'Suche nach Users über E-Mail: ' => $user->email]);
 
             $found = User::where('email', $user->email)->exists();
@@ -154,7 +150,6 @@ class UserRepository
             if ($found === false) {
                 $user->save();
                 $this->logMessage('debug', 'Neue Benutzer-ID: ', ['userId' => $user->id]);
-
             }
             else{
                 Log::info('Benutzer existiert. Es wurde kein neuer Benutzer angelegt');
@@ -194,6 +189,19 @@ class UserRepository
 
     public function update($id, array $data)
     {
+
+        $user = new User();
+        $debitor = new Debitor();
+        $userDebitor = new UserDebitor();
+        try {
+            $this->updateUserFromData($user, $debitor, $userDebitor, $data);
+
+        } catch (\Throwable $e) {
+            // Fehler beim Speichern behandeln
+            $this->logMessage('error', 'Create:: Fehler beim konvertieren des Benutzers: ' . $e->getMessage(), ['data' => $data]);
+            return false;
+        }
+
         try {
             $user = User::findOrFail($id);
 
@@ -204,7 +212,7 @@ class UserRepository
         }
 
         try {
-            $user = $this->updateUserFromData($user, $data);
+            $user = $this->updateUserFromData($user, $debitor, $userDebitor, $data);
         } catch (\Throwable $e) {
             // Fehler beim Speichern behandeln
             $this->logMessage('error', 'Create:: Fehler beim konvertieren des Benutzers: ' . $e->getMessage(), ['data' => $data]);
@@ -238,7 +246,7 @@ class UserRepository
     }
 
 
-    function updateUserFromData(&$user, &$debitor, &$userDebitor, $data) {
+    function updateUserFromData($user, $debitor, $userDebitor, $data) {
         // Mapping der Spalten von `data` zu `Users`
 
         $mapping = [

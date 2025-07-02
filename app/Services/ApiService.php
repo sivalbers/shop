@@ -180,7 +180,18 @@ class ApiService
             case 'categories':
                 return $this->warengruppeRepository->update($request->id, $request->all());
             case 'users':
-                return $this->userRepository->update($request->id, $request->all());
+                $result = $this->userRepository->update($request->id, $request->all());
+                $response = [
+                    'Version' => 1.7,
+                    'request' => [
+                          'status' => ($result === true) ? 'ok' : 'warning'
+                        ],
+                  'response' => [
+                      'result' => null,
+                      'errors' => [[]]
+                    ]
+                  ];
+                return $response;
             default:
                 return ['error' => 'Unbekannte API-Ressource'];
         }
