@@ -80,7 +80,29 @@
                             ****************************************************************************
                         -->
 
+                <div
+                    x-data="{
+                        width: window.innerWidth,
+                        breakpoint() {
+                            if (this.width >= 1536) return '2XL';
+                            if (this.width >= 1280) return 'XL';
+                            if (this.width >= 1024) return 'LG';
+                            if (this.width >= 768)  return 'MD';
+                            if (this.width >= 640)  return 'SM';
+                            return 'Keine';
+                        }
+                    }"
+                    x-init="window.addEventListener('resize', () => width = window.innerWidth)"
+                    class="block h-10 my-2
+                        bg-lime-400
+                        sm:bg-red-200
+                        md:bg-orange-200
+                        lg:bg-green-200
+                        xl:bg-blue-200
+                        2xl:bg-pink-200">
 
+                    <span x-text="breakpoint()" class="block text-center py-2 font-bold"></span>
+                </div>
                         <div class="flex flex-col md:flex-row">
 
                             <!--
@@ -89,8 +111,9 @@
                             ****************************************************************************
                             -->
 
+
                             @if ($activeTab === 'warengruppen') <!-- Warengruppen -->
-                                <div class="p-3 w-full md:w-1/3 flatwhite h-[calc(100vh-245px)] overflow-hidden">
+                                <div class="p-3 w-full md:w-1/3 flatwhite md:h-[calc(100vh-245px)] overflow-hidden">
 
                                     <div class="text-base font-bold  text-sky-600 border-b border-sky-600 h-6 flex items-center">
                                         <span
@@ -143,7 +166,7 @@
                             @endif
 
                             @if ($activeTab === 'suche') <!-- Suche -->
-                                <div class="p-2 mb-4 align-top flatwhite w-full md:w-1/3 h-[calc(100vh-245px)] overflow-y-auto">
+                                <div class="p-2 mb-4 align-top flatwhite w-full md:w-1/3 md:h-[calc(100vh-245px)] overflow-y-auto">
                                     <div class="text-base font-bold text-sky-600 border-b border-sky-600 mb-4">
                                         Suche
                                     </div>
@@ -268,7 +291,7 @@
                             @endif
 
                             @if ($activeTab === 'favoriten') <!-- Favoriten -->
-                                <div x-data="{ openSetting : false }" class=" p-3 mb-4 align-top flatwhite w-full md:w-1/3 h-[calc(100vh-245px)] overflow-hidden">
+                                <div x-data="{ openSetting : false }" class=" p-3 mb-4 align-top flatwhite w-full md:w-1/3 md:h-[calc(100vh-245px)] overflow-hidden">
                                     <div
                                         class="flex flex-row justify-between font-bold text-sky-600 border-b border-sky-60 items-center">
                                         <div class="text-base">
@@ -388,7 +411,7 @@
                             @endif
 
                             @if ($activeTab === 'schnellerfassung') <!-- Schnellerfassung -->
-                                <div class="p-3 mb-4 align-top  flatwhite w-full md:w-1/3 h-[calc(100vh-245px)] overflow-hidden">
+                                <div class="p-3 mb-4 align-top  flatwhite w-full md:w-1/3 md:h-[calc(100vh-245px)] overflow-hidden">
                                     <div class="text-base font-bold text-sky-600 border-b border-sky-600">
                                         Schnellerfassung</div>
                                     @livewire('schnellerfassung-component', ['sortiment' => $sortiment])
@@ -407,7 +430,7 @@
                             <!-- SPALTE 2 -->
 
                             @if ($activeTab != 'warenkorb') <!-- Alle Menüpunkte aus Warenkorb -->
-                            <div class="w-full md:w-2/3 md:ml-2 flatwhite h-[calc(100vh-245px)] overflow-hidden">
+                            <div class="w-full md:w-2/3 md:ml-2 flatwhite md:h-[calc(100vh-245px)] overflow-hidden">
                                 <div class="flex flex-col " id="tab5">
                                     <!-- Enthält die Komponente -->
                                     <div class="w-full max-h-full p-3 mb-2">
@@ -420,7 +443,7 @@
 
                             @else
                                 <div class="w-full md:w-2/3 md:ml-2 mb-4 align-top  flatwhite   ">
-                                    <div class="flex flex-col h-[calc(100vh-245px)] overflow-auto">
+                                    <div class="flex flex-col md:h-[calc(100vh-245px)] overflow-auto">
                                         <div class="w-full max-h-full p-3 mb-2">
                                             @livewire('shop-positionen-component')
                                         </div>
