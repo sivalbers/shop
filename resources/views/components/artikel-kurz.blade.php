@@ -1,11 +1,11 @@
 @props(['pos', 'loop', 'tabFavoritActive' => false, 'favoritenActiveId', ])
 
-<div class="flex flex-row w-full hover:bg-[#e3e692] items-center">
+<div class="flex flex-col md:flex-row w-full hover:bg-[#e3e692] ">
    @php
        $abstand = 'py-0.5';
    @endphp
 
-    <div class="basis-4/6 px-1 {{ $abstand }}">
+    <div class="basis-4/6 px-1 {{ $abstand }}  items-start">
         <span class="text-sm flex flex-row">
 
             @if ($tabFavoritActive) <!-- Favoriten -->
@@ -49,7 +49,7 @@
             </div>
         </span>
     </div>
-    <div class="basis-2/6 px-1 {{ $abstand }}">
+    <div class="basis-2/6 px-1 {{ $abstand }}  items-end">
         <div class="flex flex-col ml-auto w-full">
             <div class="flex flex-row items-center ml-auto">
                 <div class="flex-grow-0 w-auto">
