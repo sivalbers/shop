@@ -4,48 +4,53 @@
 
 
         <!-- Spalte 1 -->
-        <div class="flex flex-col w-8/12 pr-1 ">
-            <div class="flex flex-row items-center border-b border-gray-200">
-                @if ($tabFavoritActive) <!-- Favoriten -->
-                <div class="mr-2">
-                    <a href="#"  wire:click.prevent="favoritArtikelDelete( '{{ $pos['id'] }}')"
+<div class="w-full md:w-8/12 pr-1 ">
+
+    {{-- Bild rechts oben, floatend --}}
 
 
-                        class="hover:bg-[#e3e692] ">
+    {{-- Titelzeile (fließt links vom Bild) --}}
+    <div class="font-bold text-base mb-1">
+        @if ($tabFavoritActive)
+            <a href="#" wire:click.prevent="favoritArtikelDelete('{{ $pos['id'] }}')" class="hover:bg-[#e3e692] inline-block mr-1 align-middle">
+                <x-fluentui-delete-16-o class="h-5" />
+            </a>
+        @endif
 
-                        <x-fluentui-delete-16-o class="h-5" />
-                    </a>
-                </div>
-                @endif
-                <div class="relative group text-gray-300 pr-1 hover:text-yellow-500">
-                    <a href="#" wire:click.prevent="favoritArtikelForm('{{ $pos['artikelnr'] }}')" class="hover:underline">
-                        @if ($pos['is_favorit'])
-                        <x-fluentui-star-emphasis-20 class="text-yellow-500 w-5" />
-                        @else
-                            <!-- Normaler Zustand -->
-                            <x-fluentui-star-28-o class="w-5 group-hover:hidden" />
+        <a href="#" wire:click.prevent="favoritArtikelForm('{{ $pos['artikelnr'] }}')" class="hover:underline inline-block mr-1 align-middle">
+            @if ($pos['is_favorit'])
+                <x-fluentui-star-emphasis-20 class="text-yellow-500 w-5" />
+            @else
+                <x-fluentui-star-28-o class="w-5" />
+            @endif
+        </a>
 
-                            <!-- Hover-Zustand -->
-                            <x-fluentui-star-28-o class="w-5 hidden group-hover:block" />
-                        @endif
-                    </a>
-                </div>
+        <a href="#" wire:click.prevent="showArtikel('{{ $pos['artikelnr'] }}')" class="hover:underline align-middle">
+            {{ $pos['artikelnr'] }} - {{ $pos['bezeichnung'] }}
+        </a>
+    </div>
 
-                <div class="flex flex-row justify-between w-full font-bold">
-                    <div class="text-base">
-                        <a href="#" wire:click.prevent="showArtikel('{{ $pos['artikelnr'] }}')" class="hover:underline">
-                            {{ $pos['artikelnr'] }} - {{ $pos['bezeichnung'] }}
-                        </a>
-                    </div>
-                    <div class="">
-                        &nbsp;
-                    </div>
-                </div>
-            </div>
-            <div class="text-sm">
-                {!! $pos['langtext'] !!}
-            </div>
+    {{-- Langtext --}}
+    <div class="text-sm">
+
+        <div class="float-right ml-2 mb-1 ">
+            @php
+                $bilder = imageExistsAll($pos['artikelnr']);
+            @endphp
+            <x-product-image :images="$bilder" size="130" artikelnr="{{ $pos['artikelnr'] }}" beschreibung="{{ $pos['bezeichnung'] }}" />
         </div>
+        {!! $pos['langtext'] !!}
+
+    </div>
+
+    {{-- Float beenden --}}
+    <div class="clear-both"></div>
+</div>
+
+
+
+
+
 
 
        <!-- Spalte 2 -->
@@ -54,7 +59,7 @@
     <!-- Spalte 3 -->
 
 
-    <div class="flex flex-col w-full md:w-4/12 items-end text-left  space-y-1">
+    <div class="flex flex-col w-full md:w-4/12 items-end text-left  space-y-1 ">
         {{-- Zeile: Preis + Menge + Icons in einer Zeile, zentriert --}}
         <div class="flex basis-1 flex-row md:flex-col   space-x-2">
             <div class="text-red-800 text-lg  text-left">
@@ -87,13 +92,7 @@
             </div>
         </div>
 
-        <div class="flex flex-col w-full px-2 items-end my-2">
-            @php
-                $bilder = imageExistsAll($pos['artikelnr']);
-            @endphp
 
-            <x-product-image :images="$bilder" size="100" artikelnr="{{ $pos['artikelnr'] }}" beschreibung="{{ $pos['bezeichnung'] }}" />
-        </div>
 
     </div>
 

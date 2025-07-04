@@ -530,7 +530,7 @@
                                     $bilder = imageExistsAll($mArtikel->artikelnr);
                                 @endphp
 
-                                <x-product-image :images="$bilder" size="250" artikelnr="{{ $mArtikel->artikelnr }}" beschreibung="{{ $mArtikel->bezeichnung }}" />
+                                <x-product-image :images="$bilder" size="200" artikelnr="{{ $mArtikel->artikelnr }}" beschreibung="{{ $mArtikel->bezeichnung }}" />
 
 
                             </div>
