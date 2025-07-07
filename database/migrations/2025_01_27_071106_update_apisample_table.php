@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::table('apisample', function (Blueprint $table) {
             // Fügt das Feld 'benutzergruppe' nach dem Feld 'updated_at' hinzu
-            $table->string('wgnr', 20)->nullable()->change();
             $table->string('httpmethod')
                   ->nullable()
                   ->comment('POST GET PATCH DELETE')

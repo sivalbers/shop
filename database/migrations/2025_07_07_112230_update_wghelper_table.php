@@ -12,6 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('wghelper', function (Blueprint $table) {
+            $table->string('wgnr', 20)->nullable()->change();
             if (!Schema::hasColumn('wghelper', 'name')) {
                 $table->string('name', 80)
                     ->nullable()
