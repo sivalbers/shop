@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Models\Anschrift;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Config;
 
 class AnschriftRepository
 {
@@ -17,9 +18,9 @@ class AnschriftRepository
     public function __construct()
     {
         // Lade Log-Level aus der Konfiguration (z. B. aus der .env über logging.php)
-        $this->logLevel = config('logging.anschrift_repository_log_level', 'error');
+        $this->logLevel = Config::globalString('logging.anschrift_repository_log_level', 'info');
 
-        Log::info(['Loglevel' => $this->logLevel]);
+        Log::info(['logging.anschrift_repository_log_level' => $this->logLevel]);
     }
 
     public function setLogLevel(string $level): void

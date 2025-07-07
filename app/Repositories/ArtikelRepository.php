@@ -7,6 +7,7 @@ use App\Models\Warengruppe;
 use App\Models\WgHelper;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Config;
 
 class ArtikelRepository
 {
@@ -20,14 +21,16 @@ class ArtikelRepository
     public function __construct()
     {
         // Lade Log-Level aus der Konfiguration (z. B. aus der .env über logging.php)
-        $this->logLevel = config('logging.artikel_repository_log_level', 'error');
+        $this->logLevel = Config::globalString('logging.artikel_repository_log_level', 'info');
 
-        Log::info(['Loglevel' => $this->logLevel]);
-    }
+        Log::info(['logging.artikel_repository_log_level' => $this->logLevel]);
 
-    public function setLogLevel(string $level): void
-    {
-        $this->logLevel = $level;
+        /*
+            $this->logMessage('debug', 'Test debug');
+            $this->logMessage('info', 'Test info');
+            $this->logMessage('warning', 'Test warning');
+            $this->logMessage('error', 'Test error');
+        */
     }
 
     private function shouldLog(string $level): bool
@@ -66,34 +69,59 @@ class ArtikelRepository
         return Artikel::all();
     }
 
+    private function logFailure(string $context, \Throwable $e, array $data = []): void
+    {
+        Log::error("[$context] Exception: " . $e->getMessage(), [
+            'trace' => $e->getTraceAsString(),
+            'data' => $data
+        ]);
+    }
+
+    private function getArtikelOrNew($artikelnr){
+        $artikel = Artikel::where('artikelnr', $artikelnr )->first();
+        if (!$artikel){
+            $this->logMessage('debug', 'Artikel wurde nicht gefunden!');
+            $artikel = new Artikel();
+        }
+        else {
+            $this->logMessage('debug', 'Artikel wurde gefunden!');
+        }
+        return $artikel;
+    }
+
     public function create(array $data) {
-        $artikel = new Artikel();
+
+        $artikel = $this->getArtikelOrNew($data['item_number']);
 
         try {
             $artikel = $this->updateArtikelFromData($artikel, $data);
+            $this->logMessage('debug', 'Data wurde zu Artikel übernommen!');
         } catch (\Throwable $e) {
-            // Fehler beim Speichern behandeln
-            $this->logMessage('error', 'Create:: Fehler beim konvertieren des Artikels: ' . $e->getMessage(), ['data' => $data]);
-            return false;
+
+            $this->logMessage('error', 'ArtikelRepository->Create:: Fehler beim konvertieren des Artikels: ' . $e->getMessage(), ['data' => $data]);
+            return null;
         }
 
         try {
-            // Validierung des Datensatzes
+
             if (!$this->validateRec($artikel)) {
-                return false;
+                return null;
             }
 
+            $this->logMessage('debug', 'validateRec bestanden.');
+
             if ($artikel->save()) {
+                $this->logMessage('debug', 'ArtikelRepository->Artikel wurde gespeichert.');
                 return $artikel ;
             }
 
-            // Optional: Loggen, falls Speichern nicht erfolgreich war, ohne Exception
-            $this->logMessage('warning', 'Artikel konnte nicht gespeichert werden.', ['data' => $data]);
-            return false;
+
+            $this->logMessage('warning', 'ArtikelRepository->Artikel konnte nicht gespeichert werden.', ['data' => $data]);
+            return null;
 
         } catch (\Exception $e) {
-            $this->logMessage('error', 'Create: Fehler beim Speichern des Artikels: ' . $e->getMessage(), ['data' => $data]);
-            return false;
+            $this->logMessage('error', 'ArtikelRepository->Create: Fehler beim Speichern des Artikels: ' . $e->getMessage(), ['data' => $data]);
+            return null;
         }
     }
 
@@ -209,7 +237,9 @@ class ArtikelRepository
         foreach ($mapping as $dataKey => $artikelKey) {
             if (isset($data[$dataKey])) {
                 if ($artikelKey != 'IMAGE'){
-                    Log::info(['Artikel->'.$artikelKey => $data[$dataKey]]);
+                    // Log::info(['Artikel->'.$artikelKey => $data[$dataKey]]);
+
+                    //$this->logMessage('debug', 'Feld: '.$artikelKey, [ $data[$dataKey] ]);
                     $artikel->$artikelKey = $data[$dataKey];
                 }
                 else {

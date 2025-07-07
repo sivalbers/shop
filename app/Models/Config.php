@@ -38,7 +38,7 @@ class Config extends Model
         // Log::info('cacheKey', [ $cacheKey ]);
 
         // Lade die Daten aus dem Cache oder speichere sie für 60 Minuten
-        $result = Cache::remember($cacheKey, 60, function () use ($option, $kundennr, $userId, $type) {
+        $result = Cache::remember($cacheKey, 0, function () use ($option, $kundennr, $userId, $type) {
             // Führe die Query basierend auf den übergebenen Parametern aus
             $query = Config::where('option', $option);
 
@@ -69,9 +69,14 @@ class Config extends Model
 
 
     // Statische Hilfsmethoden für String und JSON
-    public static function globalString($option)
+    public static function globalString($option, $default = '')
     {
-        return self::getConfigData($option);
+        $data = self::getConfigData($option);
+        if (empty($data)) {
+            $data = $default;
+        }
+        return $data;
+
     }
 
     public static function globalJson($option)

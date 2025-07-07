@@ -28,6 +28,10 @@ class Artikel extends Model
         'update_status' => 'integer'
     ];
 
+    protected $attributes = [
+        'update_status' => 0,
+    ];
+
     public function warengruppe()
     {
        return $this->belongsTo(Warengruppe::class, 'wgnr', 'wgnr');

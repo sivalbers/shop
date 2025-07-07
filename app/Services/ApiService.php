@@ -88,11 +88,32 @@ class ApiService
 
         switch ($url) {
             case 'products': {
+
                 $result = $this->artikelService->createArtikelMitZuordnungen($request->all());
                 Log::info('Nach $result = $this->artikelService->createArtikelMitZuordnungen($request->all());');
                 try{
                     Log::info(['$result : ' => $result ]);
-                    return $this->fillResponse($result);
+
+
+
+                    $response = [
+                        'Version' => 1.7,
+                        'request' => [
+                                'status' => ($result['error'] === false ) ? 'success' : 'error'
+                            ],
+                        'response' => [
+                            'result' => null,
+                            'errors' => !empty($result['errorMessage']) ? [[$result['errorMessage']]] : []
+                        ]
+                    ];
+                    if ($result['error'] === false && isset($result['artikel'])) {
+                        /** @var \App\Models\Artikel $artikel */
+                        $artikel = $result['artikel'];
+                        $response['response']['result'] = [
+                            'item_number' => $artikel->artikelnr ];
+                    }
+                return $response;
+
 
                 } catch (\Throwable $e) {
                     Log::error('FEHELR: '. $e->getMessage());

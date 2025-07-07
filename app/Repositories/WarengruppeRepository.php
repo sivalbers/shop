@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Warengruppe;
 use App\Models\WgHelper;
+use App\Models\Config;
 
 use Illuminate\Support\Facades\Log;
 
@@ -17,9 +18,10 @@ class WarengruppeRepository
 // #region Logging
     public function __construct(){
         // Lade Log-Level aus der Konfiguration (z. B. aus der .env über logging.php)
-        $this->logLevel = config('logging.warengruppe_repository_log_level', 'debug');
 
-        Log::info(['Loglevel' => $this->logLevel]);
+        $this->logLevel = Config::globalString('logging.warengruppe_repository_log_level', 'info');
+
+        Log::info(['logging.warengruppe_repository_log_level' => $this->logLevel]);
     }
 
     public function setLogLevel(string $level): void{
