@@ -3,7 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Warengruppe;
-use App\Models\wghelper;
+use App\Models\WgHelper;
 
 use Illuminate\Support\Facades\Log;
 
