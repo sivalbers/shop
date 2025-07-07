@@ -101,9 +101,32 @@ class ApiService
 
             }
 
-            case 'categories':
+            case 'categories': {
 
-                return $this->warengruppeRepository->create($request->all());
+                $category = $this->warengruppeRepository->create($request->all());
+                Log::info([ "category.id" => $category ]);
+                if ($category != false){
+
+
+                        $response = [
+                            'VERSION' => '1.7',
+                            'request' => [ 'status' => 'success'],
+                            'response' => [ 'result' => $category,
+                                            'errors' => [] ] ];
+
+
+                        return $response;
+                    } else {
+                        $response = [
+                            'VERSION' => '1.7',
+                            'request' => [ 'status' => 'error'],
+                            'response' => [ 'result' => '',
+                                            'errors' => ['Fehler bei der Kategorie-Anlage'] ] ];
+
+                        return $response;
+
+                    }
+                }
             case 'users': {
                   $debitor = $this->userRepository->create($request->all());
                   if ($debitor != false){
