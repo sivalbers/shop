@@ -82,14 +82,23 @@ class WarengruppeRepository
             return false;
         }
 
-        $wgh = WgHelper::where('name', $this->wgh->name)->where('sortiment', $this->wgh->sortiment)->first();
-        if (!empty($wgh) && $wgh->id){
-            $this->wgh->id = $wgh->id;
-        }
+
+
 
         try {
-            $this->wgh->save();
-            return $this->wgh->id;
+
+            // wg suchen
+            $wgh = WgHelper::where('name', $this->wgh->name)->where('sortiment', $this->wgh->sortiment)->first();
+
+            if (!empty($wgh) && $wgh->id){
+                // wg gefunden
+                return $wgh->id;
+            }
+            else {
+                // wgh nicht gefunden neu speichern
+                $this->wgh->save();
+                return $this->wgh->id;
+            }
 
         } catch (\Exception $e) {
             $this->logMessage('error', 'Warengruppe: Fehler beim Speichern der Warengruppe : ' . $e->getMessage(), []);
