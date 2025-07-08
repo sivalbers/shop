@@ -25,7 +25,7 @@ class WgHelperRepository
 
     public function create($wgHelper)
     {
-        dd($wgHelper);
+        
         // Log::info(sprintf('wgHelper->wg:%s ->sortiment', $wgHelper->warengruppe, $wgHelper->sortiment )) ;
         Log::info('wgHelper: ' . json_encode($wgHelper));
 

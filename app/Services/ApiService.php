@@ -7,6 +7,7 @@ use App\Repositories\WarengruppeRepository;
 use App\Repositories\UserRepository;
 use App\Repositories\ArtikelSortimentRepository;
 use App\Repositories\AnschriftRepository;
+use App\Repositories\WgHelperRepository;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -32,6 +33,7 @@ class ApiService
     protected $userRepository;
     protected $artikelSortimentRepository;
     protected $anschriftRepository;
+    protected $wgHelperRepository;
 
     protected $artikelService;
 
@@ -40,6 +42,7 @@ class ApiService
         UserRepository $userRepository,
         ArtikelSortimentRepository $artikelSortimentRepository,
         AnschriftRepository $anschriftRepository,
+        WgHelperRepository $wgHelperRepository,
 
         ArtikelService $artikelService )
     {
@@ -48,6 +51,7 @@ class ApiService
         $this->userRepository = $userRepository;
         $this->artikelSortimentRepository = $artikelSortimentRepository;
         $this->anschriftRepository = $anschriftRepository;
+        $this->wgHelperRepository = $wgHelperRepository;
 
         $this->artikelService = $artikelService;
     }
@@ -59,11 +63,38 @@ class ApiService
                 return $this->artikelRepository->getAll();
             case 'categories': {
                     if ($id){
-                        return $this->warengruppeRepository->getByCode($id);
+                        $wgh = $this->wgHelperRepository->getById($id);
+
+                        if (!empty($wgh)){
+
+                            $response = [
+                                'Version' => 1.7,
+                                'request' => [
+                                        'status' => 'success'
+                                    ],
+                                'response' => [
+                                    'id' => $wgh->id,
+                                    'name' => $wgh->name,
+                                    'errors' => ''
+                                ]
+                            ];
+
+                        }
+                        else
+                            $response = [
+                                'Version' => 1.7,
+                                'request' => [
+                                        'status' => 'error'
+                                    ],
+                                'response' => [
+                                    'errors' => 'id not Found'
+                                ]
+                            ];
                     }
                     else {
                         return $this->warengruppeRepository->getAll();
                     }
+                    return $response;
                 }
             case 'kunden':
                 return $this->userRepository->getAll();
@@ -222,13 +253,24 @@ class ApiService
                 return $response;
             }
             case 'categories':
-                return $this->warengruppeRepository->update($request->id, $request->all());
+                $result = $this->warengruppeRepository->update($request->id, $request->all());
+                $response = [
+                    'Version' => 1.7,
+                    'request' => [
+                          'status' => (empty($result)) ? 'error' : 'success'
+                        ],
+                  'response' => [
+                      'result' => (empty($result)) ? null : $result->id,
+                      'errors' => [(empty($result)) ? 'not found' : '']
+                    ]
+                  ];
+                return $response;
             case 'users':
                 $result = $this->userRepository->update($request->id, $request->all());
                 $response = [
                     'Version' => 1.7,
                     'request' => [
-                          'status' => ($result === true) ? 'ok' : 'warning'
+                          'status' => ($result === true) ? 'success' : 'warning'
                         ],
                   'response' => [
                       'result' => null,

@@ -19,7 +19,7 @@ class WarengruppeRepository
     public function __construct(){
         // Lade Log-Level aus der Konfiguration (z. B. aus der .env über logging.php)
 
-        $this->logLevel = Config::globalString('logging.warengruppe_repository_log_level', 'info');
+        $this->logLevel = Config::globalString('logging.warengruppe_repository_log_level', 'debug');
 
         Log::info(['logging.warengruppe_repository_log_level' => $this->logLevel]);
     }
@@ -110,10 +110,20 @@ class WarengruppeRepository
 
     public function update($id, $wgHelper)
     {
-        $warengruppe = Warengruppe::findOrFail($wgHelper->wgnr);
-        $warengruppe->bezeichnung = $wgHelper->name;
-        $warengruppe->save();
-        return $warengruppe;
+
+        // Warengruppe nach ID aus WgHelper suchen
+        $wgh = WgHelper::where('id', $id)->first();
+        if (empty($wgh)){
+            return null;
+        }
+
+        $warengruppe = Warengruppe::where('wgnr', $wgh->wgnr)->first();
+        if (empty($warengruppe)){
+            $warengruppe = Warengruppe::Create([
+                'wgnr' => $wgh->wgnr,
+                'bezeichnung' => $wgh->name ]);
+        }
+        return $wgh;
     }
 
     public function delete($id)
