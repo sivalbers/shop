@@ -25,12 +25,12 @@ class ArtikelRepository
 
         Log::info(['logging.artikel_repository_log_level' => $this->logLevel]);
 
-        /*
+
             $this->logMessage('debug', 'Test debug');
             $this->logMessage('info', 'Test info');
             $this->logMessage('warning', 'Test warning');
             $this->logMessage('error', 'Test error');
-        */
+
     }
 
     private function shouldLog(string $level): bool
@@ -229,7 +229,7 @@ class ArtikelRepository
 
     function updateArtikelFromData($artikel, $data) {
         // Mapping der Spalten von `data` zu `Artikel`
-
+        $this->logMessage('debug', 'Anfang updateArtikelFromData');
         $mapping = [
             'item_number'        => 'artikelnr',
             'item_name'          => 'bezeichnung',
@@ -260,15 +260,18 @@ class ArtikelRepository
         $blocked = (isset($data['blocked'])) ? $data['bloecked'] === 'Ja' : false ;
         $blockedVk = (isset($data['blockedVk'])) ? $data['bloeckedVk'] === 'Ja' : false ;
 
-        Log::info(sprintf('Blocked %s', $data['bloecked']));
-        Log::info(sprintf('BlockedVk %s', $data['bloeckedVk']));
+
+        $this->logMessage('debug', sprintf('Blocked %s', $data['bloecked']));
+
+        $this->logMessage('debug', sprintf('BlockedVk %s', $data['bloeckedVk']));
 
 
         $artikel->gesperrt = $blocked or $blockedVk;
         Log::info( ['gesperrt', $artikel->gesperrt]);
+        $this->logMessage('debug', 'artikel.gesperrt', ['gesperrt' => $artikel->gesperrt ]);
 
         $this->category_id = $data['category_id'];
-
+        $this->logMessage('debug', 'Ende updateArtikelFromData');
         return $artikel;
 
     }
