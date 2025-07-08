@@ -67,42 +67,37 @@ class ArtikelSortimentRepository
 
     public function create(array $data)
     {
-        $rec = new ArtikelSortiment();
 
+        // Daten in ein Artikelsortiment übernehmen
         try {
-            $rec = $this->updateRecordFromData($rec, $data);
+            $rec = $this->updateRecordFromData( $data);
         } catch (\Throwable $e) {
             // Fehler beim Speichern behandeln
             $this->logMessage('error', 'Create:: Fehler beim konvertieren des ArtikelSortiments: ' . $e->getMessage(), ['data' => $data]);
             return false;
         }
 
+        $sortiment = ArtikelSortiment::where('artikelnr', $rec->artikelnr)
+                                    ->where('sortiment', $rec->sortiment)
+                                    ->first();
         try{
-
-            // Validierung des Datensatzes
-            if (!$this->validateRec($rec)) {
-                return false;
+            if (empty($sortiment)){
+                // Sortiment nicht gefunden
+                // Datenvalidieren
+                if (!$this->validateRec($rec)) {
+                    // Bei Fehler raus.
+                    return false;
+                }
+                // Sonst speichern
+                if ($rec->save()) {
+                    $this->logMessage('info', 'ArtikelSortiment erfolgreich gespeichert.', ['data' => $data]);
+                    return true;
+                }
             }
-
-            // Überprüfen, ob der Datensatz bereits existiert
-            $exists = ArtikelSortiment::where('artikelnr', $rec->artikelnr)
-                                      ->where('sortiment', $rec->sortiment)
-                                      ->exists();
-            if ($exists) {
-                $this->logMessage('info', "Eintrag mit artikelnr '{$rec->artikelnr}' und sortiment '{$rec->sortiment}' existiert bereits.");
-                return true; // Kein Speichern notwendig
+            else{
+                // Das Sortiment gibt es schon. Es ist nichts zu tun.
+                return true ;
             }
-            Log::info(var_dump($rec));
-            // Speichern des Datensatzes
-            if ($rec->save()) {
-                $this->logMessage('info', 'ArtikelSortiment erfolgreich gespeichert.', ['data' => $data]);
-                return true;
-            }
-
-            // Loggen, falls Speichern fehlschlägt
-            $this->logMessage('warning', 'ArtikelSortiment konnte nicht gespeichert werden.', ['data' => $data]);
-            return false;
-
         } catch (\Throwable $e) {
             // Fehler beim Speichern behandeln
             $this->logMessage('error', 'Create:: Fehler beim Speichern des ArtikelSortiments: ' . $e->getMessage(), ['data' => $data]);
@@ -152,8 +147,10 @@ class ArtikelSortimentRepository
     }
 
 
-    public function updateRecordFromData($artikelSortiment, $data)
+    public function updateRecordFromData($data)
     {
+        $artikelSortiment = new Artikelsortiment();
+
         $mapping = [
             'item_number'     => 'artikelnr',
             'product_range'   => 'sortiment',
