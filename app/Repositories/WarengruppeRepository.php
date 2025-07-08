@@ -126,10 +126,12 @@ class WarengruppeRepository
         return $wgh;
     }
 
-    public function delete($id)
+    public function delete($wgnr)
     {
-        $warengruppe = Warengruppe::findOrFail($id);
-        $warengruppe->delete();
+        $warengruppe = Warengruppe::where('wgnr', $wgnr)->first();
+        if (!empty($warengruppe)){
+            $warengruppe->delete();
+        }
     }
 
 

@@ -299,7 +299,19 @@ class ApiService
                     }
                 }
             case 'categories':
-                return $this->warengruppeRepository->delete($request->id);
+                $this->wgHelperRepository->delete($request->id);
+
+                $response = [
+                    'Version' => 1.7,
+                    'request' => [
+                          'status' => 'success'
+                        ],
+                  'response' => [
+                      'result' => null,
+                      'errors' => []
+                    ]
+                  ];
+                return $response;
             case 'users':
                 $result = $this->userRepository->delete($request->id);
 

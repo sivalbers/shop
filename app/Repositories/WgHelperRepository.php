@@ -25,7 +25,7 @@ class WgHelperRepository
 
     public function create($wgHelper)
     {
-        
+
         // Log::info(sprintf('wgHelper->wg:%s ->sortiment', $wgHelper->warengruppe, $wgHelper->sortiment )) ;
         Log::info('wgHelper: ' . json_encode($wgHelper));
 
@@ -60,4 +60,14 @@ class WgHelperRepository
             return false;
         }
     }
+
+
+    public function delete($id)
+    {
+        $wgh = WgHelper::findOrFail($id);
+        $wgh->delete();
+        //$warengruppe = Warengruppe::findOrFail($id);
+        //$warengruppe->delete();
+    }
+
 }
