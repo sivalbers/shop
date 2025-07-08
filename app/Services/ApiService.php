@@ -73,8 +73,11 @@ class ApiService
                                         'status' => 'success'
                                     ],
                                 'response' => [
-                                    'id' => $wgh->id,
-                                    'name' => $wgh->name,
+                                    'result' => [
+                                        'id' => $wgh->id,
+                                        'name' => $wgh->name,
+                                        'product_range' => $wgh->sortiment
+                                    ],
                                     'errors' => ''
                                 ]
                             ];
