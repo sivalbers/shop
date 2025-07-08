@@ -257,8 +257,8 @@ class ArtikelRepository
                 $this->logMessage('warning', "Datenfeld '{$dataKey}' fehlt. ", ['data' => $data]);
             }
         }
-        $blocked = (isset($data['blocked'])) ? $data['bloecked'] : false ;
-        $blockedVk = (isset($data['blockedVk'])) ? $data['bloeckedVk'] : false ;
+        $blocked = (isset($data['blocked'])) ? $data['bloecked'] === 'Ja' : false ;
+        $blockedVk = (isset($data['blockedVk'])) ? $data['bloeckedVk'] === 'Ja' : false ;
 
         $artikel->gesperrt = $blocked or $blockedVk;
 
