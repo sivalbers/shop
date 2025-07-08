@@ -260,8 +260,8 @@ class ApiService
                           'status' => (empty($result)) ? 'error' : 'success'
                         ],
                   'response' => [
-                      'result' => (empty($result)) ? null : $result->id,
-                      'errors' => [(empty($result)) ? 'not found' : '']
+                      'result' => [
+                            'id' => (empty($result)) ? 0 : $result->id, ]
                     ]
                   ];
                 return $response;
