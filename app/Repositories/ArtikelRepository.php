@@ -260,7 +260,12 @@ class ArtikelRepository
         $blocked = (isset($data['blocked'])) ? $data['bloecked'] === 'Ja' : false ;
         $blockedVk = (isset($data['blockedVk'])) ? $data['bloeckedVk'] === 'Ja' : false ;
 
+        Log::info(sprintf('Blocked %s', $data['bloecked']));
+        Log::info(sprintf('BlockedVk %s', $data['bloeckedVk']));
+
+
         $artikel->gesperrt = $blocked or $blockedVk;
+        Log::info( ['gesperrt', $artikel->gesperrt]);
 
         $this->category_id = $data['category_id'];
 
