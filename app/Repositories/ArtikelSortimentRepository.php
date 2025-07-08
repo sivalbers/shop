@@ -134,8 +134,10 @@ class ArtikelSortimentRepository
                     ->delete();
             }
             $this->logMessage('info', "Artikel-Sortiment-Zuordnung wurde gelöscht. {$artikelNr} -> {$sortimentBezeichnung} wurden gelöscht.");
+            return true;
         } catch (\Throwable $e) {
             $this->logMessage('error', "Fehler beim Löschen aller ArtikelSortimente mit Artikelnummer {$artikelNr}: " . $e->getMessage());
+            return false;
         }
     }
 

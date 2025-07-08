@@ -335,16 +335,22 @@ class ApiService
 
     public function handleDeleteArtikelRequest($url, Request $request, $artikel = null, $id = null)
     {
-        Log::info([ 'Angekommen in handleDeleteArtikelRequest' , 'URL' => $url ] );
+        //Log::info([ 'Angekommen in handleDeleteArtikelRequest' , 'URL' => $url ] );
         switch ($url) {
             case 'products': {
-                    Log::info(['vor Delete', 'artikel' => $artikel, 'id' => $id ]);
-                    if ( $this->artikelSortimentRepository->delete($artikel, $id) ){
-                        return response('ArtikelSortiment wurde erfolgreich geloescht', 200);
-                    }
-                    else {
-                        return response('ArtikelSortiment konnte nicht geloescht werden.', 500);
-                    }
+                    //Log::info(['vor Delete', 'artikel' => $artikel, 'id' => $id ]);
+                    $result = $this->artikelSortimentRepository->delete($artikel, $id) ;
+                    $response = [
+                        'Version' => 1.7,
+                        'request' => [
+                            'status' => ($result === true) ? 'success' : 'warning'
+                            ],
+                    'response' => [
+                        'result' => null,
+                        'errors' => [($result === true) ? '' : 'fehler beim löschen']
+                        ]
+                    ];
+                    return $response;
                 }
             case 'categories':
                 return $this->warengruppeRepository->delete($request->id);
@@ -354,6 +360,7 @@ class ApiService
                 return ['error' => 'Unbekannte API-Ressource'];
         }
     }
+    
     private function fillResponse($result){
 
 
