@@ -146,8 +146,16 @@ class ArtikelRepository
 
         try {
             if ($this->validateRec($artikel) && $artikel->save()){
+
+                if (!empty($data['category_id'])){
+                    $wgHelper = WgHelper::findOrFail($data['category_id']);
+                    if ($wgHelper){
+                        $wgHelper->wgnr = $artikel->wgnr;
+                        $wgHelper->save();
+                    }
+                }
                 return true;
-                //return $artikel;
+
             }
             else{
                 return false;
