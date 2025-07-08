@@ -246,7 +246,7 @@ class ApiService
                 $response = [
                     'Version' => 1.7,
                     'request' => [
-                          'status' => ($result === true) ? 'ok' : 'warning'
+                          'status' => ($result === true) ? 'success' : 'warning'
                         ],
                   'response' => [
                       'result' => null,
@@ -360,7 +360,7 @@ class ApiService
                 return ['error' => 'Unbekannte API-Ressource'];
         }
     }
-    
+
     private function fillResponse($result){
 
 
