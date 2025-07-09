@@ -256,14 +256,29 @@ class UserRepository
             'unlocked_product_ranges'  => 'sortiment', // array ["BE", "TK" ] => $debitor->sortiment = "BE TK"
          ];
 
-        $debitor->nr                = $data['customer_number'];
+        if (isset($data['customer_number'])){
+            $debitor->nr                = $data['customer_number'];
+        }
+
         $userDebitor->debitor_nr    = $debitor->nr;
 
-        $debitor->name              = $data['company'];
+        if (isset($data['company'])){
+            $debitor->name              = $data['company'];
+        }
+
+
         $user->name                 = $debitor->name;
-        $user->email                = $data['email'];
-        $userDebitor->email         = $user->email;
-        $debitor->sortiment         = implode(' ', $data['unlocked_product_ranges']);
+
+        if (isset($data['email'])){
+            $user->email                = $data['email'];
+        }
+
+        if (isset($data['unlocked_product_ranges'])){
+            $debitor->sortiment         = implode(' ', $data['unlocked_product_ranges']);
+        }
+
+
+
 
         return true;
 
