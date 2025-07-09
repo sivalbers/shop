@@ -118,18 +118,19 @@ class WarengruppeRepository
             return null;
         }
         else{
-            Log::info('wgh NICHT leer');
+            Log::info(sprintf('wgh NICHT leer : %s', $wgh->wgnr ?? 'null'));
         }
-
-        $warengruppe = Warengruppe::where('wgnr', $wgh->wgnr)->first();
-        if (empty($warengruppe)){
-            Log::info('Warengruppe nicht gefunden ');
-            $warengruppe = Warengruppe::Create([
-                'wgnr' => $wgh->wgnr,
-                'bezeichnung' => $wgh->name ]);
-        }
-        else{
-            Log::info('Warengruppe gefunden ');
+        if (!empty($wgh->wgnr)){
+            $warengruppe = Warengruppe::where('wgnr', $wgh->wgnr)->first();
+            if (empty($warengruppe)){
+                Log::info('Warengruppe nicht gefunden ');
+                $warengruppe = Warengruppe::Create([
+                    'wgnr' => $wgh->wgnr,
+                    'bezeichnung' => $wgh->name ]);
+            }
+            else{
+                Log::info('Warengruppe gefunden ');
+            }
         }
         return $wgh;
     }

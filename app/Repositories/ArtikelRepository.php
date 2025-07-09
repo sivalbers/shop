@@ -260,18 +260,9 @@ class ArtikelRepository
         $blocked = (isset($data['blocked'])) ? $data['blocked'] === 'Ja' : false ;
         $blockedVk = (isset($data['blockedvk'])) ? $data['blockedvk'] === 'Ja' : false ;
 
-
-        $this->logMessage('debug', sprintf('blocked %s', $data['blocked']));
-
-        $this->logMessage('debug', sprintf('blockedvk %s', $data['blockedvk']));
-
-
         $artikel->gesperrt = $blocked or $blockedVk;
-        Log::info( ['gesperrt', $artikel->gesperrt]);
-        $this->logMessage('debug', 'artikel.gesperrt', ['gesperrt' => $artikel->gesperrt ]);
-
         $this->category_id = $data['category_id'];
-        $this->logMessage('debug', 'Ende updateArtikelFromData');
+
         return $artikel;
 
     }
