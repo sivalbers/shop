@@ -12,8 +12,6 @@ class UserRepository
 {
 
     private string $logLevel;
-    private Debitor $debitor;
-    private UserDebitor $userDebitor;
 
 
 //#REGION Logging
@@ -21,6 +19,7 @@ class UserRepository
     {
         // Lade Log-Level aus der Konfiguration (z. B. aus der .env über logging.php)
         $this->logLevel = config('logging.user_repository_log_level', 'error');
+        $this->logMessage('debug', 'Test muss geloggt werden.');
     }
 
     public function setLogLevel(string $level): void
@@ -121,6 +120,7 @@ class UserRepository
         try {
             // Validierung des Datensatzes
             if (!$this->validateUser($user)) {
+                $this->logMessage('error', 'E-Mail-Adresse nicht vorhanden:', [ 'data' => $data]);
                 return false;
             }
             else {
@@ -149,9 +149,12 @@ class UserRepository
 
             if ($found === false) {
                 $user->save();
+                $result = $user->id;
                 $this->logMessage('debug', 'Neue Benutzer-ID: ', ['userId' => $user->id]);
             }
             else{
+                $u = User::where('email', $user->email)->first();
+                $result = $u->id;
                 Log::info('Benutzer existiert. Es wurde kein neuer Benutzer angelegt');
             }
 
@@ -160,10 +163,10 @@ class UserRepository
             if ($found === false) {
                 $debitor->save();
                 $this->logMessage('debug', 'Neue debitor-ID: ', ['debitor->nr' => $debitor->nr]);
-                $result = $debitor->nr;
+
             }
             else{
-                $result = $debitor->nr;
+
                 Log::info('Debitor existiert. Es wurde kein neuer Debitor angelegt');
             }
 
@@ -270,7 +273,8 @@ class UserRepository
         $user->name                 = $debitor->name;
 
         if (isset($data['email'])){
-            $user->email                = $data['email'];
+            $user->email           = $data['email'];
+            $userDebitor->email    = $user->email;
         }
 
         if (isset($data['unlocked_product_ranges'])){
