@@ -21,6 +21,10 @@ class AnschriftRepository
         $this->logLevel = Config::globalString('logging.anschrift_repository_log_level', 'info');
 
         Log::info(['logging.anschrift_repository_log_level' => $this->logLevel]);
+            $this->logMessage('debug', 'Anschrift Test debug');
+            $this->logMessage('info', 'Anschrift Test info');
+            $this->logMessage('warning', 'Anschrift Test warning');
+            $this->logMessage('error', 'Anschrift Test error');
     }
 
     public function setLogLevel(string $level): void
@@ -37,7 +41,8 @@ class AnschriftRepository
             'error'   => 3,
         ];
 
-        return $allowedLogLevels[$level] <= $allowedLogLevels[$this->logLevel];
+
+        return $allowedLogLevels[$level] >= $allowedLogLevels[$this->logLevel];
     }
 
     private function logMessage(string $level, string $message, array $context = []): void
@@ -53,28 +58,28 @@ class AnschriftRepository
     {
         // Prüfen, ob `artikelnr` gesetzt und gültig ist
         if (!isset($rec->kundennr) || !is_scalar($rec->kundennr)) {
-            $this->logMessage('warning', 'Kundennr ist ungültig oder fehlt.', ['kundennr' => $rec->kundennr]);
+            $this->logMessage('error', 'Kundennr ist ungültig oder fehlt.', ['kundennr' => $rec->kundennr]);
             return false;
         }
 
-        if (!isset($rec->strasse) || !is_scalar($rec->strasse)) {
-            $this->logMessage('warning', 'strasse ist ungültig oder fehlt.', ['strasse' => $rec->strasse]);
+        if (empty($rec->strasse) || !is_scalar($rec->strasse)) {
+            $this->logMessage('error', 'Strasse ist ungültig oder fehlt.', ['strasse' => $rec->strasse ?? null]);
             return false;
         }
 
 
         if (!isset($rec->plz) || !is_scalar($rec->plz)) {
-            $this->logMessage('warning', 'plz ist ungültig oder fehlt.', ['plz' => $rec->plz]);
+            $this->logMessage('error', 'plz ist ungültig oder fehlt.', ['plz' => $rec->plz]);
             return false;
         }
 
         if (!isset($rec->stadt) || !is_scalar($rec->stadt)) {
-            $this->logMessage('warning', 'stadt ist ungültig oder fehlt.', ['stadt' => $rec->stadt]);
+            $this->logMessage('error', 'stadt ist ungültig oder fehlt.', ['stadt' => $rec->stadt]);
             return false;
         }
 
         if (!isset($rec->land) || !is_scalar($rec->land)) {
-            $this->logMessage('warning', 'land ist ungültig oder fehlt.', ['land' => $rec->land]);
+            $this->logMessage('error', 'land ist ungültig oder fehlt.', ['land' => $rec->land]);
             return false;
         }
 

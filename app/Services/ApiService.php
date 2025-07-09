@@ -183,13 +183,13 @@ class ApiService
                     }
                 }
             case 'users': {
-                  $debitor = $this->userRepository->create($request->all());
-                  if ($debitor != false){
+                  $debitorNr = $this->userRepository->create($request->all());
+                  if ($debitorNr != false){
 
                     $response = [
                         'VERSION' => '1.7',
                         'request' => [ 'status' => 'success'],
-                        'response' => [ 'result' => $debitor,
+                        'response' => [ 'result' => $debitorNr,
                                         'errors' => [] ] ];
 
 
@@ -276,7 +276,7 @@ class ApiService
                           'status' => ($result === true) ? 'success' : 'warning'
                         ],
                   'response' => [
-                      'result' => null,
+                      'result' => [ 'id' => $result->id ],
                       'errors' => [[]]
                     ]
                   ];
