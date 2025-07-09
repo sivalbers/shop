@@ -110,9 +110,8 @@ class AnschriftRepository
                 return false;
             }
 
-            $id = $anschrift->save();
-            if ($id) {
-                return $id;
+            if ($anschrift->save()){
+                return $anschrift->id;
             }
 
             // Optional: Loggen, falls Speichern nicht erfolgreich war, ohne Exception

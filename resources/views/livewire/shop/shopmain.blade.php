@@ -79,7 +79,7 @@
                             MENÜPUNKTE - ENDE
                             ****************************************************************************
                         -->
-
+                @if ( !empty(Auth::user()) && auth()->user()->isAdmin())
                 <div
                     x-data="{
                         width: window.innerWidth,
@@ -103,6 +103,7 @@
 
                     <span x-text="breakpoint()" class="block text-center py-2 font-bold"></span>
                 </div>
+                @endif
                         <div class="flex flex-col md:flex-row">
 
                             <!--
