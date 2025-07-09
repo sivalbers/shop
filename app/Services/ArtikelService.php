@@ -86,6 +86,8 @@ class ArtikelService
 
                 $wgHelper = $this->wgHelperRepository->getById($data['category_id'] ?? null);
                 if ($wgHelper){
+                    $wgHelper->wgnr = $artikel->wgnr;
+                    $wgHelper->save();
 
                     $this->logMessage('debug', 'Category gefunden 2 von 3' );
                 }

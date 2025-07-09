@@ -144,7 +144,7 @@ class ApiService
                         /** @var \App\Models\Artikel $artikel */
                         $artikel = $result['artikel'];
                         $response['response']['result'] = [
-                            'item_number' => $artikel->artikelnr ];
+                            'item_number' => $artikel->artikelnr];
                     }
                 return $response;
 
