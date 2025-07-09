@@ -248,7 +248,7 @@ class UserRepository
 
     function updateUserFromData($user, $debitor, $userDebitor, $data) {
         // Mapping der Spalten von `data` zu `Users`
-
+        $this->logMessage('debug', 'UpdateUserFromData', [ 'data' => $data]);
         $mapping = [
             'customer_number'          => 'kundennr', // $debitor->nr, $userDebitor->debitor_nr
             'company'                  => 'name',     // $debitor->name

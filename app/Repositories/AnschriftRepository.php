@@ -117,7 +117,7 @@ class AnschriftRepository
 
             // Optional: Loggen, falls Speichern nicht erfolgreich war, ohne Exception
             // $this->logMessage('warning', 'anschrift konnte nicht gespeichert werden.', ['data' => $data]);
-            return true;
+            return false;
 
         } catch (\Exception $e) {
             $this->logMessage('error', 'Create: Fehler beim Speichern des Anschrift: ' . $e->getMessage(), ['data' => $data]);
