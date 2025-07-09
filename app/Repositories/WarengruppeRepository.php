@@ -110,18 +110,26 @@ class WarengruppeRepository
 
     public function update($id, $wgHelper)
     {
-
+        Log::info(sprintf('WarengruppeRository->update( %d)', $id), [ 'wgHelper' => $wgHelper]);
         // Warengruppe nach ID aus WgHelper suchen
         $wgh = WgHelper::where('id', $id)->first();
         if (empty($wgh)){
+            Log::info('wgh ist leer');
             return null;
+        }
+        else{
+            Log::info('wgh NICHT leer');
         }
 
         $warengruppe = Warengruppe::where('wgnr', $wgh->wgnr)->first();
         if (empty($warengruppe)){
+            Log::info('Warengruppe nicht gefunden ');
             $warengruppe = Warengruppe::Create([
                 'wgnr' => $wgh->wgnr,
                 'bezeichnung' => $wgh->name ]);
+        }
+        else{
+            Log::info('Warengruppe gefunden ');
         }
         return $wgh;
     }
