@@ -167,6 +167,7 @@ class ShopComponent extends Component
 
             $results = $query->get();
 
+
             $this->warengruppen = [];
 
             $results->each(function($item) use (&$wg) {
@@ -179,7 +180,7 @@ class ShopComponent extends Component
 
             if ((empty($this->aktiveWarengruppe) || $this->aktiveWarengruppe === '') & (count($this->warengruppen) > 0)) {
 
-               // dd($this->warengruppen);
+               
                 $this->aktiveWarengruppe = $this->warengruppen[0]['wgnr'];
                 $this->aktiveWarengruppeBezeichung = Warengruppe::getBezeichnung($this->aktiveWarengruppe);
                 configSet('aktiveWarengruppe', $this->aktiveWarengruppe);

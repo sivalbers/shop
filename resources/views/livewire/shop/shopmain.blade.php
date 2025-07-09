@@ -638,7 +638,6 @@
                 @else
                     <span class="text-base">Kein Artikel ausgewählt</span><br>
                 @endif
-
             </form>
         </x-my-form>
     </div>

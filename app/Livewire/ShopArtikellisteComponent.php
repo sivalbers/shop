@@ -200,6 +200,7 @@ class ShopArtikellisteComponent extends Component
                 FROM artikel a
                 JOIN artikel_sortimente a_s ON a_s.artikelnr = a.artikelnr
                 WHERE a.wgnr = ?
+                    and a.gesperrt = false
                     AND a_s.sortiment IN ($inClause)
             ";
 
@@ -275,7 +276,7 @@ class ShopArtikellisteComponent extends Component
     public function showArtikelSuch($suchArtikelNr, $suchBezeichnung){
 
 
-        Log::info('showArtikelSuch angekommen');
+        
         if (empty($suchArtikelNr) && empty($suchBezeichnung)) {
 
             $this->aPositions = [];
@@ -313,7 +314,8 @@ class ShopArtikellisteComponent extends Component
             FROM favoriten_pos f_p
             JOIN favoriten f ON f.id = f_p.favoriten_id
 
-            WHERE f_p.artikelnr = artikel.artikelnr
+            WHERE artikel.gesperrt = false
+              and f_p.artikelnr = artikel.artikelnr
               AND f.kundennr = ?
               AND (f.user_id = 0 OR f.user_id = ?)
             ) THEN 1 ELSE 0 END AS is_favorit", [$kundennr, $userId])

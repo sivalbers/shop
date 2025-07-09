@@ -33,6 +33,7 @@ class ArtikelSuche extends Component
                     });
                 }
             }
+            
 /*
             $this->ergebnisse = $query->whereIn('artikelnr', ArtikelSortiment::whereIn('sortiment', $sortiment)->pluck('artikelnr'))
                                 ->take(200)->toArray();
