@@ -129,7 +129,9 @@ class WarengruppeRepository
                     'bezeichnung' => $wgh->name ]);
             }
             else{
-                Log::info('Warengruppe gefunden ');
+                $warengruppe->bezeichnung = $wgh->name;
+                $warengruppe->save();
+                Log::info('Warengruppe gefunden und geändert');
             }
         }
         return $wgh;
