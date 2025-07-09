@@ -113,11 +113,14 @@ class WarengruppeRepository
         Log::info(sprintf('WarengruppeRository->update( %d)', $id), [ 'wgHelper' => $wgHelper]);
         // Warengruppe nach ID aus WgHelper suchen
         $wgh = WgHelper::where('id', $id)->first();
+        $nameNeu = $wgHelper['name'];
         if (empty($wgh)){
             Log::info('wgh ist leer');
             return null;
         }
         else{
+            $wgh->name = $nameNeu;
+            $wgh->save();
             Log::info(sprintf('wgh NICHT leer : %s', $wgh->wgnr ?? 'null'));
         }
         if (!empty($wgh->wgnr)){
@@ -165,7 +168,7 @@ class WarengruppeRepository
 
     function updateRecFromData($request) {
 
-        $this->wgh->id = $request['parent'];
+        //$this->wgh->id = $request['parent'];
         // $this->wgh->wgnr = $request['wgnr'];
         $this->wgh->name = $request['name'];
         $this->wgh->sortiment = $request['product_range'];
