@@ -7,27 +7,23 @@
 
 
     <!-- nichts und SM -->
-    <div class="flex flex-row w-full md:hidden ">
+    <div class="flex flex-row w-full md:hidden border-2 max-w-full">
 
+        <div class="flex flex-col w-full" >
 
+            <div class="flex flex-row w-full items-center  justify-between bg-white">  <!-- zeile oben logo - suche - zeugnisarchiv -->
 
-
-
-        <div class="flex flex-col w-full items-center " >
-
-            <div class="flex flex-row w-full  justify-between bg-white">  <!-- zeile oben logo - suche - zeugnisarchiv -->
-
-                <div class="grow-0"> <!-- SM Logo min -->
+                <div class="flex-none"> <!-- SM Logo min -->
                     <a href="{{ route('startseite') }}">
-                        <x-ewe-logo class="h-14 " />
+                        <x-ewe-logo class="h-8 " />
                     </a>
                 </div>
 
-                <div class="grow">
+                <div class="flex-grow max-w-[200px]">
                     <livewire:artikel-suche :key="'suchtest'" />
                 </div>
 
-                <div class="grow-0 pl-2 pt-1">
+                <div class="flex-none pl-2 pt-1">
                     <x-nav-link :href="route('news')" :active="request()->routeIs('news')" wire:navigate class=" ">
                         <x-fluentui-news-20-o class="w-8 h-8  text-gray-600" />
                         <div class="text-2xl text-sky-600">{{ $anzNachrichten > 0 ? $anzNachrichten : '' }}</div>
@@ -45,11 +41,11 @@
                         rel="noopener"
                         :compact="true">
                         <x-fluentui-link-16-o class="w-6 h-6 mr-1" />
-                        {{ __('Zeugnisarchiv') }}
+                        Zeugnis-<br>archiv
                     </x-nav-link>
                 </div>
 
-                <div class=" h-12 space-x-8 flex justify-center text-gray-600">
+                <div class=" h-12 space-x-4 flex justify-center text-gray-600">
                     <x-nav-link
 
                         :href="route('shop')"
@@ -238,7 +234,7 @@
             </div>
 
             <!-- Hamburger -->
-            @if ( !empty(Auth::user()) && auth()->user()->isAdmin())
+            @if ( !empty(Auth::user()) && auth()->user()->isAdmin() && true === false )
             <div class="-me-2 flex items-center sm:hidden">
                 <button @click="open = ! open"
                     class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-900 focus:text-gray-500 dark:focus:text-gray-400 transition duration-150 ease-in-out">
