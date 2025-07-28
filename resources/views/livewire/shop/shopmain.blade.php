@@ -36,23 +36,23 @@
 
                         <div class="flex flex-row mr-4 mb-2">
                             <button wire:click="changeTab('warengruppen')"
-                                class="@if ($activeTab === 'warengruppen') tabNewActive @else tabNew @endif">
+                                class="cursor-pointer @if ($activeTab === 'warengruppen') tabNewActive @else tabNew @endif">
                                 Warengruppen
                             </button>
                             <button wire:click="changeTab('suche')"
-                                class="@if ($activeTab === 'suche') tabNewActive @else tabNew @endif">
+                                class="cursor-pointer @if ($activeTab === 'suche') tabNewActive @else tabNew @endif">
                                 Suche
                             </button>
                             <button wire:click="changeTab('favoriten')"
-                                class="@if ($activeTab === 'favoriten') tabNewActive @else tabNew @endif">
+                                class="cursor-pointer @if ($activeTab === 'favoriten') tabNewActive @else tabNew @endif">
                                 Favoriten
                             </button>
                             <button wire:click="changeTab('schnellerfassung')"
-                                class="@if ($activeTab === 'schnellerfassung') tabNewActive @else tabNew @endif">
+                                class="cursor-pointer @if ($activeTab === 'schnellerfassung') tabNewActive @else tabNew @endif">
                                 Schnellerfassung
                             </button>
                             <button wire:click="changeTab('warenkorb')"
-                                class="@if ($activeTab === 'warenkorb') tabNewActive @else tabNew @endif">
+                                class="cursor-pointer @if ($activeTab === 'warenkorb') tabNewActive @else tabNew @endif">
                                 <div class="flex flex-row items-center ">
                                     <x-fluentui-shopping-bag-20-o class="h-6" />
 

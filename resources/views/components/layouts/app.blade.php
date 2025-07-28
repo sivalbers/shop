@@ -21,11 +21,9 @@
 
 
         <div class="top-0 left-0 w-full z-50">
-            <x-zheader />
-            <!-- Navigation bleibt oben fixiert -->
-            <div class="bg-white shadow ">
+                <x-zheader />
+                <!-- Navigation bleibt oben fixiert -->
                 @livewire('NavigationComponent')
-            </div>
         </div>
 
         <div class="flex-1 flex flex-col py-2 bg-gray-100 dark:bg-gray-900 overflow-auto">
