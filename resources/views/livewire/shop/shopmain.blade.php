@@ -55,8 +55,8 @@
                                 class="cursor-pointer @if ($activeTab === 'warenkorb') tabNewActive @else tabNew @endif">
                                 <div class="flex flex-row items-center ">
                                     <x-fluentui-shopping-bag-20-o class="h-6" />
-
-                                    Warenkorb
+                                    
+                                    <span class="hidden sm:inline ml-2">Warenkorb</span>
                                 </div>
                             </button>
 

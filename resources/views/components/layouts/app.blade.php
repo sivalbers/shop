@@ -90,15 +90,6 @@
             });
         </script>
 
-
-
-
-
-
-
-
-
-
         @livewireScripts
     </body>
 </html>
