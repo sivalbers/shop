@@ -93,7 +93,7 @@
 
             <!-- Button Container -->
             <div class="fixed bottom-0 right-[5%] flex space-x-4 z-10 mb-1 opacity-100">
-                <button type="submit" class="w-52 bg-sky-600 text-white py-2 rounded-md hover:font-bold shadow-md">
+                <button type="submit" class="px-2 sm:w-52 bg-sky-600 text-white py-2 rounded-md hover:font-bold shadow-md">
                     In den Warenkorb
                 </button>
             </div>

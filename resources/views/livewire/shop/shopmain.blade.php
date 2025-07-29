@@ -53,10 +53,13 @@
                             </button>
                             <button wire:click="changeTab('warenkorb')"
                                 class="cursor-pointer @if ($activeTab === 'warenkorb') tabNewActive @else tabNew @endif">
-                                <div class="flex flex-row items-center ">
+
+                                <div class="hidden sm:flex flex-row items-center ">
                                     <x-fluentui-shopping-bag-20-o class="h-6" />
-                                    
-                                    <span class="hidden sm:inline ml-2">Warenkorb</span>
+                                    Warenkorb
+                                </div>
+                                <div class="sm:hidden flex flex-row items-center ">
+                                    Warenkorb
                                 </div>
                             </button>
 
