@@ -87,13 +87,13 @@
 
            <!-- Scroll-to-Top Button -->
            <button onclick="scrollToTop()" type="button"
-               class="fixed bottom-1 right-[50%] z-10 border rounded-3xl border-sky-600 bg-sky-600 text-white p-1 opacity-50 hover:opacity-100"
+               class="cursor-pointer fixed bottom-1 right-[50%] z-10 border rounded-3xl border-sky-600 bg-sky-600 text-white p-1 opacity-50 hover:opacity-100"
                title="nach oben scrollen"><x-fluentui-arrow-upload-16 class="h-6" /></button>
 
 
             <!-- Button Container -->
             <div class="fixed bottom-0 right-[5%] flex space-x-4 z-10 mb-1 opacity-100">
-                <button type="submit" class="px-2 sm:w-52 bg-sky-600 text-white py-2 rounded-md hover:font-bold shadow-md">
+                <button type="submit" class="cursor-pointer px-2 sm:px-6 bg-sky-600 text-white py-2 rounded-md hover:font-bold shadow-md">
                     In den Warenkorb
                 </button>
             </div>

@@ -72,16 +72,16 @@
                     x-init="quantity = {{ $pos['menge'] }}"
                     class="flex items-center overflow-hidden w-24 border border-gray-400 rounded">
                     <button type="button" @click="quantity = Math.max(0, quantity - 1); $wire.set('aPositions.{{ $loop->index }}.menge', quantity)"
-                            class="flex-1 bg-gray-200 text-gray-700 hover:bg-blue-200 h-7 border-r border-r-gray-400">-</button>
+                            class="cursor-pointer flex-1 bg-gray-200 text-gray-700 hover:bg-blue-200 h-7 border-r border-r-gray-400">-</button>
                     <input type="number" x-model="quantity" wire:model="aPositions.{{ $loop->index }}.menge"
                         class="InputMenge w-14 text-center border-none outline-none text-xs h-7"
                         @focus="$event.target.select()">
                     <button type="button" @click="quantity++; $wire.set('aPositions.{{ $loop->index }}.menge', quantity)"
-                            class="flex-1 bg-gray-200 text-gray-700 hover:bg-blue-200 h-7 border-l border-l-gray-400">+</button>
+                            class="cursor-pointer flex-1 bg-gray-200 text-gray-700 hover:bg-blue-200 h-7 border-l border-l-gray-400">+</button>
                 </div>
 
                 {{-- Icons --}}
-                <button type="submit" class="text-sky-600" title="In den Warenkorb">
+                <button type="submit" class="cursor-pointer text-sky-600" title="In den Warenkorb">
                     <x-fluentui-shopping-bag-20-o class="h-7" />
                 </button>
                 @if ($pos['bestand'] == 0)

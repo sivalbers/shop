@@ -490,7 +490,7 @@
 
 
 
-        <x-my-form :isModified="$isModified" class="min-h-[30vh] max-h-[70vh] z-40 overflow-y-auto">
+        <x-my-form :isModified="$isModified" class="w-[97vh] sd:w-[90vh] md:w-[70vh] min-h-[30vh] max-h-[70vh] sd:max-h-[90vh] sm:max-h-[70vh] z-40 overflow-y-auto">
 
             <form class="" wire:submit.prevent="InBasket">
                 @csrf
@@ -527,7 +527,9 @@
                     <div class="flex flex-row mb-4  w-full">
 
                         <div class="relative basis-3/4 p-2  ">
-                            <div class="absolute top-2 right-2 float-left">
+                            <!-- div class="absolute top-2 right-2 float-left" -->
+
+                            <div class="float-right ml-4 mb-2">
 
 
                                 @php
@@ -564,14 +566,14 @@
                                             class="flex items-center overflow-hidden w-24 py-0 border border-gray-400 rounded h-9">
 
                                             <button type="button" @click="quantity = Math.max(0, quantity - 1); $wire.set('aPositions.0.menge', quantity)"
-                                                class="flex-1 bg-gray-200 text-gray-700  hover:bg-blue-200 border-r border-r-gray-400 w-9 h-9">-</button>
+                                                class="cursor-pointer flex-1 bg-gray-200 text-gray-700  hover:bg-blue-200 border-r border-r-gray-400 w-9 h-9">-</button>
 
                                             <input type="number" min="0" max="1000000" step="1" x-model="quantity" wire:model="aPositions.0.menge"
                                                 class="InputMenge px-1 w-14 text-center border-none outline-none text-xs w-9 h-9"
                                                 @focus="$event.target.select()">
 
                                             <button type="button" @click="quantity++; $wire.set('aPositions.0.menge', quantity)"
-                                                class="flex-1 bg-gray-200 text-gray-700 hover:bg-blue-200 border-l border-l-gray-400 w-9 h-9">+</button>
+                                                class="cursor-pointer flex-1 bg-gray-200 text-gray-700 hover:bg-blue-200 border-l border-l-gray-400 w-9 h-9">+</button>
 
                                         </div>
 
@@ -587,7 +589,7 @@
                                     </div>
                                 </div>
                                 <div>
-                                    <button type="submit" class="w-40 bg-sky-600 text-white mt-2 py-2 rounded-md hover:font-bold shadow-md">
+                                    <button type="submit" class="cursor-pointer w-40 bg-sky-600 text-white mt-2 py-2 rounded-md hover:font-bold shadow-md">
                                         In den Warenkorb
                                     </button>
 
