@@ -8,17 +8,17 @@
         showFavoritArtikelForm: @entangle('showFavoritArtikelForm'),
         zeigeMessage: @entangle('zeigeMessage'),
         pending: @js($pendingUpdateSuche)
-    }"
+        }"
 
 
-    x-init="
-        document.addEventListener('livewire:load', () => {
-            if (pending) {
-                console.log('Pending-Suche erkannt → dispatching updateSuche');
-                @this.dispatch('updateSuche')
-            }
-        });
-    "
+        x-init="
+            document.addEventListener('livewire:load', () => {
+                if (pending) {
+                    console.log('Pending-Suche erkannt → dispatching updateSuche');
+                    @this.dispatch('updateSuche')
+                }
+            });
+        "
         x-on:click.self="showForm = false; showFavoritBearbeitenForm = false; showFavoritArtikelForm = false; "
         x-on:keydown.escape.window="showForm = false; showFavoritBearbeitenForm = false; showFavoritArtikelForm = false;">
 
