@@ -16,7 +16,7 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         @livewireStyles
     </head>
-    <body class="font-sans antialiased flex flex-col h-screen">
+    <body class="font-sans antialiased flex flex-col h-screen px-[2px] m-auto">
         <!-- Fixiere den Header oben -->
 
 

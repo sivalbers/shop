@@ -34,7 +34,7 @@
                             ****************************************************************************
                         -->
 
-                        <div class="flex flex-row mr-4 mb-2">
+                        <div class="flex flex-row mb-2">
                             <button wire:click="changeTab('warengruppen')"
                                 class="cursor-pointer @if ($activeTab === 'warengruppen') tabNewActive @else tabNew @endif">
                                 Warengruppen

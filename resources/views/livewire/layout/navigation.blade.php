@@ -7,7 +7,7 @@
 
 
     <!-- nichts und SM -->
-    <div class="flex flex-row w-full md:hidden border-2 max-w-full">
+    <div class="flex flex-row w-full md:hidden max-w-full">
 
         <div class="flex flex-col w-full" >
 
@@ -248,9 +248,6 @@
             </div>
             @endif
         </div>
-
-
-
     </div>
 
 
