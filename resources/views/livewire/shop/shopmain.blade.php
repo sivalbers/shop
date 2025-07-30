@@ -40,18 +40,22 @@
                                 class="cursor-pointer @if ($activeTab === 'warengruppen') tabNewActive @else tabNew @endif">
                                 Warengruppen
                             </button>
+                            <span class="sm:hidden pr-1.5">|</span>
                             <button wire:click="changeTab('suche')"
                                 class="cursor-pointer @if ($activeTab === 'suche') tabNewActive @else tabNew @endif">
                                 Suche
                             </button>
+                            <span class="sm:hidden pr-1.5">|</span>
                             <button wire:click="changeTab('favoriten')"
                                 class="cursor-pointer @if ($activeTab === 'favoriten') tabNewActive @else tabNew @endif">
                                 Favoriten
                             </button>
+                            <span class="sm:hidden pr-1.5">|</span>
                             <button wire:click="changeTab('schnellerfassung')"
                                 class="cursor-pointer @if ($activeTab === 'schnellerfassung') tabNewActive @else tabNew @endif">
                                 Schnellerfassung
                             </button>
+                            <span class="sm:hidden pr-1.5">|</span>
                             <button wire:click="changeTab('warenkorb')"
                                 class="cursor-pointer @if ($activeTab === 'warenkorb') tabNewActive @else tabNew @endif">
 

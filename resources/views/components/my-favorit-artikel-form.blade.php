@@ -2,7 +2,7 @@
     x-show="showFavoritArtikelForm" x-cloak x-on:click.self="showFavoritArtikelForm = false"
     x-on:keydown.escape.window="showFavoritArtikelForm = false"> <!-- gesamtes Fenster backdrop-blur-[2px] -->
 
-    <div class="w-4/12 m-auto flatwhite" x-data="{ isDisabled: true }" x-init="$watch('$wire.isModified', value => isDisabled = false);">
+    <div class="w-11/12 sm:w-4/12 m-auto flatwhite" x-data="{ isDisabled: true }" x-init="$watch('$wire.isModified', value => isDisabled = false);">
         <!-- Abfragefenster Fenster -->
 
         <div class="m-2">
