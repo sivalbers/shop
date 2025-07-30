@@ -7,7 +7,8 @@
         showFavoritBearbeitenForm: @entangle('showFavoritBearbeitenForm'),
         showFavoritArtikelForm: @entangle('showFavoritArtikelForm'),
         zeigeMessage: @entangle('zeigeMessage'),
-        pending: @js($pendingUpdateSuche)
+        pending: @js($pendingUpdateSuche),
+        openWG: true,
         }"
 
 
@@ -119,14 +120,27 @@
                             @if ($activeTab === 'warengruppen') <!-- Warengruppen -->
                                 <div class="p-3 w-full md:w-1/3 flatwhite md:h-[calc(100vh-245px)] overflow-hidden">
 
-                                    <div class="text-base font-bold  text-sky-600 border-b border-sky-600 h-6 flex items-center">
-                                        <span
+                                    <div class="text-base font-bold  text-sky-600 border-b border-sky-600 h-6 flex items-center justify-between">
+                                        <div
                                             werkclass="bg-yellow-400 sm:bg-green-400 md:bg-pink-400 lg:bg-red-400 xl:bg-blue-400 2xl:bg-orange-400">
                                             Alle Warengruppen aus ihrem Sortiment
-                                        </span>
+                                        </div>
+                                        <div>
+                                            <button @click="openWG = !openWG" class="">
+                                            <div x-show="!openWG"
+                                                class="flex flex-row items-center h-full">
+
+                                                <x-fluentui-caret-right-12-o class="w-6" />
+                                            </div>
+                                            <div x-show="openWG"
+                                                class="flex flex-row items-center h-full ">
+                                                <x-fluentui-caret-up-12-o class="w-6" />
+                                            </div>
+                                            </button>
+                                        </div>
                                     </div>
                                     <!-- SCROLLCONTAINER -->
-                                    <div class="overflow-scroll h-full">
+                                    <div class="overflow-scroll h-full"  x-show="openWG" x-cloak>
                                         <!-- Neue Anpassung hier -->
                                         <div class="text-sm w-full  pt-2 ">
                                             <ul class=" list-image-none">
@@ -434,7 +448,7 @@
                             <!-- SPALTE 2 -->
 
                             @if ($activeTab != 'warenkorb') <!-- Alle Menüpunkte aus Warenkorb -->
-                            <div class="w-full md:w-2/3 md:ml-2 flatwhite md:h-[calc(100vh-245px)] overflow-hidden">
+                            <div class="w-full md:w-2/3 md:ml-2 flatwhite sm:h-[calc(100vh-245px)] overflow-hidden">
                                 <div class="flex flex-col " id="tab5">
                                     <!-- Enthält die Komponente -->
                                     <div class="w-full max-h-full p-3 mb-2">
