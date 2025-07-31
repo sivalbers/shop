@@ -183,7 +183,7 @@ class AnschriftRepository
 
     function updateAnschriftFromData($rec, $data) {
 
-        $rec->kundennr          = $data['user_id'];
+        $rec->kundennr          = $data['customer_no'];
         $rec->kurzbeschreibung  = $data['company'];
         $rec->firma1            = $rec->kurzbeschreibung;
         $rec->strasse           = $data['street'];

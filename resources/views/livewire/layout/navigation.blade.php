@@ -113,29 +113,25 @@
                             </x-slot>
 
                             <x-slot name="content">
+                                <x-dropdown-hr />
+                                <x-dropdown-link :href="route('apitest')" wire:navigate class="bg-red-50">
+                                    {{ __('API-Test') }}
+                                </x-dropdown-link>
 
+                                <x-dropdown-link :href="route('apilog')" wire:navigate class="bg-red-50">
+                                    {{ __('API-Log') }}
+                                </x-dropdown-link>
 
-                                    <x-dropdown-hr />
-                                    <x-dropdown-link :href="route('apitest')" wire:navigate class="bg-red-50">
-                                        {{ __('API-Test') }}
-                                    </x-dropdown-link>
-
-                                    <x-dropdown-link :href="route('apilog')" wire:navigate class="bg-red-50">
-                                        {{ __('API-Log') }}
-                                    </x-dropdown-link>
-
-                                    <x-dropdown-link :href="route('logs')" wire:navigate class="bg-red-50">
-                                        {{ __('Log-Datei') }}
-                                    </x-dropdown-link>
-                                    <x-dropdown-link :href="route('belegarchiv')" wire:navigate class="bg-red-50">
-                                        <div class="flex flex-row">
-                                            <x-fluentui-database-search-20-o class="w-6 h-6 mr-1" />
-                                            {{ __('Belegarchiv') }}
-                                        </div>
-                                    </x-dropdown-link>
-                                    <x-dropdown-hr />
-
-
+                                <x-dropdown-link :href="route('logs')" wire:navigate class="bg-red-50">
+                                    {{ __('Log-Datei') }}
+                                </x-dropdown-link>
+                                <x-dropdown-link :href="route('belegarchiv')" wire:navigate class="bg-red-50">
+                                    <div class="flex flex-row">
+                                        <x-fluentui-database-search-20-o class="w-6 h-6 mr-1" />
+                                        {{ __('Belegarchiv') }}
+                                    </div>
+                                </x-dropdown-link>
+                                <x-dropdown-hr />
                             </x-slot>
 
                         </x-dropdown>
@@ -236,7 +232,7 @@
             <!-- Hamburger -->
             @if ( !empty(Auth::user()) && auth()->user()->isAdmin() && true === false )
             <div class="-me-2 flex items-center sm:hidden">
-                <button @click="open = ! open"
+                <button @click="open = !open"
                     class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-900 focus:text-gray-500 dark:focus:text-gray-400 transition duration-150 ease-in-out">
                     <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                         <path :class="{ 'hidden': open, 'inline-flex': !open }" class="inline-flex" stroke-linecap="round"

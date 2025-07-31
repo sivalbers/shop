@@ -1,7 +1,7 @@
 <div class="">
 
 
-    <div class="w-11/12 m-auto" x-data="{
+    <div class="" x-data="{
         expanded: @entangle('expanded'),
         showForm: @entangle('showForm'),
         showFavoritBearbeitenForm: @entangle('showFavoritBearbeitenForm'),
@@ -23,7 +23,7 @@
         x-on:click.self="showForm = false; showFavoritBearbeitenForm = false; showFavoritArtikelForm = false; "
         x-on:keydown.escape.window="showForm = false; showFavoritBearbeitenForm = false; showFavoritArtikelForm = false;">
 
-        <div class="z-0 ">
+        <div class="z-0 w-11/12 m-auto">
 
             <div class="flex w-full align-top">
                 <div class="w-full ">
@@ -40,22 +40,29 @@
                                 class="cursor-pointer @if ($activeTab === 'warengruppen') tabNewActive @else tabNew @endif">
                                 Warengruppen
                             </button>
-                            <span class="sm:hidden pr-1.5">|</span>
+                            <span class="sm:hidden pr-0.5">|</span>
                             <button wire:click="changeTab('suche')"
                                 class="cursor-pointer @if ($activeTab === 'suche') tabNewActive @else tabNew @endif">
                                 Suche
                             </button>
-                            <span class="sm:hidden pr-1.5">|</span>
+                            <span class="sm:hidden pr-0.5">|</span>
                             <button wire:click="changeTab('favoriten')"
                                 class="cursor-pointer @if ($activeTab === 'favoriten') tabNewActive @else tabNew @endif">
                                 Favoriten
                             </button>
-                            <span class="sm:hidden pr-1.5">|</span>
-                            <button wire:click="changeTab('schnellerfassung')"
+                            <span class="sm:hidden pr-0.5">|</span>
+                            <button wire:click="changeTab('schnellerfassung')" title="Artikel schnell erfassen"
                                 class="cursor-pointer @if ($activeTab === 'schnellerfassung') tabNewActive @else tabNew @endif">
-                                Schnellerfassung
+                                <div class="hidden sm:flex flex-row items-center ">
+                                    Schnellerfassung
+                                </div>
+                                <div class="sm:hidden flex flex-row items-center ">
+                                    Schnellerf.
+                                </div>
+
+
                             </button>
-                            <span class="sm:hidden pr-1.5">|</span>
+                            <span class="sm:hidden pr-0.5">|</span>
                             <button wire:click="changeTab('warenkorb')"
                                 class="cursor-pointer @if ($activeTab === 'warenkorb') tabNewActive @else tabNew @endif">
 
@@ -452,7 +459,7 @@
                             <!-- SPALTE 2 -->
 
                             @if ($activeTab != 'warenkorb') <!-- Alle Menüpunkte aus Warenkorb -->
-                            <div class="w-full md:w-2/3 md:ml-2 flatwhite sm:h-[calc(100vh-245px)] overflow-hidden">
+                            <div class="w-full md:w-2/3 md:ml-2 flatwhite sm:h-[calc(100vh-245px)] overflow-hidden border-2 border-pink-500">
                                 <div class="flex flex-col " id="tab5">
                                     <!-- Enthält die Komponente -->
                                     <div class="w-full max-h-full p-3 mb-2">

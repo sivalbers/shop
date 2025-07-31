@@ -1,5 +1,5 @@
 
-<div>
+<div class="border-2 border-red-500">
     <div class="flex flex-col w-full overflow-y-hidden" id="top"
     x-data="{}"
     x-on:click.self="zeigeFavoritPosForm = false;"
@@ -65,7 +65,7 @@
    </div>
 
    <!-- Scrollbarer Bereich -->
-   <div class="relative w-full overflow-y-auto h-[30vh] md:h-[calc(100vh-245px)] scrollbar-hide">
+   <div class="relative w-full overflow-y-auto h-[30vh] md:h-[calc(100vh-245px)] scrollbar-hide ">
        <form wire:submit.prevent="InBasket">
            @csrf
 

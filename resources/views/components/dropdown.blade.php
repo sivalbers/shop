@@ -19,7 +19,9 @@ $width = match ($width) {
 
 
 <div class="relative" x-data="{ open: false }" @click.outside="open = false" @close.stop="open = false">
-    <div  @mouseenter="open = true" @mouseleave="open = false">
+    <div  @mouseenter="open = true"
+        @mouseleave="open = false"
+        @click="open = !open">
         {{ $trigger }}
 
 
