@@ -221,7 +221,9 @@ class AnschriftRepository
         }
         $this->debitor->nr = $data['customer_no'];
         $this->debitor->name = $data['company'];
-        $this->debitor->gesperrt = $data['blocked'];
+        if (isset($data['blocked'])) {
+            $this->debitor->gesperrt = $data['blocked'];
+        }
 
 
         return $rec;
