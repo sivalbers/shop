@@ -6,12 +6,14 @@ use App\Models\Anschrift;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Config;
+use App\Models\Debitor;
 
 class AnschriftRepository
 {
 
 
     private string $logLevel;
+    private Debitor $debitor;
 
 
 //#REGION Logging
@@ -83,6 +85,8 @@ class AnschriftRepository
             return false;
         }
 
+
+
         return true;
     }
 
@@ -95,12 +99,13 @@ class AnschriftRepository
     {
         Log::info('Create-Anschrift');
         $anschrift = new Anschrift();
+        $this->debitor = new Debitor();
 
         try {
             $anschrift = $this->updateAnschriftFromData($anschrift, $data);
         } catch (\Throwable $e) {
             // Fehler beim Speichern behandeln
-            $this->logMessage('error', 'Create:: Fehler beim konvertieren der Anschrift: ' . $e->getMessage(), ['data' => $data]);
+            $this->logMessage('error', '1 Create:: Fehler beim konvertieren der Anschrift: ' . $e->getMessage(), ['data' => $data]);
             return false;
         }
         try {
@@ -124,10 +129,11 @@ class AnschriftRepository
         }
     }
 
-    public function update($kundennr, array $data){
+    public function update($id, array $data){
         Log::info([ 'data' => $data]);
         try {
-            $anschrift = Anschrift::findOrFail($kundennr);
+            $anschrift = Anschrift::findOrFail($id);
+
 
         } catch (\Throwable $e) {
             // Fehler beim Speichern behandeln
@@ -144,7 +150,14 @@ class AnschriftRepository
         }
 
         try {
-            return ($this->validateRec($anschrift) && $anschrift->save());
+            $result = ($this->validateRec($anschrift) && $anschrift->save());
+            Log::info(['1 result' => $result]);
+            if ($result){
+                $result = $this->debitor->save();
+                Log::info(['2 result' => $result]);
+            }
+
+            return $result;
 
             // Optional: Loggen, falls Speichern nicht erfolgreich war, ohne Exception
             Log::warning('anschrift konnte nicht gespeichert werden.', ['data' => $data]);
@@ -201,6 +214,15 @@ class AnschriftRepository
                 if ($data['billing']){
                     $rec->art = 'Lieferadresse';
                 }
+
+        $this->debitor = Debitor::where('nr', $rec->kundennr)->first();
+        if (!$this->debitor){
+            $this->debitor = Debitor::create();
+        }
+        $this->debitor->nr = $data['customer_no'];
+        $this->debitor->name = $data['company'];
+        $this->debitor->gesperrt = $data['blocked'];
+
 
         return $rec;
     }

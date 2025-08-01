@@ -281,6 +281,29 @@ class ApiService
                     ]
                   ];
                 return $response;
+            case 'address': {
+                $id = $this->anschriftRepository->update($request->id, $request->all());
+                if ($id != false){
+
+                    $response = [
+                        'VERSION' => '1.7',
+                        'request' => [ 'status' => 'success'],
+                        'response' => [ 'result' => $id,
+                                        'errors' => [] ] ];
+
+                    return $response;
+                }
+                else {
+                    $response = [
+                        'VERSION' => '1.7',
+                        'request' => [ 'status' => 'error'],
+                        'response' => [ 'result' => '',
+                                        'errors' => ['Fehler bei der Anschriften-Änderung'] ] ];
+
+                    return $response;
+
+                }
+                }
             default:
                 return ['error' => 'Unbekannte API-Ressource'];
         }
