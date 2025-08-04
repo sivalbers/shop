@@ -66,8 +66,12 @@ class BestellbestaetigungMail extends Mailable
         Log::info(['empfänger' => $empfaenger]);
         Log::info(['cc' => $ccArr]);
         Log::info(['bcc' => $bccArr]);
+
+
+        $subject = sprintf('Bestellbestätigung für Ihre Bestellung Nr.: %s', $this->details['bestellung']->nr );
+
         return new Envelope(
-            subject: 'Bestellbestätigung für Ihre Bestellung Nr.: '.$this->details['bestellung']->nr,
+            subject: $subject,
             to: $empfaenger,
             bcc: $bccArr,
             cc: $ccArr,

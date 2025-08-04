@@ -24,11 +24,11 @@
      ">
 
     <!-- Dialog -->
-    <div class="w-6/12 m-auto text-center ">
+    <div class="w-[95vH] md:w-6/12 m-auto text-center ">
         <div class="m-4 p-4 border rounded-md border-sky-600 bg-sky-600 shadow-md">
 
-            <div class="flex flex-row items-center w-full">
-                <div class="flex flex-col w-5/6">
+            <div class="flex flex-col sm:flex-row items-center w-full">
+                <div class="flex flex-col w-9/12 md:w-5/6">
                     <div class="text-3xl font-bold text-white">
                         {{ $titel ?? 'Bestellung wurde gespeichert!' }}
                         {{ $slot }}
@@ -37,7 +37,7 @@
                         {{ $hinweis ?? 'Ihre Bestellbestätigung erhalten Sie in Kürze per E-Mail.' }}
                     </div>
                 </div>
-                <div class="w-1/6 text-right">
+                <div class="w-3/12 md:w-1/6 text-right">
                     <button x-on:click="zeigeMessage = false" class="py-2 px-4 border border-gray-400 bg-ewe-gruen rounded-md">
                         Schließen
                     </button>
