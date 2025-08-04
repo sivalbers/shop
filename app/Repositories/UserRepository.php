@@ -190,6 +190,22 @@ class UserRepository
         }
     }
 
+    protected function validateRec($rec): bool
+    {
+        // Prüfen, ob `artikelnr` gesetzt und gültig ist
+        if (!isset($rec->name) || !is_scalar($rec->name)) {
+            $this->logMessage('error', 'name ist ungültig oder fehlt.', ['name' => $rec->name]);
+            return false;
+        }
+
+        if (empty($rec->email) || !is_scalar($rec->email)) {
+            $this->logMessage('error', 'email ist ungültig oder fehlt.', ['email' => $rec->email ?? null]);
+            return false;
+        }
+
+        return true;
+    }
+
     public function update($id, array $data)
     {
 

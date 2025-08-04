@@ -35,7 +35,32 @@
                             ****************************************************************************
                         -->
 
-                        <div class="flex flex-row mb-2">
+                        <div class="flex flex-row ">
+                            @if ( !empty(Auth::user()) && auth()->user()->isAdmin())
+                            <div
+                                x-data="{
+                                    width: window.innerWidth,
+                                    breakpoint() {
+                                        if (this.width >= 1536) return '2XL';
+                                        if (this.width >= 1280) return 'XL';
+                                        if (this.width >= 1024) return 'LG';
+                                        if (this.width >= 768)  return 'MD';
+                                        if (this.width >= 640)  return 'SM';
+                                        return 'Keine';
+                                    }
+                                }"
+                                x-init="window.addEventListener('resize', () => width = window.innerWidth)"
+                                class="block mx-2
+                                    bg-lime-400
+                                    sm:bg-red-200
+                                    md:bg-orange-200
+                                    lg:bg-green-200
+                                    xl:bg-blue-200
+                                    2xl:bg-pink-200">
+
+                                <span x-text="breakpoint()" class="block text-center font-bold"></span>
+                            </div>
+                            @endif
                             <button wire:click="changeTab('warengruppen')"
                                 class="cursor-pointer @if ($activeTab === 'warengruppen') tabNewActive @else tabNew @endif">
                                 Warengruppen
@@ -94,31 +119,7 @@
                             MENÜPUNKTE - ENDE
                             ****************************************************************************
                         -->
-                @if ( !empty(Auth::user()) && auth()->user()->isAdmin())
-                <div
-                    x-data="{
-                        width: window.innerWidth,
-                        breakpoint() {
-                            if (this.width >= 1536) return '2XL';
-                            if (this.width >= 1280) return 'XL';
-                            if (this.width >= 1024) return 'LG';
-                            if (this.width >= 768)  return 'MD';
-                            if (this.width >= 640)  return 'SM';
-                            return 'Keine';
-                        }
-                    }"
-                    x-init="window.addEventListener('resize', () => width = window.innerWidth)"
-                    class="block h-10 my-2
-                        bg-lime-400
-                        sm:bg-red-200
-                        md:bg-orange-200
-                        lg:bg-green-200
-                        xl:bg-blue-200
-                        2xl:bg-pink-200">
 
-                    <span x-text="breakpoint()" class="block text-center py-2 font-bold"></span>
-                </div>
-                @endif
                         <div class="flex flex-col md:flex-row">
 
                             <!--
@@ -129,7 +130,7 @@
 
 
                             @if ($activeTab === 'warengruppen') <!-- Warengruppen -->
-                                <div class="p-3 w-full md:w-1/3 flatwhite md:h-[calc(100vh-245px)] overflow-hidden">
+                                <div class="p-3 w-full md:w-1/3 flatwhite h-[20vH] md:h-[calc(100vh-245px)] overflow-hidden">
 
                                     <div class="text-base font-bold  text-sky-600 border-b border-sky-600 h-6 flex items-center justify-between">
                                         <div
@@ -459,10 +460,10 @@
                             <!-- SPALTE 2 -->
 
                             @if ($activeTab != 'warenkorb') <!-- Alle Menüpunkte aus Warenkorb -->
-                            <div class="w-full md:w-2/3 md:ml-2 flatwhite sm:h-[calc(100vh-245px)] overflow-hidden border-2 border-pink-500">
+                            <div class="w-full md:w-2/3 md:ml-2 flatwhite md:h-[calc(100vh-245px)] md:overflow-scroll">
                                 <div class="flex flex-col " id="tab5">
                                     <!-- Enthält die Komponente -->
-                                    <div class="w-full max-h-full p-3 mb-2">
+                                    <div class="w-full p-3 mb-2">
 
                                         @livewire('shop-artikelliste-component', ['quantities' => $quantities])
 

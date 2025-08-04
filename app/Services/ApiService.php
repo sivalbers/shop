@@ -256,7 +256,7 @@ class ApiService
                 return $response;
             }
             case 'categories':
-                $result = $this->warengruppeRepository->update($request->id, $request->all());
+                $result = $this->warengruppeRepository->update($id, $request->all());
                 $response = [
                     'Version' => 1.7,
                     'request' => [
@@ -269,7 +269,7 @@ class ApiService
                   ];
                 return $response;
             case 'users':
-                $result = $this->userRepository->update($request->id, $request->all());
+                $result = $this->userRepository->update($id, $request->all());
                 $response = [
                     'Version' => 1.7,
                     'request' => [
@@ -282,7 +282,7 @@ class ApiService
                   ];
                 return $response;
             case 'address': {
-                $id = $this->anschriftRepository->update($request->id, $request->all());
+                $id = $this->anschriftRepository->update($id, $request->all());
                 if ($id != false){
 
                     $response = [
