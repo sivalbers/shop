@@ -152,7 +152,7 @@
                 <div class="h-12 grow  flex justify-end items-center pr-2"> <!-- Name und Sortiment - Dropdown -->
                     <x-dropdown align="right">
                         <x-slot name="trigger"> <!-- Name und Sortiment - Überschrift -->
-                            <button class="inline-flex items-center pl-2 pt-2 text-sm focus:outline-none transition ease-in-out duration-150 w-full
+                            <button class="cursor-pointer inline-flex items-center pl-2 pt-2 text-sm focus:outline-none transition ease-in-out duration-150 w-full
                                 bg-ewe-gruen">
                                 <div class=" text-start text-gray-600">
 
@@ -219,7 +219,7 @@
                             </x-dropdown-link>
 
                             <!-- Authentication -->
-                            <button wire:click="logout" class="w-full text-start">
+                            <button wire:click="logout" class="cursor-pointer w-full text-start">
                                 <x-dropdown-link >
                                     {{ __('auth.Log Out') }}
                                 </x-dropdown-link>
@@ -233,7 +233,7 @@
             @if ( !empty(Auth::user()) && auth()->user()->isAdmin() && true === false )
             <div class="-me-2 flex items-center sm:hidden">
                 <button @click="open = !open"
-                    class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-900 focus:text-gray-500 dark:focus:text-gray-400 transition duration-150 ease-in-out">
+                    class="cursor-pointer inline-flex items-center justify-center p-2 rounded-md text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-900 focus:text-gray-500 dark:focus:text-gray-400 transition duration-150 ease-in-out">
                     <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                         <path :class="{ 'hidden': open, 'inline-flex': !open }" class="inline-flex" stroke-linecap="round"
                             stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
@@ -430,7 +430,7 @@
                 <div class="h-12 w-full">
                     <x-dropdown align="right">
                         <x-slot name="trigger">
-                            <button class="inline-flex items-center pl-2 pt-2 text-sm focus:outline-none transition ease-in-out duration-150 w-full
+                            <button class="cursor-pointer inline-flex items-center pl-2 pt-2 text-sm focus:outline-none transition ease-in-out duration-150 w-full
                                 bg-ewe-gruen">
                                 <div class=" text-start text-gray-600">
 
@@ -497,7 +497,7 @@
                                 </x-dropdown-link>
 
                                 <!-- Authentication -->
-                                <button wire:click="logout" class="w-full text-start">
+                                <button wire:click="logout" class="cursor-pointer w-full text-start">
                                     <x-dropdown-link >
                                         {{ __('auth.Log Out') }}
                                     </x-dropdown-link>
@@ -521,7 +521,7 @@
         <!-- Hamburger -->
         <div class="-me-2 flex items-center sm:hidden">
             <button @click="open = ! open"
-                class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-900 focus:text-gray-500 dark:focus:text-gray-400 transition duration-150 ease-in-out">
+                class="cursor-pointer inline-flex items-center justify-center p-2 rounded-md text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-900 focus:text-gray-500 dark:focus:text-gray-400 transition duration-150 ease-in-out">
                 <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                     <path :class="{ 'hidden': open, 'inline-flex': !open }" class="inline-flex" stroke-linecap="round"
                         stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />

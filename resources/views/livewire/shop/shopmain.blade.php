@@ -138,7 +138,7 @@
                                             Alle Warengruppen aus ihrem Sortiment
                                         </div>
                                         <div>
-                                            <button @click="openWG = !openWG" class="">
+                                            <button @click="openWG = !openWG" class="cursor-pointer ">
                                             <div x-show="!openWG"
                                                 class="flex flex-row items-center h-full">
 

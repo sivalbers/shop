@@ -29,7 +29,7 @@
                         <label for="kundenbestellnr">Kundenbestellnr.:</label>
                     </div>
                     <div class="w-2/3 md:w-full lg:w-2/3">
-                        <input type="text" wire:model="kundenbestellnr" id="kundenbestellnr"
+                        <input type="text" wire:model="kundenbestellnr" id="kundenbestellnr" maxlength="100"
                             class="basketInput {{ $fldClass }} w-full">
                     </div>
                 </div>
@@ -39,7 +39,7 @@
                         <label for="kommission">Kommission:</label>
                     </div>
                     <div class="w-2/3 md:w-full lg:w-2/3">
-                        <input type="text" wire:model="kommission" id="kommission"
+                        <input type="text" wire:model="kommission" id="kommission"  maxlength="100"
                             class="basketInput {{ $fldClass }}  w-full">
                     </div>
                 </div>
@@ -94,7 +94,7 @@
             </div>
             <div class="flex flex-row justify-end">
                 <div>
-                    <button type="submit" class="flex mt-2 px-4 py-2 bg-sky-600 text-white rounded-md shadow-md shadow-gray-400 justify-right">
+                    <button type="submit" class="cursor-pointer flex mt-2 px-4 py-2 bg-sky-600 text-white rounded-md shadow-md shadow-gray-400 justify-right">
                         Speichern
                     </button>
                 </div>
@@ -113,17 +113,17 @@
 
         <div class="flex justify-end">
             <button x-show="showEmptyButton === false" type="button" @click="showEmptyButton = true";
-                class="flex flex-row mt-2 px-4 py-2 bg-red-600 text-white rounded-md w-auto  items-center shadow-md shadow-gray-400">
+                class="cursor-pointer flex flex-row mt-2 px-4 py-2 bg-red-600 text-white rounded-md w-auto  items-center shadow-md shadow-gray-400">
                     <x-fluentui-delete-28-o class="h-6 pr-2" />
                     Leeren ...
             </button>
 
             <div x-show="showEmptyButton" x-cloak>
                 <button wire:click="doEmpty; showEmptyButton = false"
-                    class="mt-2 px-4 py-2 bg-red-600 text-white rounded-md shadow-md shadow-gray-400">Wirklich
+                    class="cursor-pointer mt-2 px-4 py-2 bg-red-600 text-white rounded-md shadow-md shadow-gray-400">Wirklich
                     leeren?</button>
                 <button @click="showEmptyButton = false";
-                    class="mt-2 px-4 py-2 text-black bg-[#CDD503] rounded-md shadow-md shadow-gray-400">Abbrechen?</button>
+                    class="cursor-pointer mt-2 px-4 py-2 text-black bg-[#CDD503] rounded-md shadow-md shadow-gray-400">Abbrechen?</button>
 
             </div>
         </div>

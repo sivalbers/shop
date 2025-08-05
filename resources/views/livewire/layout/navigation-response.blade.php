@@ -41,7 +41,7 @@
                 </x-responsive-nav-link>
 
                 <!-- Authentication -->
-                <button wire:click="logout" class="w-full text-start">
+                <button wire:click="logout" class="cursor-pointer w-full text-start">
                     <x-responsive-nav-link>
                         {{ __('Log Out') }}
                     </x-responsive-nav-link>

@@ -68,7 +68,14 @@ class BestellbestaetigungMail extends Mailable
         Log::info(['bcc' => $bccArr]);
 
 
-        $subject = sprintf('Bestellbestätigung für Ihre Bestellung Nr.: %s', $this->details['bestellung']->nr );
+        if (!empty( $this->details['bestellung']->kundenbestellnr)){
+            $subject = sprintf('Bestellbestätigung für Ihre Bestellung Nr.: %s - [ Kundenbestellnr.: %s ]',
+                                $this->details['bestellung']->nr,
+                                $this->details['bestellung']->kundenbestellnr
+                );
+        }
+        else
+            $subject = sprintf('Bestellbestätigung für Ihre Bestellung Nr.: %s', $this->details['bestellung']->nr );
 
         return new Envelope(
             subject: $subject,

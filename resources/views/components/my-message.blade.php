@@ -38,7 +38,7 @@
                     </div>
                 </div>
                 <div class="w-3/12 md:w-1/6 text-right">
-                    <button x-on:click="zeigeMessage = false" class="py-2 px-4 border border-gray-400 bg-ewe-gruen rounded-md">
+                    <button x-on:click="zeigeMessage = false" class="cursor-pointer py-2 px-4 border border-gray-400 bg-ewe-gruen rounded-md">
                         Schließen
                     </button>
                 </div>
