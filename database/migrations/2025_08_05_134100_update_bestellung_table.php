@@ -17,7 +17,7 @@ return new class extends Migration
                   ->nullable()
                   ->comment('Email Empfaenger für Bestellbestätigung')
                   ->after('lieferdatum');
-            $table->tinyInteger('abholer')->unsigned()->default(0)->after('kopieempfaenger');
+            $table->tinyInteger('abholer')->unsigned()->default(1)->after('kopieempfaenger');
         });
     }
 

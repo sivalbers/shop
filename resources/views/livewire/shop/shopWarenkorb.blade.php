@@ -78,7 +78,7 @@
                         {!! $rechnungsadresse !!}
                     </div>
                 </div>
-                
+                @if ($abholer)
                 <div class="flex flex-row md:flex-col xl:flex-row mb-1 mt-4 text-base">
                     <div class="w-1/3 font-bold mr-2 text-right  md:text-left lg:text-right">
                         Lieferadresse:
@@ -89,6 +89,9 @@
                     </div>
 
                 </div>
+                @else
+                <h1>Sie müssen selber abholen!</h1>
+                @endif
 
 
             </div>
