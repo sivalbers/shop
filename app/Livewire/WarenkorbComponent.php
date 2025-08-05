@@ -32,6 +32,8 @@ class WarenkorbComponent extends Component
     public $bestellung;
     public $rechnungsadresse;
     public $lieferadresse;
+    public $kopieempfaenger;
+    public $abholer;
 
     public function mount($sortiment){
 
@@ -62,6 +64,8 @@ class WarenkorbComponent extends Component
         if (empty($this->lieferdatum) | $this->lieferdatum == ''){
             $this->lieferdatum = Bestellung::calcLFDatum()->format('Y-m-d');
         }
+        $this->kopieempfaenger = $this->bestellung->kopieempfaenger;
+        $this->abholer = $this->bestellung->abholer;
 
     }
 
