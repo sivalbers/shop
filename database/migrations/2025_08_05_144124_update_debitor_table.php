@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('debitor', function (Blueprint $table) {
             // Fügt das Feld 'erpid' nach dem Feld 'lieferdatum' hinzu
-            $table->tinyInteger('abholer')->unsigned()->default(0)->after('sortiment');
+            $table->tinyInteger('abholer')->unsigned()->default(1)->after('sortiment');
         });
     }
 
