@@ -38,6 +38,9 @@ class Bestellung extends Model
         'kommission',
         'bemerkung',
         'lieferdatum',
+        'kopieempfaenger',
+        'abholer'
+
     ];
 
     protected $casts= [
@@ -52,6 +55,7 @@ class Bestellung extends Model
         'lieferdatum' => 'date',
         'created_at' => 'date',
         'updated_at'  => 'date',
+        'abholer' => 'boolean'
     ];
 
     public function reAdresse()

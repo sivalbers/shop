@@ -17,7 +17,7 @@ return new class extends Migration
                   ->nullable()
                   ->comment('Email Empfaenger für Bestellbestätigung')
                   ->after('lieferdatum');
-            $table->tinyInteger('abholer')->unsigned()->default(0);
+            $table->tinyInteger('abholer')->unsigned()->default(0)->after('kopieempfaenger');
         });
     }
 
@@ -26,9 +26,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('kopieempfaenger', function (Blueprint $table) {
+        Schema::table('bestellungen', function (Blueprint $table) {
             // Entfernt das Feld 'erpid'
-            $table->dropColumn('erpid');
+            $table->dropColumn('kopieempfaenger');
             $table->dropColumn('abholer');
         });
     }
