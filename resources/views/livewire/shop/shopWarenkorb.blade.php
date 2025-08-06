@@ -63,11 +63,50 @@
                     <div class="w-2/3 md:w-full lg:w-2/3">
                         <input type="date" wire:model.live="lieferdatum" min="{{ $minLieferdatum }}" id="lieferdatum"
                             class="basketInput {{ $fldClass }} w-full">
-                        @if ($lieferdatumError != '')
-                            <div class="text-red-500 text-left">{{ $lieferdatumError }}</div>
-                        @endif
+
+
+
                     </div>
                 </div>
+                @if ($lieferdatumError != '')
+                <div class="flex {{ $flexclass }} -mt-1">
+                    <div class="w-1/3 mr-2">
+                        &nbsp;
+                    </div>
+                    <div class=" w-2/3 md:w-full lg:w-2/3 text-red-500 text-left">
+                            {{ $lieferdatumError }}
+                    </div>
+                </div>
+                @endif
+
+
+                <div class="flex mb-1 {{ $flexclass }}">
+                    <div class="w-1/3 text-right md:text-left lg:text-right mr-2 pt-[6px]">
+                        <label for="kopieempfaenger">Bestätigungs-Kopie:</label>
+                    </div>
+                    <div class="w-2/3 md:w-full lg:w-2/3">
+                        <input type="text" wire:model="kopieempfaenger" id="kopieempfaenger" maxlength="255"
+                            class="basketInput {{ $fldClass }} w-full">
+                    </div>
+                </div>
+                <div class="flex {{ $flexclass }} -mt-1">
+                    <div class="w-1/3 mr-2">
+                        &nbsp;
+                    </div>
+                    <div class=" w-2/3 md:w-full lg:w-2/3 text-xs text-gray-500">
+                            (Mehrere E-Mails durch Semikolon (;) trennen)
+                    </div>
+                </div>
+                @if ($kopieempfaengerError != '')
+                <div class="flex {{ $flexclass }} -mt-1">
+                    <div class="w-1/3 mr-2">
+                        &nbsp;
+                    </div>
+                    <div class=" w-2/3 md:w-full lg:w-2/3 text-red-500 text-left">
+                            {{ $kopieempfaengerError }}
+                    </div>
+                </div>
+                @endif
 
                 <div class="flex flex-row md:flex-col xl:flex-row mb-1 mt-4 text-base">
                     <div class="w-1/3 font-bold mr-2 text-right  md:text-left lg:text-right">
@@ -78,7 +117,7 @@
                         {!! $rechnungsadresse !!}
                     </div>
                 </div>
-                @if ($abholer)
+                @if (!$abholer)
                 <div class="flex flex-row md:flex-col xl:flex-row mb-1 mt-4 text-base">
                     <div class="w-1/3 font-bold mr-2 text-right  md:text-left lg:text-right">
                         Lieferadresse:
@@ -90,7 +129,7 @@
 
                 </div>
                 @else
-                <h1>Sie müssen selber abholen!</h1>
+
                 @endif
 
 

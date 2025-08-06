@@ -102,7 +102,6 @@ class Bestellung extends Model
 
             if (!$bestellung){
 
-
                 $LfAddr = Anschrift::Lieferadresse($kundennr);
 
                 $ReAddr = Anschrift::Rechnungsadresse($kundennr);
@@ -115,7 +114,7 @@ class Bestellung extends Model
                     'status_id' => 0,                  // Beispiel für einen Standardstatus (1 = 'offen' o.ä.)
                     'gesamtbetrag' => 0.00,         // Standardwert für Gesamtbetrag (z.B. 0.00)0
                     'lieferdatum' => Bestellung::calcLFDatum(),
-                    'abholer' => Debitor::where('nr', $kundennr)->pluck('abholer')
+                    'abholer' => Debitor::where('nr', $kundennr)->value('abholer')
                 ]);
                 $result = $bestellung ;
             }

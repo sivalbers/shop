@@ -33,6 +33,7 @@ class WarenkorbComponent extends Component
     public $rechnungsadresse;
     public $lieferadresse;
     public $kopieempfaenger;
+    public $kopieempfaengerError;
     public $abholer;
 
     public function mount($sortiment){
@@ -68,6 +69,25 @@ class WarenkorbComponent extends Component
         $this->abholer = $this->bestellung->abholer;
 
     }
+
+    protected function validateKopieempfaenger(): bool
+    {
+        // Prüfen, ob `artikelnr` gesetzt und gültig ist
+        if (isset($this->kopieempfaenger)){
+
+            $emails = array_map('trim', explode(';', $this->kopieempfaenger));
+
+            foreach ($emails as $email) {
+                if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                    $this->kopieempfaengerError = 'Eine oder mehrere E-Mail-Adressen sind fehlerhaft.';
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
 
     private function getNachrichten(){
 
@@ -107,11 +127,19 @@ class WarenkorbComponent extends Component
 
         Log::info('Warenkorbkomponent->bestellungAbsenden');
 
+        if (!$this->validateKopieempfaenger()) {
+            return;
+        }
+
+
         $this->bestellung->kundenbestellnr = $this->kundenbestellnr;
         $this->bestellung->kommission = $this->kommission;
         $this->bestellung->bemerkung = $this->bemerkung;
         $this->bestellung->lieferdatum = ($this->lieferdatum === '') ? null: $this->lieferdatum;
         $this->bestellung->status_id = 1;
+        $this->bestellung->kopieempfaenger = $this->kopieempfaenger;
+
+
         $this->bestellung->save();
 
         SendBestellungToErp::dispatch($this->bestellung); // Bestellung in warteschlange zum übertragen an faveo
@@ -134,12 +162,15 @@ class WarenkorbComponent extends Component
 
     #[On('updateWarenkorb')]
     public function updateWarenkorb($doShowMessage = true){
-
-
+        if (!$this->validateKopieempfaenger()) {
+            return;
+        }
         $this->bestellung->kundenbestellnr = $this->kundenbestellnr;
         $this->bestellung->kommission = $this->kommission;
         $this->bestellung->bemerkung = $this->bemerkung;
         $this->bestellung->lieferdatum = ($this->lieferdatum === '') ? null: $this->lieferdatum;
+        $this->bestellung->kopieempfaenger = $this->kopieempfaenger;
+
         $this->bestellung->save();
 
         if ($doShowMessage){
@@ -163,6 +194,7 @@ class WarenkorbComponent extends Component
         $this->bestellung->kommission = '';
         $this->bestellung->bemerkung = '';
         $this->bestellung->lieferdatum = Bestellung::calcLFDatum();
+        $this->bestellung->kopieempfaenger = '';
         $this->bestellung->save();
         $this->setData();
         $this->dispatch('updateNavigation');

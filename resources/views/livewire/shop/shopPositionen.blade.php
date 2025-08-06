@@ -162,7 +162,7 @@
                             }
                         @endphp
                         <div class="">
-                            <button type="submit" class="w-52 {{ $farbe }} py-2 rounded-md">
+                            <button type="submit" class="cursor-pointer w-52 {{ $farbe }} py-2 rounded-md">
 
                                 @if (!$isPosModified)
                                     @if (count($bPositionen) > 0 )

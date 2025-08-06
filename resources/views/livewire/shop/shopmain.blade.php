@@ -152,7 +152,7 @@
                                         </div>
                                     </div>
                                     <!-- SCROLLCONTAINER -->
-                                    <div class="overflow-scroll h-full"  x-show="openWG" x-cloak>
+                                    <div class="overflow-scroll h-full"  x-show="openWG" >
                                         <!-- Neue Anpassung hier -->
                                         <div class="text-sm w-full  pt-2 ">
                                             <ul class=" list-image-none">

@@ -149,6 +149,8 @@ class ShopComponent extends Component
     }
 
     public function updateQuery(){
+        Log::info([ 'activeTab' => $this->activeTab ]);
+
 
 
         if ($this->activeTab === 'warengruppen') {
@@ -180,7 +182,7 @@ class ShopComponent extends Component
 
             if ((empty($this->aktiveWarengruppe) || $this->aktiveWarengruppe === '') & (count($this->warengruppen) > 0)) {
 
-               
+
                 $this->aktiveWarengruppe = $this->warengruppen[0]['wgnr'];
                 $this->aktiveWarengruppeBezeichung = Warengruppe::getBezeichnung($this->aktiveWarengruppe);
                 configSet('aktiveWarengruppe', $this->aktiveWarengruppe);
@@ -190,6 +192,8 @@ class ShopComponent extends Component
             if ($this->aktiveWarengruppe){
                 $this->dispatch('showArtikelWG', $this->aktiveWarengruppe );
             }
+
+            Log::info(['am Ende von updateQuery', 'count' => count($this->warengruppen)]);
 
         }
         elseif ($this->activeTab === 'favoriten') {
