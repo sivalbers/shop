@@ -79,7 +79,7 @@
                 </div>
                 <div class="flex-grow-0  px-1">
                     <button type="submit" class="cursor-pointer text-sky-600 pt-[4px] f" title="In den Warenkorb">
-                        <x-fluentui-shopping-bag-16-o class="h-6" />
+                        <x-fluentui-shopping-bag-16-o class="h-6" title="warenkorb"/>
                     </button>
                 </div>
                 <div class="flex-grow-0 w-auto ml-2">
