@@ -79,15 +79,15 @@
                 </div>
                 <div class="flex-grow-0  px-1">
                     <button type="submit" class="cursor-pointer text-sky-600 pt-[4px] f" title="In den Warenkorb">
-                        <x-fluentui-shopping-bag-16-o class="h-6" title="warenkorb"/>
+                        <x-fluentui-shopping-bag-16-o class="h-6" title="In den Warenkorb"/>
                     </button>
                 </div>
                 <div class="flex-grow-0 w-auto ml-2">
 
                     @if ($pos['bestand'] == 0)
-                        <x-fluentui-vehicle-truck-profile-24-o class="h-7 text-red-500" />
+                        <x-fluentui-vehicle-truck-profile-24-o class="h-7 text-red-500" title="Artikel nicht auf Lager" />
                     @else
-                        <x-fluentui-vehicle-truck-profile-24 class="h-7 text-[#CDD503] " />
+                        <x-fluentui-vehicle-truck-profile-24 class="h-7 text-[#CDD503]" title="Artikel auf Lager"/>
                     @endif
                 </div>
             </div>

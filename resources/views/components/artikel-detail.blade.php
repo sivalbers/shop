@@ -82,12 +82,12 @@
 
                 {{-- Icons --}}
                 <button type="submit" class="cursor-pointer text-sky-600" title="In den Warenkorb">
-                    <x-fluentui-shopping-bag-20-o class="h-7" />
+                    <x-fluentui-shopping-bag-20-o class="h-7" title="In den Warenkorb"/>
                 </button>
                 @if ($pos['bestand'] == 0)
-                    <x-fluentui-vehicle-truck-profile-24-o class="h-7 text-red-500" />
+                    <x-fluentui-vehicle-truck-profile-24-o class="h-7 text-red-500" title="Artikel nicht auf Lager" />
                 @else
-                    <x-fluentui-vehicle-truck-profile-24 class="h-7 text-[#CDD503]" />
+                    <x-fluentui-vehicle-truck-profile-24 class="h-7 text-[#CDD503]" title="Artikel auf Lager"/>
                 @endif
             </div>
         </div>

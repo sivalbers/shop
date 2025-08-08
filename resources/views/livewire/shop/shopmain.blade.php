@@ -130,7 +130,7 @@
 
 
                             @if ($activeTab === 'warengruppen') <!-- Warengruppen -->
-                                <div class="p-3 w-full md:w-1/3 flatwhite h-[20vH] md:h-[calc(100vh-245px)] overflow-hidden">
+                                <div class="p-3 w-full md:w-1/3 flatwhite max-h-[20vH] md:max-h-max md:h-[calc(100vh-245px)] overflow-y-scroll md:overflow-y-hidden">
 
                                     <div class="text-base font-bold  text-sky-600 border-b border-sky-600 h-6 flex items-center justify-between">
                                         <div
@@ -138,7 +138,7 @@
                                             Alle Warengruppen aus ihrem Sortiment
                                         </div>
                                         <div>
-                                            <button @click="openWG = !openWG" class="cursor-pointer ">
+                                            <button @click="openWG = !openWG" class="cursor-pointer md:hidden">
                                             <div x-show="!openWG"
                                                 class="flex flex-row items-center h-full">
 
