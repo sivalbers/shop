@@ -26,7 +26,7 @@ use App\Livewire\BelegarchivComponent;
 use App\Models\Config;
 
 use App\Http\Controllers\ODataController;
-use App\Http\Controllers\Punchout;
+use App\Http\Controllers\PunchOut;
 
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\ApiLogMiddleware;
@@ -102,7 +102,8 @@ Route::middleware([AdminMiddleware::class])->group(function(){
 });
 
 // Route::get('/suchtest', ArtikelSuche::class); // Funktioniert, aber ausgeklammert. Bildet die Artikelsuche ab.
-Route::post('/punchout', [Punchout::class, 'handlePunchOut']);
+Route::post('/punchout', [Punchout::class, 'handlePunchOutPost']);
+Route::get('/punchout', [PunchOut::class, 'handlePunchOutGet']);
 
 Route::view('/datenschutz', 'datenschutz')->name('datenschutz');
 Route::view('/impressum', 'impressum')->name('impressum');
