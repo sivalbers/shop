@@ -276,7 +276,7 @@ class ApiService
                           'status' => ($result === true) ? 'success' : 'warning'
                         ],
                   'response' => [
-                      'result' => [ 'id' => $result->id ],
+                      'result' => [ 'id' => $result ],
                       'errors' => [[]]
                     ]
                   ];

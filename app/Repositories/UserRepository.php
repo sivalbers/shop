@@ -210,9 +210,12 @@ class UserRepository
 
     public function update($id, array $data)
     {
-
+        Log::info('user update');
         $user = new User();
-        $debitor = new Debitor();
+        $debitor = Debitor::where('nr' , $id)->first();
+
+        $debitor->nr = $id;
+
         $userDebitor = new UserDebitor();
         try {
             $this->updateUserFromData($user, $debitor, $userDebitor, $data);
@@ -223,8 +226,22 @@ class UserRepository
             return false;
         }
 
+
+        if (!$this->validateDebitor($debitor)) {
+            return false;
+
+        }
+        else {
+            $debitor->save();
+            Log::info('Prüfung Debitor => Okay.');
+        }
+
+
         try {
-            $user = User::findOrFail($id);
+            $user = User::where('email', $user->email)->first();
+
+            Log::info('user wurde gefunden.');
+
 
         } catch (\Throwable $e) {
             // Fehler beim Speichern behandeln
@@ -232,25 +249,21 @@ class UserRepository
             return false;
         }
 
-        try {
-            $user = $this->updateUserFromData($user, $debitor, $userDebitor, $data);
-        } catch (\Throwable $e) {
-            // Fehler beim Speichern behandeln
-            $this->logMessage('error', 'Create:: Fehler beim konvertieren des Benutzers: ' . $e->getMessage(), ['data' => $data]);
-            return false;
+        $found = UserDebitor::where('email', $user->email)->where('debitor_nr', $debitor->nr)->exists();
+        if ($found === false) {
+            $userDebitor->save();
+            $this->logMessage('debug', 'Neue UserDebitor-ID: ', ['userDebitor->id' => $userDebitor->id]);
+        }
+        else{
+
+            Log::info('User_Debitor existiert. Es wurde kein neuer UserDebitor angelegt');
         }
 
-        try {
-            return ($this->validateRec($user) && $user->save());
+        return $id;
 
-            // Optional: Loggen, falls Speichern nicht erfolgreich war, ohne Exception
-            Log::warning('Benutzer konnte nicht gespeichert werden.', ['data' => $data]);
-            return false;
 
-        } catch (\Exception $e) {
-            Log::error('Update: Fehler beim Speichern des Artikels: ' . $e->getMessage(), ['data' => $data]);
-            return false;
-        }
+
+
     }
 
 
@@ -280,6 +293,7 @@ class UserRepository
         if (isset($data['customer_number'])){
             $debitor->nr                = $data['customer_number'];
         }
+        Log::info([ 'Debitor->nr', $debitor->nr]);
 
         $userDebitor->debitor_nr    = $debitor->nr;
 
