@@ -149,12 +149,12 @@ class UserRepository
 
             if ($found === false) {
                 $user->save();
-                $result = $user->id;
+                // $result = $user->id; Nicht user sondern debitor-Nr zrückgeben
                 $this->logMessage('debug', 'Neue Benutzer-ID: ', ['userId' => $user->id]);
             }
             else{
                 $u = User::where('email', $user->email)->first();
-                $result = $u->id;
+                // $result = $u->id; Nicht user sondern debitor-Nr zrückgeben
                 Log::info('Benutzer existiert. Es wurde kein neuer Benutzer angelegt');
             }
 
@@ -179,6 +179,8 @@ class UserRepository
             else{
                 Log::info('User_Debitor existiert. Es wurde kein neuer UserDebitor angelegt');
             }
+
+            $result = $debitor->nr;
 
             // Optional: Loggen, falls Speichern nicht erfolgreich war, ohne Exception
             // $this->logMessage('warning', 'Benutzer konnte nicht gespeichert werden.', ['data' => $data]);
