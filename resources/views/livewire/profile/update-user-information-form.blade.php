@@ -220,7 +220,7 @@ new class extends Component {
                         @if ($iUser->user->email != Auth::user()->email)
                             @if ($rolle === 1)
                                 <button wire:click="btnDelete('{{ $iUser->user->email }}')"
-                                    class=" border border-red-400 text-white rounded-md px-2 w-10"
+                                    class=" border border-red-400 text-white rounded-md px-2 w-10 cursor-pointer"
                                     title="Nach Rückfrage wird der Zugang von '{{ $iUser->user->email }}' für diesen Debitor gelöscht.">
                                     <x-fluentui-shopping-bag-dismiss-20-o class="h-5 text-red-500" />
                                 </button>
@@ -231,7 +231,7 @@ new class extends Component {
             @endforeach
             @if ($rolle === 1)
             <div class="flex flex-row border-t items-end gap-4 justify-end">
-                <button wire:click="neuerBenutzer" class="mt-2 border border-sky-600 bg-sky-600 text-white rounded shadow-md px-4">Benutzer erstellen</button>
+                <button wire:click="neuerBenutzer" class="cursor-pointer mt-2 border border-sky-600 bg-sky-600 text-white rounded shadow-md px-4">Benutzer erstellen</button>
             </div>
             @endif
         </div>
@@ -259,7 +259,7 @@ new class extends Component {
                                         {{ __('Your email address is unverified.') }}
 
                                         <button wire:click.prevent="sendVerification"
-                                            class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
+                                            class="cursor-pointer underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
                                             {{ __('Click here to re-send the verification email.') }}
                                         </button>
                                     </p>

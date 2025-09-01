@@ -217,6 +217,8 @@ class UserRepository
         $debitor->nr = $id;
 
         $userDebitor = new UserDebitor();
+
+
         try {
             $this->updateUserFromData($user, $debitor, $userDebitor, $data);
 
@@ -225,7 +227,6 @@ class UserRepository
             $this->logMessage('error', 'Create:: Fehler beim konvertieren des Benutzers: ' . $e->getMessage(), ['data' => $data]);
             return false;
         }
-
 
         if (!$this->validateDebitor($debitor)) {
             return false;
@@ -236,39 +237,20 @@ class UserRepository
             Log::info('Prüfung Debitor => Okay.');
         }
 
-
-        try {
-            $user = User::where('email', $user->email)->first();
-
-            Log::info('user wurde gefunden.');
+        Log::info([ 'nr' => $debitor->nr, 'name' => $debitor->name, 'E-mail' => $user->email ]);
+        $this->handleStdEmailAdress($debitor->nr, $debitor->name, $user->email);
 
 
-        } catch (\Throwable $e) {
-            // Fehler beim Speichern behandeln
-            $this->logMessage('error', 'Update:: Benutzer nicht gefunden: ' . $e->getMessage(), ['artikelnr' => $id]);
-            return false;
-        }
 
-        $found = UserDebitor::where('email', $user->email)->where('debitor_nr', $debitor->nr)->exists();
-        if ($found === false) {
-            $userDebitor->save();
-            $this->logMessage('debug', 'Neue UserDebitor-ID: ', ['userDebitor->id' => $userDebitor->id]);
-        }
-        else{
 
-            Log::info('User_Debitor existiert. Es wurde kein neuer UserDebitor angelegt');
-        }
+
 
         return $id;
-
-
-
 
     }
 
 
-    public function delete($id)
-    {
+    public function delete($id) {
         try{
             $user = User::findOrFail($id);
             $user->delete();
@@ -280,8 +262,7 @@ class UserRepository
     }
 
 
-    function updateUserFromData($user, $debitor, $userDebitor, $data) {
-        // Mapping der Spalten von `data` zu `Users`
+    function updateUserFromData($user, $debitor, $userDebitor, $data) {    // Mapping der Spalten von `data` zu `Users`
         $this->logMessage('debug', 'UpdateUserFromData', [ 'data' => $data]);
         $mapping = [
             'customer_number'          => 'kundennr', // $debitor->nr, $userDebitor->debitor_nr
@@ -293,16 +274,19 @@ class UserRepository
         if (isset($data['customer_number'])){
             $debitor->nr                = $data['customer_number'];
         }
-        Log::info([ 'Debitor->nr', $debitor->nr]);
-
-        $userDebitor->debitor_nr    = $debitor->nr;
 
         if (isset($data['company'])){
-            $debitor->name              = $data['company'];
+            $debitor->name              = trim($data['company']);
+            $user->name                 = $debitor->name;
         }
+        else
+            if (isset($data['firstname'])){
+                $debitor->name           = trim($data['firstname']);
+                $user->name              = $debitor->name;
+            }
 
 
-        $user->name                 = $debitor->name;
+        $userDebitor->debitor_nr    = $debitor->nr;
 
         if (isset($data['email'])){
             $user->email           = $data['email'];
@@ -313,10 +297,42 @@ class UserRepository
             $debitor->sortiment         = implode(' ', $data['unlocked_product_ranges']);
         }
 
-
-
-
         return true;
+
+    }
+
+
+
+    function handleStdEmailAdress($debitorNr, $name, $email){
+
+        $user = User::where('email', $email)->first();
+
+        if (empty($user)) {
+
+            $user = new user();
+            $user->name = $name;
+            $user->email = $email;
+            $user->role = 64;
+
+            $user->save();
+
+            $this->logMessage('debug', 'Neue Benutzer-ID: ', ['userId' => $user->id]);
+
+            UserDebitor::where('debitor_nr', $debitorNr)
+                ->where('email', '!=', $email)
+                ->update([
+                    'rolle' => 0,
+                    'standard' => 0,
+                ]);
+
+            $userDebitor = new UserDebitor();
+            $userDebitor->email = $email;
+            $userDebitor->debitor_nr = $debitorNr;
+            $userDebitor->rolle = 1;
+            $userDebitor->standard = 1;
+            $userDebitor->save();
+
+        }
 
     }
 

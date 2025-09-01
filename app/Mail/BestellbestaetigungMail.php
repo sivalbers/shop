@@ -58,14 +58,26 @@ class BestellbestaetigungMail extends Mailable
         $bcc = Config::globalString('mail-bcc');
         $bccArr = explode(';', $bcc);
 
+
         $cc = Config::globalString('mail-cc');
-        $ccArr = explode(';', $cc);
+
+        // Beide Strings splitten (falls leer, gibt explode mindestens ein leeres Element zurück)
+        $emails_cc = array_filter(array_merge(
+            array_map('trim', explode(';', (string)$cc)),
+            array_map('trim', explode(';', (string)$this->details['bestellung']->kopieempfaenger))
+        ));
+
+        // Doppelte entfernen und wieder zusammenbauen
+        $emails_cc = implode(';', array_unique($emails_cc));
+
+
+        $ccArr = explode(';', $emails_cc);
 
 
         $empfaenger = [ $mail ];
-        Log::info(['empfänger' => $empfaenger]);
-        Log::info(['cc' => $ccArr]);
-        Log::info(['bcc' => $bccArr]);
+        Log::info(['Bestellbestätigung E-Mail-Empfänger' => $empfaenger]);
+        Log::info(['Bestellbestätigung E-Mail-cc' => $ccArr]);
+        Log::info(['Bestellbestätigung E-Mail-bcc' => $bccArr]);
 
 
         if (!empty( $this->details['bestellung']->kundenbestellnr)){
