@@ -2,59 +2,64 @@
 
 namespace App\Repositories;
 
-use App\Models\Favorit;
-use App\Models\FavoritPos;
-
-
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-
-use Exception;
+use Intervention\Image\Facades\Image;
 
 class ImageRepository
 {
-
     private $pathOriginal;
     private $pathBig;
     private $pathSmall;
     private $pathArchive;
 
-    public function __construct(){
-        $this->pathOriginal = env('image_original', "public/products_original/" );
-        $this->pathBig = env('image_big', "public/products_big/" );
-        $this->pathSmall = env('image_small', "public/products_small/" );
-        $this->pathArchive = env('image_archive', "public/products_archive/" );
+    public function __construct()
+    {
+        $this->pathOriginal = env('image_original', "public/products_original/");
+        $this->pathBig = env('image_big', "public/products_big/");
+        $this->pathSmall = env('image_small', "public/products_small/");
+        $this->pathArchive = env('image_archive', "public/products_archive/");
     }
 
-    function storeItemImage($base64Image, $artikelnr){
-        // Prüfe, ob ein Bild vorhanden ist
+    public function storeItemImage($base64Image, $artikelnr)
+    {
         if (!$base64Image) {
             return null;
         }
 
-        // Extrahiere Dateityp (png oder jpeg) und eigentliche Bilddaten
-        list($format, $base64Data) = explode(':', $base64Image);
+        // Dateiname bereinigen
+        $artikelnrClean = explode(' ', $artikelnr)[0];
 
-        // Definiere den MIME-Typ basierend auf dem Format
+        // Format und Bilddaten trennen
+        list($format, $base64Data) = explode(':', $base64Image);
         $mimeType = ($format == 'png') ? 'image/png' : 'image/jpeg';
         $extension = ($format == 'png') ? 'png' : 'jpg';
 
-        // Base64-Daten dekodieren
         $imageData = base64_decode($base64Data);
+        $fileName = $artikelnrClean . '.' . $extension;
+        $originalPath = $this->pathOriginal . $fileName;
 
-        // Generiere einen einzigartigen Dateinamen
-        $fileName = $artikelnr . '.' . $extension;
+        // Original speichern
+        Storage::put($originalPath, $imageData);
 
-        // Speicherort in Laravel (z.B. storage/app/public/items/)
-        $path = $this->pathOriginal . $fileName;
+        // Mit Intervention Image weiterverarbeiten
+        $image = Image::make($imageData);
 
-        // Speichere das Bild mit Laravel's Storage-Funktion
-        Storage::put($path, $imageData);
+        // BIG: z.B. 1024x768 max (für Webdarstellung)
+        $imageBig = clone $image;
+        $imageBig->resize(1024, 768, function ($constraint) {
+            $constraint->aspectRatio();
+            $constraint->upsize();
+        });
+        Storage::put($this->pathBig . $fileName, (string) $imageBig->encode($extension));
 
-        // Rückgabe des Speicherpfads für die Datenbank
-        return $path;
+        // SMALL: z.B. 150x150 (für Vorschau wie im Screenshot)
+        $imageSmall = clone $image;
+        $imageSmall->fit(150, 150);
+        Storage::put($this->pathSmall . $fileName, (string) $imageSmall->encode($extension));
+
+        // ARCHIVE: Original verschieben
+        Storage::move($originalPath, $this->pathArchive . $fileName);
+
+        return $this->pathBig . $fileName;
     }
-
-
-
 }
