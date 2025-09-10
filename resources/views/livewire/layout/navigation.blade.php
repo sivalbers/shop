@@ -390,26 +390,29 @@
                                 </button>
                             </x-slot>
 
-                            <x-slot name="content">
-                                <x-dropdown-hr />
-                                <x-dropdown-link :href="route('apitest')" wire:navigate class="bg-red-50">
+                            <x-slot name="content" class="bg-red-400">
+
+                                <x-dropdown-link :href="route('apitest')" wire:navigate class="-mt-1 border-b border-gray-300 ">
                                     {{ __('API-Test') }}
                                 </x-dropdown-link>
 
-                                <x-dropdown-link :href="route('apilog')" wire:navigate class="bg-red-50">
+                                <x-dropdown-link :href="route('apilog')" wire:navigate class="border-b border-gray-300 ">
                                     {{ __('API-Log') }}
                                 </x-dropdown-link>
 
-                                <x-dropdown-link :href="route('logs')" wire:navigate class="bg-red-50">
+                                <x-dropdown-link :href="route('logs')" wire:navigate class="border-b border-gray-300 ">
                                     {{ __('Log-Datei') }}
                                 </x-dropdown-link>
-                                <x-dropdown-link :href="route('belegarchiv')" wire:navigate class="bg-red-50">
+                                <x-dropdown-link :href="route('import')" wire:navigate class="border-b border-gray-300 ">
+                                    {{ __('Import') }}
+                                </x-dropdown-link>
+                                <x-dropdown-link :href="route('belegarchiv')" wire:navigate class="-mb-1">
                                     <div class="flex flex-row">
                                         <x-fluentui-database-search-20-o class="w-6 h-6 mr-1" />
                                         {{ __('Belegarchiv') }}
                                     </div>
                                 </x-dropdown-link>
-                                <x-dropdown-hr />
+
                             </x-slot>
 
                         </x-dropdown>

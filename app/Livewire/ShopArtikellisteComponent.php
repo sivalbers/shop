@@ -202,15 +202,26 @@ class ShopArtikellisteComponent extends Component
                 WHERE a.wgnr = ?
                     and a.gesperrt = false
                     AND a_s.sortiment IN ($inClause)
-            ";
+                    GROUP BY a.artikelnr,
+                            a.bezeichnung,
+                            a.vkpreis,
+                            a.steuer,
+                            a.bestand,
+                            a.langtext,
+                            a.einheit,
+                            is_favorit
+                    ";
 
             $params = array_merge([$kundennr, $user_id, $wgnr], $sortimentArray);
 
 
             $this->myArtikels = DB::select($SQLquery, $params);
 
+            Log::info(['SQL', $SQLquery]);
+            Log::info(['Kundennr', $kundennr, 'userId', $user_id, 'wgnr', $wgnr, 'sortiment', $sortimentArray]);
 
             foreach ($this->myArtikels as $artikel) {
+                Log::info(['Artikel', $artikel->artikelnr]);
 
                 $this->aPositions[] = [
                     'uid' => md5($artikel->artikelnr . now()),
@@ -276,7 +287,7 @@ class ShopArtikellisteComponent extends Component
     public function showArtikelSuch($suchArtikelNr, $suchBezeichnung){
 
 
-        
+
         if (empty($suchArtikelNr) && empty($suchBezeichnung)) {
 
             $this->aPositions = [];

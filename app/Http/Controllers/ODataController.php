@@ -11,6 +11,7 @@ use App\Models\Warengruppe;
 use App\Models\ArtikelSortiment;
 use App\Models\Sortiment;
 use App\Models\Config;
+use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
@@ -24,15 +25,13 @@ class ODataController extends Controller
     private $storagePath;
 
 
-    public function __construct()
-    {
+    public function __construct(){
         $this->error = false;
         $this->errorMessage = '';
         $this->storagePath = storage_path('app/'); // Korrektes Dateitrennzeichen
     }
 
-    public function importArtikel()
-    {
+    public function importArtikel(){
 
         $data = $this->getJsonData('URL_IMPORT_ARTIKEL');
 
@@ -41,15 +40,43 @@ class ODataController extends Controller
         $this->save_json_csv($data, 'artikel.csv');
         $result = $this->importArtikelDirect('artikel.csv');
         //dd($result);
+
         if ($result) {
-            return response()->json(['ok' => 'Import Erfolgreich'], 200);
+            return ['success' => true, 'message' => 'Artikel erfolgreich importiert.'];
         } else {
-            return response()->json(['error' => $this->errorMessage], 500);
+            return ['success' => false, 'message' => 'Fehler beim Import.'];
         }
     }
 
-    public function save_json_csv($data, $name)
+    public function importArtikelBestand(): array
     {
+        $dt = now()->subWeeks(4)->startOfDay()->utc()->format('Y-m-d\TH:i:s\Z');
+        $filter = "systemModifiedAt ge {$dt}";
+
+        $data = $this->getJsonDataMitFilter('URL_IMPORT_ARTIKELBESTAND', $filter);
+
+        if (empty($data) || empty($data['value'])) {
+            return ['success' => false, 'message' => $this->errorMessage ?? 'Keine Daten gefunden.'];
+        }
+
+        Log::info('Beginne mit dem Import der Artikelbestände');
+
+        try {
+            foreach ($data['value'] as $item) {
+                $artikel = Artikel::find($item["artikelnr"]);
+                if ($artikel) {
+                    $artikel->bestand = $item["bestand"];
+                    $artikel->save();
+                }
+            }
+
+            return ['success' => true, 'message' => 'Artikelbestände erfolgreich importiert.'];
+        } catch (\Exception $e) {
+            return ['success' => false, 'message' => 'Fehler beim Import: ' . $e->getMessage()];
+        }
+    }
+
+    public function save_json_csv($data, $name){
         $file = $this->storagePath . $name;
         $csvFile = fopen($file, 'w');
 
@@ -76,8 +103,8 @@ class ODataController extends Controller
         fclose($csvFile);
     }
 
-    public function importArtikelDirect($name)
-    {
+
+    public function importArtikelDirect($name){
         try {
             $escapedPath = DB::getPdo()->quote($this->storagePath . $name);
             Log::info('Vor Update Artikel');
@@ -96,8 +123,8 @@ class ODataController extends Controller
                     gesperrt = IF(@gesperrt != '', 1, 0),
                     vkpreis = CAST(REPLACE(@vkpreis, ',', '.') AS DECIMAL(10,2)),
                     updated = 10;
-        ");
-*/
+            ");
+            */
             // 1. Neue Einträge hinzufügen, vorhandene ignorieren
 
 
@@ -135,11 +162,8 @@ class ODataController extends Controller
             Log::info('Vor Drop temp table');
             DB::statement("DROP TEMPORARY TABLE artikel_import;");
 
-
-
-
-
             return true;
+
         } catch (\Exception $e) {
             $this->error = true;
             $this->errorMessage = $e->getMessage();
@@ -149,8 +173,7 @@ class ODataController extends Controller
     }
 
 
-    private function get($item, $fld)
-    {
+    private function get($item, $fld){
         try {
             //log::info(['get' => $fld]);
 
@@ -167,8 +190,7 @@ class ODataController extends Controller
     }
 
 
-    public function importArtikel_zeilenweise($data)
-    {
+    public function importArtikel_zeilenweise($data){
         if (!empty($data)) {
 
             Log::info('Beginne mit dem Import der Daten');
@@ -227,8 +249,7 @@ class ODataController extends Controller
         }
     }
 
-    public function importWarengruppe()
-    {
+    public function importWarengruppe() {
 
         $data = $this->getJsonData('URL_IMPORT_WG');
 
@@ -252,17 +273,17 @@ class ODataController extends Controller
                     // z.B.: YourModel::create($item);
                 }
 
-                return response()->json(['message' => 'Daten erfolgreich importiert']);
+                return ['success' => true, 'message' => 'Warengruppen erfolgreich importiert.'];
             } catch (\Exception $e) {
-                return response()->json(['error' => 'Fehler beim Import: ' . $e->getMessage()], 500);
+                return ['success' => false, 'message' => 'Fehler beim Import: ' . $e->getMessage()];
             }
         } else {
-            return response()->json(['error' => $this->errorMessage], 500);
+            return ['success' => false, 'message' => 'Fehler/Hinweis: Keine Daten für den Import vorhanden.' ];
         }
+
     }
 
-    public function importSortiment()
-    {
+    public function importSortiment() {
         Log::info('ImportSortiment');
 
         $data = $this->getJsonData('URL_IMPORT_SORTIMENT');
@@ -337,8 +358,8 @@ class ODataController extends Controller
         }
     }
 
-    public function getJsonData($url)
-    {
+    public function getJsonData($url) {
+        Log::info([ 'getJsonData', $url ]);
         $json = json_decode(Config::kundennrJson('URL_IMPORT', Auth::user()->kundenr), true);
 
         if (!$json) {
@@ -348,8 +369,50 @@ class ODataController extends Controller
         $url = $json[$url];
 
         $username = env('NAV_USER', "testuser");
-        $password = env('NAV_PASSWORD', "Sieverding22!!");
+        $password = env('NAV_PASSWORD', "Sieverding22!");
+        //dd($password);
+        // Initialisiere den Guzzle-Client
+        $client = new Client();
 
+        try {
+            // Sende die Anfrage an den OData-Dienst mit Basic-Authentifizierung
+            $response = $client->request('GET', $url, [
+                'auth' => [$username, $password],
+                'headers' => [
+                    'Accept' => 'application/json',
+                ],
+            ]);
+            Log::info('fehlerfrei');
+
+            // Hole den Body der Antwort
+            return json_decode($response->getBody()->getContents(), true);
+        } catch (\Exception $e) {
+            Log::info('Fehler' . $e->getMessage());
+            $this->error = true;
+            $this->errorMessage = 'Fehler beim Import: ' . $e->getMessage();
+            return null;
+        }
+    }
+
+    public function getJsonDataMitFilter($url, $filter) {
+        Log::info([ 'getJsonData', $url ]);
+        $json = json_decode(Config::kundennrJson('URL_IMPORT', Auth::user()->kundenr), true);
+
+        if (!$json) {
+            return response()->json(['error' => 'Fehler beim Import: >URL_IMPORT< nicht gefunden'], 500);
+        }
+
+        $url = $json[$url];
+
+        // korrekt URL-kodiert (Leerzeichen -> %20), $ bleibt erhalten:
+        $url = $url . '&$filter=' . rawurlencode($filter);
+        // dd($url);
+
+
+
+        $username = env('NAV_USER', "testuser");
+        $password = env('NAV_PASSWORD', "Sieverding22!");
+        //dd($password);
         // Initialisiere den Guzzle-Client
         $client = new Client();
 

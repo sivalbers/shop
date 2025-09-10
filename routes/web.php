@@ -81,7 +81,9 @@ Route::middleware([AdminMiddleware::class])->group(function(){
     Route::get('/warengruppen', WarengruppeComponent::class)->middleware('auth')->name('warengruppen');
 
 
+
     Route::get('/import-odata/artikel', [ODataController::class, 'importArtikel'])->name('importArtikel');
+    Route::get('/import-odata/artikelbestand', [ODataController::class, 'importArtikelBestand'])->name('importArtikelBestand');
     Route::get('/import-odata/wg', [ODataController::class, 'importWarengruppe'])->name('importWG');
     Route::get('/import-odata/sortiment', [ODataController::class, 'importSortiment'])->name('importSortiment');
 

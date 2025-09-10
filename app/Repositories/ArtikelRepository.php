@@ -8,6 +8,7 @@ use App\Models\WgHelper;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Config;
+use App\Repositories\ImageRepository;
 
 class ArtikelRepository
 {
@@ -252,7 +253,8 @@ class ArtikelRepository
                     $artikel->$artikelKey = $data[$dataKey];
                 }
                 else {
-                    Log::info(['Image' => $this->storeItemImage($data[$dataKey], $artikel->artikelnr)]);
+                    $imageRepository = new ImageRepository();
+                    Log::info(['Image' => $imageRepository->storeItemImage($data[$dataKey], $artikel->artikelnr)]);
                 }
             } else {
                 $this->logMessage('warning', "Datenfeld '{$dataKey}' fehlt. ", ['data' => $data]);
@@ -268,7 +270,7 @@ class ArtikelRepository
 
     }
 
-
+/*
     function storeItemImage($base64Image, $artikelnr)
     {
         // Prüfe, ob ein Bild vorhanden ist
@@ -298,6 +300,6 @@ class ArtikelRepository
         // Rückgabe des Speicherpfads für die Datenbank
         return $path;
     }
-
+*/
 
 }

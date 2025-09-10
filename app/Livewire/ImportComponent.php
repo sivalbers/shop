@@ -33,8 +33,13 @@ class ImportComponent extends Component
                 $odata = new ODataController();
                 $response = $odata->importSortiment();
         }
-        session()->flash('message', $response->json()['message'] ?? 'Fehler beim Import: '.$type);
+        elseif ($type === 'ArtikelBestand') {
+                $odata = new ODataController();
+                $result = $odata->importArtikelBestand();
+        }
 
+        // session()->flash('message', $response->json()['message'] ?? 'Fehler beim Import: '.$type);
+        session()->flash('message', $result['message']);
     }
 
     public function render(){
