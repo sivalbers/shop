@@ -1,4 +1,4 @@
-@props(['pos', 'loop', 'tabFavoritActive' => false, 'favoritenActiveId', ])
+@props(['pos', 'artikel', 'loop', 'tabFavoritActive' => false, 'favoritenActiveId', ])
 
 <div class="flex flex-col md:flex-row w-full hover:bg-[#e3e692] ">
    @php
@@ -36,15 +36,15 @@
 
             <span class="relative group text-gray-500 pr-2">
                 <x-fluentui-info-12-o class="w-5" />
-                @if (!empty(trim($pos['langtext'])))
+                @if (!empty(trim($artikel->langtext)))
                     <span class="absolute hidden group-hover:block bg-gray-700 text-white text-xs rounded py-1 px-2 w-80 -mt-8 z-10">
-                        {!! $pos['langtext'] !!}
+                        {!! $artikel->langtext !!}
                     </span>
                 @endif
             </span>
             <div class="w-full">
                 <a href="#" wire:click.prevent="showArtikel('{{ $pos['artikelnr'] }}')" class="hover:underline">
-                    <span class="font-bold ">{{ $pos['artikelnr'] }} - </span>{{ $pos['bezeichnung'] }}
+                    <span class="font-bold ">{{ $pos['artikelnr'] }} - </span>{{ $artikel->bezeichnung }}
                 </a>
             </div>
         </span>
@@ -54,7 +54,7 @@
             <div class="flex flex-row items-center ml-auto">
                 <div class="flex-grow-0 w-auto">
                     <div class="basis-1 text-red-800 text-sm text-right">
-                        {{ formatPreis( $pos['vkpreis']) }} € / {{ $pos['einheit'] }}
+                        {{ formatPreis( $artikel->vkpreis) }} € / {{ $artikel->einheit }}
                     </div>
                 </div>
 
@@ -84,7 +84,7 @@
                 </div>
                 <div class="flex-grow-0 w-auto ml-2">
 
-                    @if ($pos['bestand'] == 0)
+                    @if ( $artikel->bestand == 0 )
                         <x-fluentui-vehicle-truck-profile-24-o class="h-7 text-red-500" title="Artikel nicht auf Lager" />
                     @else
                         <x-fluentui-vehicle-truck-profile-24 class="h-7 text-[#CDD503]" title="Artikel auf Lager"/>

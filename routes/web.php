@@ -75,7 +75,7 @@ Route::get('/news', NachrichtenListComponent::class)
 
 
 Route::middleware([AdminMiddleware::class])->group(function(){
-    Route::get('/artikels', ArtikelComponent::class)->middleware('auth')->name('artikel');
+    Route::get('/artikel', ArtikelComponent::class)->middleware('auth')->name('artikel');
     Route::get('/sortimente', SortimentComponent::class)->middleware('auth')->name('sortimente');
     Route::get('/artikel-sortimente', ArtikelSortimentComponent::class)->middleware('auth'); // Fehler
     Route::get('/warengruppen', WarengruppeComponent::class)->middleware('auth')->name('warengruppen');

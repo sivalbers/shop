@@ -114,18 +114,28 @@
 
                             <x-slot name="content">
                                 <x-dropdown-hr />
-                                <x-dropdown-link :href="route('apitest')" wire:navigate class="bg-red-50">
+                                <x-dropdown-link :href="route('apitest')" wire:navigate class="">
                                     {{ __('API-Test') }}
                                 </x-dropdown-link>
 
-                                <x-dropdown-link :href="route('apilog')" wire:navigate class="bg-red-50">
+                                <x-dropdown-link :href="route('apilog')" wire:navigate class="">
                                     {{ __('API-Log') }}
                                 </x-dropdown-link>
 
-                                <x-dropdown-link :href="route('logs')" wire:navigate class="bg-red-50">
+                                <x-dropdown-link :href="route('logs')" wire:navigate class="">
                                     {{ __('Log-Datei') }}
                                 </x-dropdown-link>
-                                <x-dropdown-link :href="route('belegarchiv')" wire:navigate class="bg-red-50">
+                                <x-dropdown-link :href="route('artikel')" wire:navigate class="">
+                                    <div class="flex flex-row">
+                                        <x-fluentui-database-search-20-o class="w-6 h-6 mr-1" />
+                                        {{ __('Artikelstamm') }}
+                                    </div>
+                                </x-dropdown-link>
+                                <x-dropdown-link :href="route('import')" wire:navigate class="border-b border-gray-300">
+                                    {{ __('Import') }}
+                                </x-dropdown-link>
+
+                                <x-dropdown-link :href="route('belegarchiv')" wire:navigate class="">
                                     <div class="flex flex-row">
                                         <x-fluentui-database-search-20-o class="w-6 h-6 mr-1" />
                                         {{ __('Belegarchiv') }}
@@ -402,6 +412,12 @@
 
                                 <x-dropdown-link :href="route('logs')" wire:navigate class="border-b border-gray-300 ">
                                     {{ __('Log-Datei') }}
+                                </x-dropdown-link>
+                                <x-dropdown-link :href="route('artikel')" wire:navigate class="">
+                                    <div class="flex flex-row">
+                                        <x-fluentui-database-search-20-o class="w-6 h-6 mr-1" />
+                                        {{ __('Artikelstamm') }}
+                                    </div>
                                 </x-dropdown-link>
                                 <x-dropdown-link :href="route('import')" wire:navigate class="border-b border-gray-300 ">
                                     {{ __('Import') }}

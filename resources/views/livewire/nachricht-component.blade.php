@@ -187,7 +187,7 @@
 
 
             @foreach ($nachrichten as $nachricht)
-                <div class="hover:bg-[#CDD503] flatwhite bg-red-600   my-2">
+                <div class="hover:bg-[#CDD503] flatwhite my-2">
                     <div class="flex flex-row pt-1 ">
                         <div class="min-w-6 w-[6%] px-2 border-r flex justify-center">
                             @if ($nachricht->prioritaet === 'hoch')

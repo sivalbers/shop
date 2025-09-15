@@ -74,12 +74,13 @@
                     @endphp
 
 
-                @foreach ($aPositions as $index => $position)
+                    @foreach ($aPositions as $index => $position)
+                        @php $artikel = $artikelMap[$position['artikelnr']] ?? null; @endphp
                         <div wire:key="pos-{{ $position['uid'] }}">
                             @if (!$listKurz)
-                                <x-artikel-detail :pos="$position" :loop="$loop" :tabFavoritActive="$tabFavoritActive" :favoritenActiveId="$favoritenActiveId" />
+                                <x-artikel-detail :pos="$position" :artikel="$artikel" :loop="$loop" :tabFavoritActive="$tabFavoritActive" :favoritenActiveId="$favoritenActiveId" />
                             @else
-                                <x-artikel-kurz :pos="$position" :loop="$loop" :tabFavoritActive="$tabFavoritActive" :favoritenActiveId="$favoritenActiveId" />
+                                <x-artikel-kurz :pos="$position" :artikel="$artikel" :loop="$loop" :tabFavoritActive="$tabFavoritActive" :favoritenActiveId="$favoritenActiveId" />
                             @endif
                         </div>
                     @endforeach

@@ -217,7 +217,6 @@ class ShopComponent extends Component
 
     public function clickWarengruppe($wg){
 
-
         $this->aktiveWarengruppe = $wg;
         $this->aktiveWarengruppeBezeichung = Warengruppe::getBezeichnung($wg);
 
@@ -232,67 +231,12 @@ class ShopComponent extends Component
     #[On('showArtikel')]
     public function showArtikel($artikelnr){
         $this->mArtikel = Artikel::with('ersatzArtikel')->with('zubehoerArtikel')->where('artikelnr', $artikelnr)->first();
-        $artikel = $this->mArtikel;
 
-        $this->aPositions = [];
-
-        $this->aPositions[] = [
-            'uid' => md5($artikel->artikelnr . now()),
-            'id' => 0,
-            'menge' => 0,
-            'artikelnr' => $artikel->artikelnr,
-            'bezeichnung' => $artikel->bezeichnung,
-            'vkpreis' => $artikel->vkpreis,
-            'einheit' => $artikel->einheit,
-            'steuer' => $artikel->steuer,
-            'bestand' =>  $artikel->bestand,
-            'langtext' =>  $artikel->langtext,
-            'is_favorit' => $artikel->is_favorit,
-        ] ;
-
-
-
-        foreach($this->mArtikel->zubehoerArtikel as $zubehoerArtikel){
-
-            $this->aPositions[] = [
-                'uid' => md5($zubehoerArtikel->zubehoerArtikel->artikelnr . now()),
-                'id' => 0,
-                'menge' => 0,
-                'artikelnr' => $zubehoerArtikel->zubehoerartikelnr,
-                'bezeichnung' => $zubehoerArtikel->zubehoerArtikel->bezeichnung,
-                'vkpreis' => $zubehoerArtikel->zubehoerArtikel->vkpreis,
-                'einheit' => $zubehoerArtikel->zubehoerArtikel->einheit,
-                'steuer' => $zubehoerArtikel->zubehoerArtikel->steuer,
-                'bestand' =>  $zubehoerArtikel->zubehoerArtikel->bestand,
-                'langtext' =>  $zubehoerArtikel->zubehoerArtikel->langtext,
-                'is_favorit' => false,
-                'art' => 'Zubehörartikel',
-            ] ;
-        }
-
-
-        foreach($this->mArtikel->ersatzArtikel as $ersatzartikel){
-            $this->aPositions[] = [
-                'uid' => md5($ersatzartikel->ersatzArtikel->artikelnr . now()),
-                'id' => 0,
-                'menge' => 0,
-                'artikelnr' => $ersatzartikel->ersatzartikelnr,
-                'bezeichnung' => $ersatzartikel->ersatzArtikel->bezeichnung,
-                'vkpreis' => $ersatzartikel->ersatzArtikel->vkpreis,
-                'einheit' => $ersatzartikel->ersatzArtikel->einheit,
-                'steuer' => $ersatzartikel->ersatzArtikel->steuer,
-                'bestand' =>  $ersatzartikel->ersatzArtikel->bestand,
-                'langtext' =>  $ersatzartikel->ersatzArtikel->langtext,
-                'is_favorit' => false,
-                'art' => 'Ersatzartikel',
-            ] ;
-        }
-
+        $this->aPositions = \App\Repositories\PositionRepository::loadArtikelKomplett($artikelnr);
 
         $this->quantity = 0;
         $this->showForm = true ;
         $this->refreshArtikelDetailFavoriten();
-
     }
 
     public function refreshArtikelDetailFavoriten(){
@@ -320,7 +264,7 @@ class ShopComponent extends Component
             ->whereIn('f_p.artikelnr', $artikelNr)
             ->groupBy('f_p.artikelnr');
 
-    //Log::info($favoriten->toRawSql());
+        //Log::info($favoriten->toRawSql());
 
         $favoriten = $favoriten->get();
 
@@ -334,14 +278,10 @@ class ShopComponent extends Component
                 $pos['is_favorit'] = (bool)$favoritenMap[$artikelnr]->is_favorit;
             }
         }
-
         return $favoriten;
-
     }
 
     public function changeTab($tab){
-
-
 
         $oldTab = $this->activeTab;
 
@@ -595,6 +535,19 @@ class ShopComponent extends Component
                 if ($pos['menge'] >0) {
 
                     if ($pos['id'] == 0){
+                        /* NEU */
+                        $artikel = Artikel::find($pos['artikelnr']);
+                        if ($artikel) {
+                            BestellungPos::Create([
+                                'bestellnr' => $bestellung->nr,
+                                'artikelnr' => $pos['artikelnr'],
+                                'menge' => $pos['menge'],
+                                'epreis' => $artikel->vkpreis,
+                                'steuer' => $artikel->steuer,
+                                'sort' => 0,
+                            ]);
+                        }
+                        /* ALT
                         BestellungPos::Create([
                             'bestellnr' => $bestellung->nr,
                             'artikelnr' => $pos['artikelnr'],
@@ -603,6 +556,7 @@ class ShopComponent extends Component
                             'steuer' => $pos['steuer'],
                             'sort' => 0,
                         ]);
+                        */
 
                         $this->aPositions[$key]['menge'] = 0;
 

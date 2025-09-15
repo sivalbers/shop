@@ -526,7 +526,6 @@
                         $pos = $aPositions[0];
                     @endphp
                     <div class="flex flex-row items-center justify-between border-b-2 border-sky-600">
-
                         <div class="flex flex-row items-center">
                             <div class="mr-2">
                                 <a href="#" wire:click.prevent="favoritArtikelForm( '{{ $mArtikel->artikelnr }}')" class="text-gray-300 hover:text-yellow-500 group">
@@ -562,7 +561,7 @@
                                     $bilder = imageExistsAll($mArtikel->artikelnr);
                                 @endphp
 
-                                <x-product-image :images="$bilder" size="200" artikelnr="{{ $mArtikel->artikelnr }}" beschreibung="{{ $mArtikel->bezeichnung }}" />
+                                <x-product-image-small :images="$bilder" size="200" artikelnr="{{ $mArtikel->artikelnr }}" beschreibung="{{ $mArtikel->bezeichnung }}" />
 
 
                             </div>

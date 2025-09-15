@@ -114,12 +114,21 @@ class ShopArtikellisteComponent extends Component
     }
 
 
-    public function render()
-    {
+    public function render(){
+
+        $artikelIds = collect($this->aPositions)->pluck('artikelnr')->toArray();
+
+        $artikelMap = Artikel::whereIn('artikelnr', $artikelIds)
+            ->get()
+            ->keyBy('artikelnr');
+
         $artikels = $this->myArtikels;
 
-        return view('livewire.shop.shopartikelliste', [ 'artikels' => $artikels ]);
-
+        return view('livewire.shop.shopartikelliste',
+            [
+              'artikels' => $artikels,
+              'artikelMap' => $artikelMap
+            ]);
     }
 
 
@@ -161,123 +170,38 @@ class ShopArtikellisteComponent extends Component
 
             $this->selectedTab = Tab::arWG;
 
-
-            $this->aPositions = array();
-
-            $sortimentArray = explode(' ', $sortiment);
-
             $warengruppe = Warengruppe::where('wgnr', $wgnr)->first();
             if ($warengruppe) {
                 $this->selectedWarengruppeBezeichung = $warengruppe->bezeichnung;
             }
 
-            $kundennr = Session()->get('debitornr');
-            $user_id = Auth::id();
+            $this->aPositions = \App\Repositories\PositionRepository::loadByWarengruppe($wgnr);
 
-            $inClause = implode(',', array_fill(0, count($sortimentArray), '?'));
-
-            $SQLquery = "
-                SELECT
-                    a.artikelnr,
-                    a.bezeichnung,
-                    a.vkpreis,
-                    a.steuer,
-                    a.bestand,
-                    a.langtext,
-                    a.einheit,
-                    CASE
-                        WHEN EXISTS (
-                            SELECT 1
-                            FROM favoriten_pos f_p
-                            JOIN favoriten f ON f.id = f_p.favoriten_id
-                            WHERE f_p.artikelnr = a.artikelnr
-                                AND f.kundennr = ?
-                                AND (f.user_id = 0 or f.user_id = ?)
-
-                        ) THEN 1
-                        ELSE 0
-                    END AS is_favorit
-                FROM artikel a
-                JOIN artikel_sortimente a_s ON a_s.artikelnr = a.artikelnr
-                WHERE a.wgnr = ?
-                    and a.gesperrt = false
-                    AND a_s.sortiment IN ($inClause)
-                    GROUP BY a.artikelnr,
-                            a.bezeichnung,
-                            a.vkpreis,
-                            a.steuer,
-                            a.bestand,
-                            a.langtext,
-                            a.einheit,
-                            is_favorit
-                    ";
-
-            $params = array_merge([$kundennr, $user_id, $wgnr], $sortimentArray);
-
-
-            $this->myArtikels = DB::select($SQLquery, $params);
-
-            Log::info(['SQL', $SQLquery]);
-            Log::info(['Kundennr', $kundennr, 'userId', $user_id, 'wgnr', $wgnr, 'sortiment', $sortimentArray]);
-
-            foreach ($this->myArtikels as $artikel) {
-                Log::info(['Artikel', $artikel->artikelnr]);
-
-                $this->aPositions[] = [
-                    'uid' => md5($artikel->artikelnr . now()),
-                    'id' => 0,
-                    'menge' => 0,
-                    'artikelnr' => $artikel->artikelnr,
-                    'bezeichnung' => $artikel->bezeichnung,
-                    'vkpreis' => $artikel->vkpreis,
-                    'einheit' => $artikel->einheit,
-                    'steuer' => $artikel->steuer,
-                    'bestand' =>  $artikel->bestand,
-                    'langtext' =>  $artikel->langtext,
-                    'is_favorit' => $artikel->is_favorit,
-                ] ;
-
-            }
             $this->anzGefunden = count($this->aPositions);
 
             $this->selectedWarengruppe = $wgnr;
         } else {
 
-            $this->anzGefunden = 0 ;
             $this->selectedWarengruppeBezeichung = '';
-            $this->myArtikels = Artikel::join('artikel_sortimente as a_s', 'artikel.artikelnr', '=', 'a_s.artikelnr')
-                ->where('artikel.wgnr', '')
-                ->select('artikel.*')
-                ->get();
-
-            foreach ($this->myArtikels as $artikel) {
-
-                $this->aPositions[] = [
-                    'uid' => md5($artikel->artikelnr . now()),
-                    'id' => 0,
-                    'menge' => 0,
-                    'artikelnr' => $artikel->artikelnr,
-                    'bezeichnung' => $artikel->bezeichnung,
-                    'vkpreis' => $artikel->vkpreis,
-                    'einheit' => $artikel->einheit,
-                    'steuer' => $artikel->steuer,
-                    'bestand' =>  $artikel->bestand,
-                    'langtext' =>  $artikel->langtext,
-                ] ;
-            }
+            $this->aPositions[] = [
+                'uid' => md5('00' . now()),
+                'id' => 0,
+                'menge' => 0,
+                'artikelnr' => '',
+                'is_favorit' => false,
+            ] ;
 
             $this->selectedWarengruppe = null;
-
             $this->anzGefunden = 0;
         }
 
-        $endTime = microtime(true);
-
-        // Differenz in Millisekunden berechnen
-        $duration = ($endTime - $startTime) * 1000;
-
-        // Zeit in die Log-Datei schreiben
-        // Log::info('Dauer der Funktion "ShopArtikellisteComponent.selectWarengruppe":', ['Dauer (ms)' => $duration]);
+        /*
+            $endTime = microtime(true);
+            Differenz in Millisekunden berechnen
+            $duration = ($endTime - $startTime) * 1000;
+            Zeit in die Log-Datei schreiben
+            Log::info('Dauer der Funktion "ShopArtikellisteComponent.selectWarengruppe":', ['Dauer (ms)' => $duration]);
+        */
 
     }
 
@@ -286,8 +210,6 @@ class ShopArtikellisteComponent extends Component
     #[On('showArtikelsuche')]
     public function showArtikelSuch($suchArtikelNr, $suchBezeichnung){
 
-
-
         if (empty($suchArtikelNr) && empty($suchBezeichnung)) {
 
             $this->aPositions = [];
@@ -295,102 +217,15 @@ class ShopArtikellisteComponent extends Component
             return;
         }
 
-
         session()->put('suchArtikelNr', $suchArtikelNr);
         session()->put('suchBezeichnung', $suchBezeichnung);
         $this->lastSuchArtikelNr = $suchArtikelNr;
         $this->lastSuchBezeichnung = $suchBezeichnung;
         $this->selectedTab = Tab::arSuche;
 
-        $sortiment = explode(' ', session()->get('sortiment'));
-
-        $artikelArr = [];
-        $artikelBezArr = [];
-
-        if ($suchArtikelNr != '') {
-            $artikelArr = explode(' ', $suchArtikelNr);
-        }
-
-        if ($suchBezeichnung != '') {
-            $artikelBezArr = explode(' ', $suchBezeichnung);
-        }
-
-        $kundennr = Session()->get('debitornr');
-        $userId = Auth::id();
-
-
-        $q = Artikel::select('artikel.*')
-        ->selectRaw("CASE WHEN EXISTS (
-            SELECT 1
-            FROM favoriten_pos f_p
-            JOIN favoriten f ON f.id = f_p.favoriten_id
-
-            WHERE artikel.gesperrt = false
-              and f_p.artikelnr = artikel.artikelnr
-              AND f.kundennr = ?
-              AND (f.user_id = 0 OR f.user_id = ?)
-            ) THEN 1 ELSE 0 END AS is_favorit", [$kundennr, $userId])
-        ->where(function ($query) use ($artikelArr, $artikelBezArr) {
-            // Bedingung: Artikelnummer kann einen der Begriffe enthalten
-            if (!empty($artikelArr)) {
-                $query->where(function ($q) use ($artikelArr) {
-                    foreach ($artikelArr as $part) {
-                        $q->orWhere('artikelnr', 'like', "%{$part}%");
-                    }
-                });
-            }
-
-            // Bedingung: alle Teile der Suchbezeichnung müssen in Bezeichnung oder Langtext vorkommen
-            if (!empty($artikelBezArr)) {
-                foreach ($artikelBezArr as $part) {
-                    $query->where(function ($q) use ($part) {
-                        $q->where('bezeichnung', 'like', "%{$part}%")
-                          ->orWhere('langtext', 'like', "%{$part}%");
-                    });
-                }
-            }
-        })
-        ->whereIn('artikelnr', ArtikelSortiment::whereIn('sortiment', $sortiment)->pluck('artikelnr'))
-        ->take(200);
-
-        // Ergebnis abrufen
-        $this->myArtikels = $q->get();
-
-        $this->aPositions = [];
-
-        // Mengen-Array für jedes gefundene Artikel
-        foreach ($this->myArtikels as $artikel) {
-
-            $this->aPositions[] = [
-                'uid' => md5($artikel->artikelnr . now()),
-                'id' => 0,
-                'menge' => 0,
-                'artikelnr' => $artikel->artikelnr,
-                'bezeichnung' => $artikel->bezeichnung,
-                'vkpreis' => $artikel->vkpreis,
-                'einheit' => $artikel->einheit,
-                'steuer' => $artikel->steuer,
-                'bestand' =>  $artikel->bestand,
-                'langtext' =>  $artikel->langtext,
-                'is_favorit' => $artikel->is_favorit,
-            ] ;
-
-        }
-
+        $this->aPositions = \App\Repositories\PositionRepository::loadSuchArtikel($suchArtikelNr, $suchBezeichnung);
         $this->anzGefunden = count($this->aPositions);
-    }
 
-
-    function findMengeByArtikelnummer(&$artikelArray, $artikelnummer) {
-        foreach ($artikelArray as &$artikel) {
-            if ($artikel['artikelnummer'] === $artikelnummer) {
-                $artikel['artikelnummer'] = 'x';
-                return $artikel['menge'];
-            }
-        }
-
-        // Falls die Artikelnummer nicht gefunden wird, kann null zurückgegeben werden
-        return null;
     }
 
     #[On('showArtikelSchnellerfassung')]
@@ -399,65 +234,9 @@ class ShopArtikellisteComponent extends Component
 
         $this->selectedTab = Tab::arSchnellerfassung;
 
-        $artikelStr = '';
+        $this->aPositions = \App\Repositories\PositionRepository::loadBySchnellerfassung($artikelArray, $sortiment);
 
-        foreach ($artikelArray as $art){
-            $artikelStr = $artikelStr . $art['artikelnummer']. ', ';
-        }
-
-        $artikelnummern = array_column($artikelArray, 'artikelnummer');
-        $sortimentArray = explode(' ', $sortiment);
-
-        $kundennr = Session()->get('debitornr');
-        $userId = Auth::id();
-
-        $qu = Artikel::join('artikel_sortimente as a_s', 'artikel.artikelnr', '=', 'a_s.artikelnr')
-                ->whereIn('artikel.artikelnr', $artikelnummern)
-                ->whereIn('a_s.sortiment', $sortimentArray)
-                ->select('artikel.*')
-                ->selectRaw("CASE WHEN EXISTS (
-                    SELECT 1
-                    FROM favoriten_pos f_p
-                    JOIN favoriten f ON f.id = f_p.favoriten_id
-
-                    WHERE f_p.artikelnr = artikel.artikelnr
-                      AND f.kundennr = ?
-                      AND (f.user_id = 0 OR f.user_id = ?)
-                    ) THEN 1 ELSE 0 END AS is_favorit", [$kundennr, $userId]);
-
-
-        $artikellist = $qu->get();
-
-        $this->myArtikels = array();
-        foreach ($artikelArray as $art){
-
-            $xx = $artikellist->firstWhere('artikelnr', $art['artikelnummer']);
-            if ($xx){
-                $this->myArtikels[] = $xx;
-            }
-
-        }
-
-        $this->aPositions = [];
-
-        foreach ($this->myArtikels as $artikel){
-            $this->aPositions[] = [
-                'uid' => md5($artikel->artikelnr . now()),
-                'id' => 0,
-                'menge' => $this->findMengeByArtikelnummer($artikelArray, $artikel->artikelnr),
-                'artikelnr' => $artikel->artikelnr,
-                'bezeichnung' => $artikel->bezeichnung,
-                'vkpreis' => $artikel->vkpreis,
-                'einheit' => $artikel->einheit,
-                'steuer' => $artikel->steuer,
-                'bestand' =>  $artikel->bestand,
-                'langtext' =>  $artikel->langtext,
-                'is_favorit' => $artikel->is_favorit,
-            ] ;
-
-        }
-
-        $this->anzGefunden = count($this->myArtikels);
+        $this->anzGefunden = count($this->aPositions);
     }
 
     #[On('showFavoritMitID')]
@@ -466,43 +245,7 @@ class ShopArtikellisteComponent extends Component
 
         $this->selectedTab = Tab::arFavoriten;
 
-
-        $sortimentArray = explode(' ', session()->get('sortiment'));
-
-        $qu = Artikel::query()
-            ->join('favoriten_pos as p', 'p.artikelnr', '=', 'artikel.artikelnr')
-            ->join('favoriten as f', 'f.id', '=', 'p.favoriten_id')
-            ->join('artikel_sortimente as s', 's.artikelnr', '=', 'artikel.artikelnr')
-            ->where('f.id', $favoritId)
-            ->whereIn('s.sortiment', $sortimentArray)
-            ->where('artikel.gesperrt', '=', false)
-            ->select('p.id', 'artikel.*', \DB::raw('true as is_favorit'))
-            ->orderBy('p.sort', 'asc');
-
-
-        Log::info($qu->toRawSql());
-
-        $artikellist = $qu->get();
-
-        $this->aPositions = [];
-
-        foreach ($artikellist as $artikel){
-
-            $this->aPositions[] = [
-                'uid' => md5($artikel->artikelnr . now()),
-                'id' => $artikel->id,
-                'menge' => 0,
-                'artikelnr' => $artikel->artikelnr,
-                'bezeichnung' => $artikel->bezeichnung,
-                'vkpreis' => $artikel->vkpreis,
-                'einheit' => $artikel->einheit,
-                'steuer' => $artikel->steuer,
-                'bestand' =>  $artikel->bestand,
-                'langtext' =>  $artikel->langtext,
-                'is_favorit' => $artikel->is_favorit,
-            ] ;
-
-        }
+        $this->aPositions = \App\Repositories\PositionRepository::loadByFavoritId($favoritId);
         $this->anzGefunden = count($this->aPositions);
     }
 
@@ -510,22 +253,6 @@ class ShopArtikellisteComponent extends Component
     public function showArtikel($artikelnr){
         $this->dispatch('showArtikel' , ['artikelnr' => $artikelnr ]);
     }
-
-/*
-    #[On('updateQuantityPos')]
-    public function updateQuantityPos($artikelnr, $quantity)
-    {
-        try{
-            if ($quantity >= 0) {
-               // $this->quantities[$artikelnr]['menge'] = $quantity;
-
-                //$this->dispatch('updateQuantity' , $artikelnr, $quantity);
-            }
-        } catch (\Exception $e) {
-            return log::error ( 'Fehler in updateQuantityPos: ' , [ $e->getMessage()]);
-        }
-    }
-*/
 
 
     public function InBasket(){
@@ -540,12 +267,13 @@ class ShopArtikellisteComponent extends Component
                 if ($pos['menge'] >0) {
 
                     if ($pos['id'] == 0){
+                        $artikel = Artikel::where('artikelnr', $pos['artikelnr'])->first();
                         BestellungPos::Create([
                             'bestellnr' => $bestellung->nr,
                             'artikelnr' => $pos['artikelnr'],
-                            'menge' => $pos['menge'],
-                            'epreis' => $pos['vkpreis'],
-                            'steuer' => $pos['steuer'],
+                            'menge'     => $pos['menge'],
+                            'epreis'    => $artikel->vkpreis,
+                            'steuer'    => $artikel->steuer,
                             'sort' => 0,
                         ]);
 

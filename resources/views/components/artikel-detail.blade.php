@@ -1,4 +1,4 @@
-@props(['pos', 'loop', 'tabFavoritActive' => false, 'favoritenActiveId', ])
+@props(['pos', 'artikel', 'loop', 'tabFavoritActive' => false, 'favoritenActiveId', ])
 
 <div class="flex flex-col md:flex-row mt-2 border-b-2 border-sky-600 w-full ">
 
@@ -26,7 +26,7 @@
         </a>
 
         <a href="#" wire:click.prevent="showArtikel('{{ $pos['artikelnr'] }}')" class="hover:underline align-middle">
-            {{ $pos['artikelnr'] }} - {{ $pos['bezeichnung'] }}
+            {{ $pos['artikelnr'] }} - {{ $artikel->bezeichnung }}
         </a>
     </div>
 
@@ -37,9 +37,9 @@
             @php
                 $bilder = imageExistsAll($pos['artikelnr']);
             @endphp
-            <x-product-image :images="$bilder" size="130" artikelnr="{{ $pos['artikelnr'] }}" beschreibung="{{ $pos['bezeichnung'] }}" />
+            <x-product-image-small :images="$bilder" size="130" artikelnr="{{ $pos['artikelnr'] }}" beschreibung="{{ $artikel->bezeichnung }}" />
         </div>
-        {!! $pos['langtext'] !!}
+        {!! $artikel->langtext !!}
 
     </div>
 
@@ -48,22 +48,11 @@
 </div>
 
 
-
-
-
-
-
-       <!-- Spalte 2 -->
-
-
-    <!-- Spalte 3 -->
-
-
     <div class="flex flex-col w-full md:w-4/12 items-end text-left  space-y-1 ">
         {{-- Zeile: Preis + Menge + Icons in einer Zeile, zentriert --}}
         <div class="flex basis-1 flex-row md:flex-col   space-x-2">
             <div class="text-red-800 text-lg  text-left">
-                {{ formatPreis($pos['vkpreis']) }} € / {{ $pos['einheit'] }}
+                {{ formatPreis($artikel->vkpreis) }} € / {{ $artikel->einheit }}
             </div>
             <div class="flex felx-row items-center">
                 {{-- Menge --}}
@@ -84,7 +73,7 @@
                 <button type="submit" class="cursor-pointer text-sky-600" title="In den Warenkorb">
                     <x-fluentui-shopping-bag-20-o class="h-7" title="In den Warenkorb"/>
                 </button>
-                @if ($pos['bestand'] == 0)
+                @if ($artikel->bestand == 0)
                     <x-fluentui-vehicle-truck-profile-24-o class="h-7 text-red-500" title="Artikel nicht auf Lager" />
                 @else
                     <x-fluentui-vehicle-truck-profile-24 class="h-7 text-[#CDD503]" title="Artikel auf Lager"/>

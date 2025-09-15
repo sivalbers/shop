@@ -3,26 +3,42 @@
 use Illuminate\Support\Facades\Storage;
 
 
-if (!function_exists('imageExists')) {
-    function imageExists($artikelnr)
+if (!function_exists('imageExistsBig')) {
+    function imageExistsBig($artikelnr)
     {
-        if (Storage::exists("public/products/$artikelnr.jpg")) {
+        $pathBig = env('image_big', "public/products_big/");
+
+
+        if (Storage::exists($pathBig.$artikelnr.".jpg")) {
             return "$artikelnr.jpg";
-        } elseif (Storage::exists("public/products/$artikelnr.png")) {
+        } elseif (Storage::exists($pathBig.$artikelnr.".png")) {
             return "$artikelnr.png";
         }
-
         return '';
     }
-
 }
+
+if (!function_exists('imageExistsSmall')) {
+    function imageExistsSmall($artikelnr)
+    {
+        $pathSmall = env('image_small', "public/products_small/");
+        if (Storage::exists($pathSmall.$artikelnr.".jpg")) {
+            return "$artikelnr.jpg";
+        } elseif (Storage::exists($pathSmall.$artikelnr.".png")) {
+            return "$artikelnr.png";
+        }
+        return '';
+    }
+}
+
 
 if (!function_exists('imageExistsAll')) {
     function imageExistsAll($artikelnr)
     {
         static $allFiles = null; // Caching für alle Dateien im Verzeichnis
 
-        $directory = "public/products/";
+        //$directory = env('image_big', "public/products_big/");
+        $directory = env('image_small', "public/products_small/");
 
         // Lade alle Dateien nur einmal in die statische Variable
         if ($allFiles === null) {

@@ -35,7 +35,7 @@
                             $bilder = imageExistsAll($artikel['artikelnr']);
                             @endphp
 
-                            <x-product-image :images="$bilder" size="75" artikelnr="{{ $artikel['artikelnr'] }}" beschreibung="{{ $artikel['bezeichnung'] }}" />
+                            <x-product-image-small :images="$bilder" size="75" artikelnr="{{ $artikel['artikelnr'] }}" beschreibung="{{ $artikel['bezeichnung'] }}" />
                         </div>
                         @php
                             $anr = $artikel['artikelnr'];
