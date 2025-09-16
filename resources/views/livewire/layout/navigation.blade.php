@@ -375,7 +375,7 @@
             <div class="flex flex-col ">
                 <div class="h-12 flex  w-full bg-inherit/50"> <!-- Zeile mit Name -->
 
-                    @if ( !empty(Auth::user()) && auth()->user()->isAdmin())
+                    @if ( !empty(Auth::user()) && ( auth()->user()->isAdmin() || auth()->user()->isStammdatenManager() ))
                         <x-dropdown align="right">
                             <x-slot name="trigger">
                                 <button
@@ -389,11 +389,11 @@
                                             {{ Auth::user()->name }}
                                         </div>
 
-                                        @if (auth()->user()->isAdmin())
+
                                         <div>
                                             <x-dropdown-svg />
                                         </div>
-                                        @endif
+                                        
 
                                     </div>
 
@@ -401,7 +401,7 @@
                             </x-slot>
 
                             <x-slot name="content" class="bg-red-400">
-
+                                @if (auth()->user()->isAdmin())
                                 <x-dropdown-link :href="route('apitest')" wire:navigate class="-mt-1 border-b border-gray-300 ">
                                     {{ __('API-Test') }}
                                 </x-dropdown-link>
@@ -413,12 +413,19 @@
                                 <x-dropdown-link :href="route('logs')" wire:navigate class="border-b border-gray-300 ">
                                     {{ __('Log-Datei') }}
                                 </x-dropdown-link>
+                                @endif
+
+                                @if (auth()->user()->isStammdatenManager())
                                 <x-dropdown-link :href="route('artikel')" wire:navigate class="">
                                     <div class="flex flex-row">
                                         <x-fluentui-database-search-20-o class="w-6 h-6 mr-1" />
                                         {{ __('Artikelstamm') }}
                                     </div>
                                 </x-dropdown-link>
+                                @endif
+
+                                @if (auth()->user()->isAdmin())
+
                                 <x-dropdown-link :href="route('import')" wire:navigate class="border-b border-gray-300 ">
                                     {{ __('Import') }}
                                 </x-dropdown-link>
@@ -428,7 +435,7 @@
                                         {{ __('Belegarchiv') }}
                                     </div>
                                 </x-dropdown-link>
-
+                                @endif
                             </x-slot>
 
                         </x-dropdown>
