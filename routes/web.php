@@ -30,6 +30,7 @@ use App\Http\Controllers\PunchOut;
 
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\ApiLogMiddleware;
+use App\Http\Middleware\StammdatenManagerMiddleware;
 
 use App\Livewire\ArtikelSuche;
 
@@ -74,8 +75,12 @@ Route::get('/news', NachrichtenListComponent::class)
     ->name('news');
 
 
+Route::middleware(['auth', 'stammdaten'])->group(function () {
+    Route::get('/artikel', ArtikelComponent::class)->name('artikel');
+});
+
 Route::middleware([AdminMiddleware::class])->group(function(){
-    Route::get('/artikel', ArtikelComponent::class)->middleware('auth')->name('artikel');
+    // Route::get('/artikel', ArtikelComponent::class)->middleware(['auth', 'stammdaten'])->name('artikel');
     Route::get('/sortimente', SortimentComponent::class)->middleware('auth')->name('sortimente');
     Route::get('/artikel-sortimente', ArtikelSortimentComponent::class)->middleware('auth'); // Fehler
     Route::get('/warengruppen', WarengruppeComponent::class)->middleware('auth')->name('warengruppen');

@@ -164,6 +164,7 @@ class ShopComponent extends Component
             ->join('artikel', 'warengruppen.wgnr', '=', 'artikel.wgnr')
             ->join('artikel_sortimente', 'artikel.artikelnr', '=', 'artikel_sortimente.artikelnr')
             ->whereIn('artikel_sortimente.sortiment', $sortimentArray)
+            ->where('gesperrt', 0)
             ->groupBy('warengruppen.wgnr', 'warengruppen.bezeichnung')
             ->orderBy('warengruppen.bezeichnung');
 

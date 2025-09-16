@@ -18,6 +18,10 @@ return Application::configure(basePath: dirname(__DIR__))
             '/api/*',
         ]);
       //  $middleware->append(AdminMiddleware::class); => Middleware wird immer aufgerufen
+        $middleware->alias([
+            'stammdaten' => \App\Http\Middleware\StammdatenManagerMiddleware::class,
+            'admin' => \App\Http\Middleware\AdminMiddleware::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

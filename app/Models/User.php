@@ -18,12 +18,17 @@ class User extends Authenticatable
     // Rolle int
     // A = Admin
     // R = Reporter (Darf nachrichten erstellen)
-    //                          R  A
+    // S = Stammdatenmanager
+    //                       S  R  A
     //              1 2 4 8 16 32 64
 
 
     public function isAdmin(){
         return ( $this->role & 64 ) === 64 ;
+    }
+
+    public function isStammdatenManager(){
+        return (( $this->role & 16 ) === 16) | $this->isAdmin() ;
     }
 
     public function isReporter(){
