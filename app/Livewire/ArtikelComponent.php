@@ -33,6 +33,10 @@ class ArtikelComponent extends Component
     public $processedCount = 0;     // wie viele Dateien schon fertig sind
     public $totalCount = 0;         // wie viele insgesamt
 
+    public array $loadedImages = [];
+    public array $selectedToDelete = [];
+
+
     use WithFileUploads;
 
     public $images = []; // für mehrere Dateien
@@ -155,6 +159,44 @@ class ArtikelComponent extends Component
 
     }
 
+    public function loadImages($artikelnr)
+    {
+        $path = env('image_small', 'public/products_small/');
+        $files = Storage::files($path);
+
+        $artikelImages = [];
+
+        foreach ($files as $file) {
+            $filename = basename($file);
+            if (str_starts_with($filename, $artikelnr)) {
+                $artikelImages[] = $filename;
+            }
+        }
+
+        $this->loadedImages[$artikelnr] = $artikelImages;
+
+    }
+
+    public function deleteSelectedImages($artikelnr)
+    {
+        $pathSmall = env('image_small', 'public/products_small/');
+        $pathBig = env('image_big', 'public/products_big/');
+        if (!isset($this->selectedToDelete[$artikelnr])) {
+            return;
+        }
+        foreach ($this->selectedToDelete[$artikelnr] as $filename => $isChecked) {
+            $filename = str_replace('__', '.', $filename);
+
+            if ($isChecked) {
+                Storage::delete($pathSmall . $filename);
+                Storage::delete($pathBig . $filename);
+            }
+        }
+
+        // Cleanup & reload
+        unset($this->selectedToDelete[$artikelnr]);
+        $this->loadImages($artikelnr);
+    }
 
 
 }

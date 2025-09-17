@@ -107,15 +107,53 @@
                                 </p>
                             </div>
                             <div class="w-1/12 px-1">
-                                {{ imageExistsSmall($artikel->artikelnr) !== '' ? 'Ja' : '' }}
+                                @if (imageExistsSmall($artikel->artikelnr) !== '')
+                                    <button x-data @click="$dispatch('toggle-images-{{ $artikel->artikelnr }}')"
+                                        wire:click="loadImages('{{ $artikel->artikelnr }}')">
+                                        Ja <span>▼</span>
+                                    </button>
+                                @endif
                             </div>
 
+
+                        </div>
+                        <div x-data="{ visible: false }"
+                            x-init="window.addEventListener('toggle-images-{{ $artikel->artikelnr }}', () => visible = !visible)">
+                            <div x-show="visible" x-transition class="w-full bg-gray-100 px-4 py-3 border-b border-gray-400">
+                                @if (isset($loadedImages[$artikel->artikelnr]))
+                                    <div class="flex justify-between items-start flex-wrap gap-2">
+                                        <div class="flex flex-wrap gap-2">
+                                            @foreach ($loadedImages[$artikel->artikelnr] as $image)
+                                                <div class="relative">
+                                                    <input type="checkbox"
+                                                        wire:model="selectedToDelete.{{ $artikel->artikelnr }}.{{ str_replace('.', '__', $image) }}"
+                                                        class="absolute top-0 left-0 m-1 z-10">
+                                                    <a href="{{ asset('storage/products_big/' . $image ) }}"
+                                                    data-lightbox="galerie-{{ $artikel->artikelnr }}"
+                                                    data-title="{{ $artikel->artikelnr }} - {{ $artikel->bezeichnung }}">
+                                                        <img class="border-2 border-slate-400 rounded-md"
+                                                            style="width: 120px;"
+                                                            src="{{ asset('storage/products_small/' . $image ) }}"
+                                                            alt="Produktbild">
+                                                    </a>
+                                                </div>
+                                            @endforeach
+                                        </div>
+
+                                        <div>
+                                            <button wire:click="deleteSelectedImages('{{ $artikel->artikelnr }}')"
+                                                class="bg-red-600 text-white px-3 py-2 rounded text-sm hover:bg-red-700">
+                                                🗑️ Ausgewählte löschen
+                                            </button>
+                                        </div>
+                                    </div>
+                                @endif
+                            </div>
                         </div>
                     @endforeach
                 </div>
                 <div class="col-span-7">
                     {{ $artikels->links() }}<br>
-
                 </div>
 
             </div>
