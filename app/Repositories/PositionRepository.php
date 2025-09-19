@@ -190,7 +190,8 @@ class PositionRepository
                         foreach ($artikelBezArr as $part) {
                             $query->where(function ($q) use ($part) {
                                 $q->where('bezeichnung', 'like', "%{$part}%")
-                                ->orWhere('langtext', 'like', "%{$part}%");
+                                ->orWhere('langtext', 'like', "%{$part}%")
+                                ->orWhere('artikelnr', 'like', "%{$part}%");
                             });
                         }
                     }

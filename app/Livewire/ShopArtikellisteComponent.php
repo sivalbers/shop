@@ -67,7 +67,7 @@ class ShopArtikellisteComponent extends Component
 
     public function mount()
     {
-        Log::info('ShopArtikellisteComponent.mount()');
+        Log::info('ShopArtikellisteComponent->mount()');
         $this->listKurz =  Config::userString(self::CONFIG_LISTKURZ) === 'true';
         $this->myArtikels = collect();
 
@@ -216,9 +216,8 @@ class ShopArtikellisteComponent extends Component
             $this->anzGefunden = 0;
             return;
         }
+        Log::info(['B3a showArtikelSuch' => $suchBezeichnung ]);
 
-        session()->put('suchArtikelNr', $suchArtikelNr);
-        session()->put('suchBezeichnung', $suchBezeichnung);
         $this->lastSuchArtikelNr = $suchArtikelNr;
         $this->lastSuchBezeichnung = $suchBezeichnung;
         $this->selectedTab = Tab::arSuche;

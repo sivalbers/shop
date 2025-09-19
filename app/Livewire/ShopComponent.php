@@ -89,6 +89,7 @@ class ShopComponent extends Component
     public $aPositions = [];
 
     public function mount(){
+        Log::info('ShopComponent - Mount()');
 
         $this->showFavoritBearbeitenForm = false;
         $this->showFavoritArtikelForm = false;
@@ -113,11 +114,18 @@ class ShopComponent extends Component
         $this->updateQuery();
 
         if (request()->has('artikel')) {
+            Log::info('A Suche mit Artikel nach Bezeichnung');
             Log::info(['showArtikel' => request()->get('artikel')]);
             $this->suchBezeichnung = request()->get('suchBezeichnung');
             $this->pendingUpdateSuche = true; // Setze eine Flag
             Log::info('ShopComponent.Mount()');
             $this->dispatch('showArtikel', artikelnr: request()->get('artikel'));
+        }
+        elseif (request()->has('suchBezeichnung')) {
+            Log::info(['B1a Suche nach Bezeichnung' => $this->suchBezeichnung ] );
+            $this->suchBezeichnung = request()->get('suchBezeichnung');
+            Log::info(['B1b Suche nach Bezeichnung' => $this->suchBezeichnung ] );
+            $this->pendingUpdateSuche = true; // Setze eine Flag
         }
         request()->get('artikel');
     }
@@ -211,9 +219,12 @@ class ShopComponent extends Component
     }
 
     public function updateSuche(){
+        Log::info(['B2 UpdateSuche' => $this->suchBezeichnung]);
+        session()->put('suchArtikelNr', $this->suchArtikelnr);
+        session()->put('suchBezeichnung', $this->suchBezeichnung);
+
 
         $this->dispatch('showArtikelsuche', $this->suchArtikelnr, $this->suchBezeichnung);
-
     }
 
     public function clickWarengruppe($wg){

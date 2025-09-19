@@ -33,30 +33,12 @@ class ArtikelSuche extends Component
                     });
                 }
             }
-            
-/*
-            $this->ergebnisse = $query->whereIn('artikelnr', ArtikelSortiment::whereIn('sortiment', $sortiment)->pluck('artikelnr'))
-                                ->take(200)->toArray();
-*/
+
             $this->ergebnisse = $query->whereIn('artikelnr', ArtikelSortiment::whereIn('sortiment', $sortiment)->pluck('artikelnr'))
             ->limit(100)
             ->get()
             ->toArray();
 
-
-/*
-
-                $this->ergebnisse = Artikel::query()
-                ->where(function ($query) {
-                    $query->where('artikelnr', 'like', "%{$this->suchbegriff}%")
-                        ->orWhere('bezeichnung', 'like', "%{$this->suchbegriff}%")
-                        ->orWhere('langtext', 'like', "%{$this->suchbegriff}%");
-                })
-                ->whereIn('artikelnr', ArtikelSortiment::whereIn('sortiment', $sortiment)->pluck('artikelnr'))
-                ->limit(1000)
-                ->get()
-                ->toArray();
-*/
         }
         else
             $this->ergebnisse = [];

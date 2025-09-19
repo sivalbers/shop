@@ -6,6 +6,7 @@
             placeholder="Artikel suchen..."
             @focus="offen = true"
             @click.away="offen = false"
+            @keydown.enter.prevent="window.location.href = '/shop?tab=suche&suchBezeichnung=' + $event.target.value"
         />
         <div class="ml-2 flex items-center">
             @if ($suchbegriff != '')
@@ -19,7 +20,6 @@
             @endif
         </div>
     </div>
-
 
 
     <ul x-show="offen" x-transition

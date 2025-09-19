@@ -35,7 +35,7 @@
                             ****************************************************************************
                         -->
 
-                        <div class="flex flex-row ">
+                        <div class="flex flex-row  pb-2">
                             @if ( !empty(Auth::user()) && auth()->user()->isAdmin())
                             <div
                                 x-data="{
@@ -230,7 +230,7 @@
 
                                             <div class="text-right">
                                                 <button type="submit"
-                                                    class="ml-2 px-4 py-2 border border-blue-600 bg-sky-600 rounded-md text-white">Suchen</button>
+                                                    class="cursor-pointer ml-2 px-4 py-2 border border-blue-600 bg-sky-600 rounded-md text-white">Suchen</button>
                                             </div>
 
                                         </div>
@@ -245,7 +245,7 @@
                                                         class="text-ewe-gruen border border-ewe-gruen rounded-md bg-white mr-2">
                                                         <x-fluentui-info-16 class="w-6" />
                                                     </div>
-                                                    <button @click="expanded = !expanded" class="">
+                                                    <button @click="expanded = !expanded" class="cursor-pointer">
                                                         <div class="flex flex-row items-center ">
                                                             <div>
                                                                 Hinweise zur Suche
