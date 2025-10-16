@@ -81,11 +81,12 @@ class PunchOut extends Controller
                 session()->regenerate();
                 AuthHelper::AfterLogin($userDebitor);
                 session()->put('hook_url', $hook_url );
-                session()->put('punchout', 1 );
                 return redirect()->route('startseite');
             }
             else {
-                session()->put('punchout', 0 );
+                session()->invalidate();
+                session()->regenerateToken();
+                session()->forget('hook_url');
                 return response()->json([
                     'success' => false,
                     'message' => 'E-Mail oder Passwort ist falsch',

@@ -17,8 +17,8 @@
 
                 <div class="flex {{ $flexclass }} mb-2 underline w-full">
                     <div class="w-1/3 text-right font-bold text-xl mr-2">
-                        
-                        {{ (session()->get('punchout') === 1) ? 'Warenkorb:' : 'Bestellung:' }}
+
+                        {{ (session()->has('hook_url')) ? 'Warenkorb:' : 'Bestellung:' }}
                     </div>
                     <div class="w-2/3 font-bold text-xl mt-0.5 {{ $fldClass }}">
                         {{ $bestellung->nr }}
@@ -121,7 +121,7 @@
                 @if (!$abholer)
                 <div class="flex flex-row md:flex-col xl:flex-row mb-1 mt-4 text-base">
                     <div class="w-1/3 font-bold mr-2 text-right  md:text-left lg:text-right">
-                        Lieferadresse:
+                        {{ (session()->has('hook_url')) ? 'Abladestelle:' : 'Lieferadresse:' }}
                     </div>
 
                     <div class="w-2/3 md:w-full lg:w-2/3">

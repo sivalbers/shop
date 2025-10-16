@@ -160,7 +160,7 @@ class WarenkorbComponent extends Component
         else
         {   // Rückgabe per OCI-Punchout
             session()->put('oci_cart_data', $this->prepareCartData());
-            \Log::info('vor redirect()->route(oci.submit)');
+            
             return redirect()->route('oci.submit');
         }
     }
@@ -227,6 +227,32 @@ class WarenkorbComponent extends Component
 
     }
 
+
+    private function einheitenMapping($einheit){
+
+        $mapping = [
+            'ST'        => 'PCE',
+            'M'         => 'MTR',
+            'Satz'      => 'PK',
+            'Liter'     => 'LTR',
+            'L'         => 'LTR',
+            'kg'        => 'KGM',
+            'Rolle'     => 'RO',
+            'Karton'    => 'CT',
+            'Eimer'     => 'PCE',
+            'Flasche'   => 'PCE',
+            'Sack'      => 'BG',
+            'GB'        => 'PA',
+            'Paar'      => 'PR',
+            'Dose'      => 'TIN',
+            'Tafel'     => 'PG',
+            'Tube'      => 'PCE',
+        ];
+
+        $einheit = strtoupper(trim($einheit));
+        return $mapping[$einheit] ?? 'PCE';
+    }
+
     private function prepareCartData()
     {
         // Bestellung mit Positionen und Artikeln laden
@@ -249,7 +275,7 @@ class WarenkorbComponent extends Component
 
             // Menge und Einheit
             $data['NEW_ITEM-QUANTITY'][$itemNumber] = (string) $position->menge;
-            $data['NEW_ITEM-UNIT'][$itemNumber] = $artikel->einheit ?? 'C62'; // C62 = Stück
+            $data['NEW_ITEM-UNIT'][$itemNumber] = $this->einheitenMapping( $artikel->einheit ) ; // C62 = Stück
 
             // Preise
             $data['NEW_ITEM-PRICE'][$itemNumber] = number_format($position->epreis, 2, '.', '');

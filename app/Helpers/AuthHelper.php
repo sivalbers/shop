@@ -48,9 +48,8 @@ class AuthHelper
         session()->put('firma',     $stdDebitor->debitor->name);
         session()->put('sortiment', $stdDebitor->debitor->sortiment);
         session()->put('rolle',     $stdDebitor->rolle );
-        session()->put('punchout',  0 );
         Log::info("UserDebitor", ['debitor_nr' => session()->get('debitornr'), 'firma' => session()->get('firma'), 'sortiment' => session()->get('sortiment'), 'rolle' => session()->get('rolle'),
-            'punchout' => session()->get('punchout') ]);
+            'hook_url' => session()->get('hook_url') ]);
 
         $bestellung = Bestellung::getBasket();
         if ($bestellung){

@@ -167,7 +167,7 @@
                                 @if (!$isPosModified)
                                     @if (count($bPositionen) > 0 )
 
-                                        {{ (session()->get('punchout') === 1) ? 'Warenkorb absenden' : 'Bestellung absenden' }}
+                                        {{ (session()->has('hook_url')) ? 'Warenkorb absenden' : 'Bestellung absenden' }}
                                     @else
                                         Keine Änderungen
                                     @endif
