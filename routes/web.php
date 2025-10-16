@@ -112,6 +112,10 @@ Route::middleware([AdminMiddleware::class])->group(function(){
 Route::post('/punchout', [Punchout::class, 'handlePunchOutPost']);
 Route::get('/punchout', [PunchOut::class, 'handlePunchOutGet']);
 
+Route::get('/oci/submit', [ PunchOut::class, 'submit'] )
+    ->middleware(['auth'])
+    ->name('oci.submit');
+
 Route::view('/datenschutz', 'datenschutz')->name('datenschutz');
 Route::view('/impressum', 'impressum')->name('impressum');
 

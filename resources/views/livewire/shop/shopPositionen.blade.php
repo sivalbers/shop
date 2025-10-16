@@ -166,7 +166,8 @@
 
                                 @if (!$isPosModified)
                                     @if (count($bPositionen) > 0 )
-                                        Bestellung absenden
+
+                                        {{ (session()->get('punchout') === 1) ? 'Warenkorb absenden' : 'Bestellung absenden' }}
                                     @else
                                         Keine Änderungen
                                     @endif

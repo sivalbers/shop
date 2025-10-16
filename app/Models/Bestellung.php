@@ -83,6 +83,7 @@ class Bestellung extends Model
     }
 
     public static function getBasket(){
+        Log::info("GetBasket", ['user_id' => Auth::id() ]);
         // Vorhandene Bestellung wird geladen, oder eine neue Bestellung wird erzeugt
         $result = null;
         if( Auth::user() ){
@@ -99,7 +100,7 @@ class Bestellung extends Model
                 ->where('user_id', $user->id)
                 ->where('status_id', 0)
                 ->first();
-
+            Log::info("Bestellung prüfen", ['kundennr' => $kundennr, 'user_id' => $user->id, 'bestellnr' => $bestellung ? $bestellung->nr : 'keine Bestellung vorhanden' ]);
             if (!$bestellung){
 
                 $LfAddr = Anschrift::Lieferadresse($kundennr);

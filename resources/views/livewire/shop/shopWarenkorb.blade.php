@@ -17,7 +17,8 @@
 
                 <div class="flex {{ $flexclass }} mb-2 underline w-full">
                     <div class="w-1/3 text-right font-bold text-xl mr-2">
-                        Bestellung:
+                        
+                        {{ (session()->get('punchout') === 1) ? 'Warenkorb:' : 'Bestellung:' }}
                     </div>
                     <div class="w-2/3 font-bold text-xl mt-0.5 {{ $fldClass }}">
                         {{ $bestellung->nr }}

@@ -7,6 +7,7 @@ use App\Models\Debitor;
 use App\Models\UserDebitor;
 use Exception;
 use Illuminate\Support\Facades\Log;
+use App\Models\Anschrift;
 
 class UserRepository
 {
@@ -335,5 +336,75 @@ class UserRepository
         }
 
     }
+
+
+    public function createPunchoutUser(array $data){
+
+        // $data auslesen
+        $username= $data['Username'] ?? 'no user';  // mercateo oder wesernetz
+        $password= $data['Password'] ?? 'no password';
+        $externalUserId= $data['externalUserId'] ?? 'no externalUserId'; // z.B. samundt
+
+        $email = $externalUserId . '@'. $username . '.com'; // samundt@wesrnetz.com
+
+
+        // Prüfen, ob Benutzer existiert, wenn nicht anlegen
+        $user = User::where('email', $email)->first();
+        if (empty($user)) {
+            $user = new User();
+            $user->name = $externalUserId;
+            $user->email = $email;
+            $user->role = 8; // PunchOut User
+            $user->password = bcrypt($password);
+            $user->save();
+
+            $this->logMessage('debug', 'Neue Benutzer-ID: ', ['userId' => $user->id]);
+        }
+        else{
+            Log::info('Benutzer existiert. Es wurde kein neuer Benutzer angelegt');
+        }
+
+        // Prüfen, ob Debitor existiert, wenn nicht anlegen
+        $debitor = Debitor::where('name', $username)->first();
+        if (empty($debitor)) {
+            $debitor = new Debitor();
+            if ($username = 'mercateo'){
+                $debitor->nr = 21011;
+                $debitor->name = 'mercateo';
+                $debitor->sortiment = 'EWE TK';
+                $debitor->abholer = 0;
+                $debitor->save();
+            }
+            elseif ($username = 'wesernetz'){
+                $debitor->nr = 26020;
+                $debitor->name = 'wesernetz';
+                $debitor->sortiment = 'BE WN';
+                $debitor->abholer = 0;
+                $debitor->save();
+            }
+            $userDebitor = UserDebitor::where('email', $email)->where('debitor_nr', $debitor->nr)->with('debitor')->first();
+            if (empty($userDebitor)) {
+                $userDebitor = new UserDebitor();
+                $userDebitor->email = $email;
+                $userDebitor->debitor_nr = $debitor->nr;
+                $userDebitor->rolle = 0;
+                $userDebitor->standard = 1;
+                $userDebitor->save();
+            }
+
+        } else {
+           $userDebitor = UserDebitor::where('email', $email)->where('debitor_nr', $debitor->nr)->with('debitor')->first();
+        }
+
+        $ans = AnschriftRepository::checkPunchOutAnschrift($debitor);
+
+        if ($ans !== true ){
+            Log::info('Keine Anschrift gefunden, FEHLER!');
+        }
+
+
+        return $userDebitor;
+    }
+
 
 }

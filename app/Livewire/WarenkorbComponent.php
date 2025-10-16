@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
+use App\Http\Controllers\PunchOut;
 use App\Models\Bestellung;
 use App\Models\BestellungPos;
 use App\Models\Anschrift;
@@ -131,7 +132,6 @@ class WarenkorbComponent extends Component
             return;
         }
 
-
         $this->bestellung->kundenbestellnr = $this->kundenbestellnr;
         $this->bestellung->kommission = $this->kommission;
         $this->bestellung->bemerkung = $this->bemerkung;
@@ -139,24 +139,30 @@ class WarenkorbComponent extends Component
         $this->bestellung->status_id = 1;
         $this->bestellung->kopieempfaenger = $this->kopieempfaenger;
 
-
         $this->bestellung->save();
 
-        SendBestellungToErp::dispatch($this->bestellung); // Bestellung in warteschlange zum übertragen an faveo
+        if (!session()->has('hook_url') ){
 
-        $nachrichten = $this->getNachrichten();
+            SendBestellungToErp::dispatch($this->bestellung); // Bestellung in warteschlange zum übertragen an faveo
+            $nachrichten = $this->getNachrichten();
 
-        $details = [
-            'bestellung' => $this->bestellung,
-            'nachrichten' => $nachrichten,
-            'login' => Auth::user()->login,
-        ];
+            $details = [
+                'bestellung' => $this->bestellung,
+                'nachrichten' => $nachrichten,
+                'login' => Auth::user()->login,
+            ];
 
+            Mail::send(new BestellbestaetigungMail($details));
 
-        Mail::send(new BestellbestaetigungMail($details));
+            $this->dispatch('ShopComponent_NeueBestellung');
 
-        $this->dispatch('ShopComponent_NeueBestellung');
-
+        }
+        else
+        {   // Rückgabe per OCI-Punchout
+            session()->put('oci_cart_data', $this->prepareCartData());
+            \Log::info('vor redirect()->route(oci.submit)');
+            return redirect()->route('oci.submit');
+        }
     }
 
 
@@ -176,7 +182,6 @@ class WarenkorbComponent extends Component
         if ($doShowMessage){
             $this->dispatch('zeigeMessage', titel:"Angaben gespeichert.", hinweis: "Die Bestellung wurde noch nicht versendet.");
         }
-
     }
 
 
@@ -204,7 +209,6 @@ class WarenkorbComponent extends Component
 
     public function updatedLieferdatum(){
 
-
         if ($this->minLieferdatum > $this->lieferdatum){
             $this->lieferdatumError = 'Lieferdatum nicht möglich! - Datum wurde korrigiert.' ;
             $this->lieferdatum = $this->minLieferdatum;
@@ -222,4 +226,63 @@ class WarenkorbComponent extends Component
         }
 
     }
+
+    private function prepareCartData()
+    {
+        // Bestellung mit Positionen und Artikeln laden
+        $this->bestellung->load(['positionen.artikel.warengruppe']);
+
+        $positionen = $this->bestellung->positionen;
+        $data = [];
+
+        // Für jede Position die OCI-Felder befüllen
+        foreach ($positionen as $index => $position) {
+            $itemNumber = $index + 1; // OCI startet bei 1
+            $artikel = $position->artikel;
+
+            // Grundlegende Felder
+            $data['http_content_charset'][$itemNumber] = 'utf8';
+            $data['oci_interface'][$itemNumber] = null;
+
+            // Artikel-Beschreibung
+            $data['NEW_ITEM-DESCRIPTION'][$itemNumber] = $artikel->bezeichnung ?? '';
+
+            // Menge und Einheit
+            $data['NEW_ITEM-QUANTITY'][$itemNumber] = (string) $position->menge;
+            $data['NEW_ITEM-UNIT'][$itemNumber] = $artikel->einheit ?? 'C62'; // C62 = Stück
+
+            // Preise
+            $data['NEW_ITEM-PRICE'][$itemNumber] = number_format($position->epreis, 2, '.', '');
+            $data['NEW_ITEM-CURRENCY'][$itemNumber] = 'EUR';
+            $data['NEW_ITEM-PRICEUNIT'][$itemNumber] = '1';
+
+            // Langtext (falls vorhanden)
+            if (!empty($artikel->langtext)) {
+                $data['NEW_ITEM-LONGTEXT_' . $itemNumber . ':132'] = [$artikel->langtext];
+            }
+
+            // Vendor-Informationen (anpassen nach deinen Bedürfnissen)
+            $data['NEW_ITEM-VENDOR'][$itemNumber] = '350923'; // Deine Lieferantennummer
+            $data['NEW_ITEM-VENDORMAT'][$itemNumber] = $artikel->artikelnr;
+            $data['NEW_ITEM-EXT_PRODUCT_ID'][$itemNumber] = $artikel->artikelnr;
+
+            // Link zum Artikel
+            $data['NEW_ITEM-ATTACHMENT_TITLE'][$itemNumber] = url('/artikel/' . $artikel->artikelnr);
+
+            // Custom Fields
+            $data['NEW_ITEM-CUST_FIELD3'][$itemNumber] = number_format($position->steuer, 2, '.', '');
+            $data['NEW_ITEM-CUST_FIELD5'][$itemNumber] = 'LAGERMATERIAL'; // oder dynamisch
+
+            // Hersteller (falls vorhanden)
+            $data['NEW_ITEM-MANUFACTURER'][$itemNumber] = 'SIEVERDING'; // oder aus DB
+
+            // Warengruppe
+            if ($artikel->warengruppe) {
+                $data['NEW_ITEM-ZZMATGROUP'][$itemNumber] = $artikel->warengruppe->wgnr ?? '';
+            }
+        }
+
+        return $data;
+    }
+
 }

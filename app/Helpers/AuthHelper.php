@@ -43,11 +43,14 @@ class AuthHelper
 
 
     public static function AfterLogin(UserDebitor $stdDebitor){
-
+        Log::info("AfterLogin", ['user_id' => Auth::id() ]);
         session()->put('debitornr', $stdDebitor->debitor_nr );
         session()->put('firma',     $stdDebitor->debitor->name);
         session()->put('sortiment', $stdDebitor->debitor->sortiment);
         session()->put('rolle',     $stdDebitor->rolle );
+        session()->put('punchout',  0 );
+        Log::info("UserDebitor", ['debitor_nr' => session()->get('debitornr'), 'firma' => session()->get('firma'), 'sortiment' => session()->get('sortiment'), 'rolle' => session()->get('rolle'),
+            'punchout' => session()->get('punchout') ]);
 
         $bestellung = Bestellung::getBasket();
         if ($bestellung){

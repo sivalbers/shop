@@ -229,5 +229,70 @@ class AnschriftRepository
         return $rec;
     }
 
+    public static function checkPunchOutAnschrift($debitor){
+
+        AnschriftRepository::checkRechnungsadresse($debitor);
+        AnschriftRepository::checkLieferadresse($debitor);
+
+        $lf = Anschrift::Lieferadresse($debitor->nr);
+        $re = Anschrift::Rechnungsadresse($debitor->nr);
+//        Log::info("LF: " . $lf . " RE: " . $re);
+
+        return (Anschrift::Lieferadresse($debitor->nr)  !== -1) && ( Anschrift::Rechnungsadresse($debitor->nr) !== -1);
+    }
+
+    public static function checkRechnungsadresse($debitor){
+        Log::info('Rechnungsadresse prüfen für Debitor: ' . $debitor->nr);
+        if (Anschrift::Rechnungsadresse($debitor->nr) == -1) {
+            Log::info('Lege Standard-Rechnungsadresse für Debitor an: ' . $debitor->nr);
+            $anschrift = new Anschrift();
+            $anschrift->kundennr = $debitor->nr;
+            $anschrift->art = 'Rechnungsadresse';
+            $anschrift->land = '';
+            $anschrift->standard = 1;
+
+            if ($debitor->nr === 21011){
+                $anschrift->kurzbeschreibung = 'EWE NETZ GmbH';
+                $anschrift->firma1 = 'EWE NETZ GmbH';
+                $anschrift->strasse = 'Cloppenburger Str. 302';
+                $anschrift->plz = '26133';
+                $anschrift->stadt = 'Oldenburg';
+            }
+            else {
+
+                $anschrift->kurzbeschreibung = 'Wesernetz Bremen GmbH';
+                $anschrift->firma1 = 'Wesernetz Bremen GmbH';
+                $anschrift->strasse = 'Theodor-Heuss-Allee 20';
+                $anschrift->plz = '28215';
+                $anschrift->stadt = 'Bremen';
+            }
+            $anschrift->save();
+        }else{
+            Log::info('Rechnungsadresse für Debitor existiert bereits: ' . $debitor->nr);
+
+        }
+    }
+
+    public static function checkLieferadresse($debitor){
+        Log::info('Lieferadresse prüfen für Debitor: ' . $debitor->nr);
+        if (Anschrift::Lieferadresse($debitor->nr) == -1) {
+            Log::info('Lege Standard-Lieferadresse für Debitor an: ' . $debitor->nr);
+            $anschrift = new Anschrift();
+            $anschrift->kundennr = $debitor->nr;
+            $anschrift->art = 'Lieferadresse';
+            $anschrift->land = '';
+            $anschrift->standard = 1;
+            $anschrift->firma1 = 'Deb./Abladestelle SRM';
+            $anschrift->strasse = '';
+            $anschrift->plz = '';
+            $anschrift->stadt = '';
+            $anschrift->kurzbeschreibung = 'Deb./Abladestelle SRM';
+            $anschrift->save();
+        }else{
+            Log::info('Lieferadresse für Debitor existiert bereits: ' . $debitor->nr);
+
+        }
+    }
+
 
 }

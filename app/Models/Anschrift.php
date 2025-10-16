@@ -50,46 +50,56 @@ class Anschrift extends Model
         ->where('art', 'Lieferadresse')
         ->where('standard', true)
         ->first();
-        Log::info("1: ", [ $lf ] );
+
         if (!$lf) {
             $lf = Anschrift::where('kundennr', $kundennr)
             ->where('art', 'Lieferadresse')
             ->first();
-            Log::info("2: ", [ $lf ] );
+
             if (!$lf) {
                 $lf = Anschrift::where('kundennr', $kundennr)
+                ->where('art', '')
                 ->first();
-                Log::info("3: ", [ $lf ] );
+
             }
         }
-        Log::info("Result LF: ", [ $lf ] );
+
         $result = -1;
         if ($lf)
             $result = $lf->id;
-        Log::info("Result LF-ID: ", [ $result ] );
+
         return $result;
     }
 
     public static function Rechnungsadresse($kundennr){
+        $result = -1;
+
         $re = Anschrift::where('kundennr', $kundennr)
         ->where('art', 'Rechnungsadresse')
         ->where('standard', true)
         ->first();
-        if (!$re) {
-            $lf = Anschrift::where('kundennr', $kundennr)
+
+        if (empty($re)) {
+            // Standard Rechnungsanschrift nicht gefunden
+            $re = Anschrift::where('kundennr', $kundennr)
             ->where('art', 'Rechnungsadresse')
             ->first();
-            if (!$re) {
+
+            if (empty($re)) {
+                // Keine Rechnungsanschrift gefunden, versuche neutrale Adresse
                 $re = Anschrift::where('kundennr', $kundennr)
+                ->where('art', '')
                 ->first();
             }
 
         }
-        Log::info("Result RE: ", [ $re ] );
-        $result = -1;
-        if ($re)
+
+        if (!empty($re)){
             $result = $re->id;
-        Log::info("Result RE-ID: ", [ $result ] );
+        }
+
+
+
         return $result;
     }
 

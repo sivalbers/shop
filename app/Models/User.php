@@ -19,7 +19,8 @@ class User extends Authenticatable
     // A = Admin
     // R = Reporter (Darf nachrichten erstellen)
     // S = Stammdatenmanager
-    //                       S  R  A
+    // P = PunchOut User
+    //                    P  S  R  A
     //              1 2 4 8 16 32 64
 
 

@@ -6,7 +6,8 @@
             <div class="flex flex-col w-full lg:w-2/5 flatwhite p-2 h-[calc(100vh-202px)]">
                 <!-- Überschrift 'Bestellungen' -->
                 <div class="text-sky-600 font-bold text-xl py-0.5">
-                    Bestellungen
+                    {{ (session()->get('punchout') === 1) ? 'Alte Warenkörbe' : 'Bestellungen' }}
+
                 </div>
 
                 <!-- Tabellenüberschrift fixiert -->
@@ -66,7 +67,8 @@
                         <div class="flex flex-row">
                             <div class="flex flex-row w-1/2 items-center">
                                 <div class="text-xl font-bold  text-sky-600 w-28">
-                                    Bestellung:
+                                    {{ (session()->get('punchout') === 1) ? 'Warenkorb:' : 'Bestellung:' }}
+
                                 </div>
                                 <div class="text-xl font-bold  text-sky-600">
                                     <div>{{ !empty($activeBestellung) ? $activeBestellung->nr : '' }} </div>
