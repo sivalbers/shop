@@ -126,18 +126,43 @@ class PunchOut extends Controller
 
     }
 
-    public function submit()
-    {
-        \Log::info('in Submit');
-        $hookUrl = session('hook_url');
-        $cartData = session('oci_cart_data');
+public function submit()
+{
+    \Log::info('in Submit');
 
-        return view('oci.submit', [
-            'hookUrl' => $hookUrl,
-            'cartData' => $cartData
+    // Prüfen ob die benötigten Session-Daten vorhanden sind
+    if (!session()->has('hook_url')) {
+        \Log::error('OCI Submit: hook_url fehlt in Session');
+        return view('oci.error', [
+            'message' => 'Fehler: Hook-URL nicht gefunden.'
         ]);
     }
 
+    if (!session()->has('oci_cart_data')) {
+        \Log::error('OCI Submit: oci_cart_data fehlt in Session');
+        return view('oci.error', [
+            'message' => 'Fehler: Warenkorb-Daten nicht gefunden.'
+        ]);
+    }
+
+    $hookUrl = session('hook_url');
+    $cartData = session('oci_cart_data');
+
+    \Log::info('OCI Submit', [
+        'hook_url' => $hookUrl,
+        'items_count' => count($cartData['NEW_ITEM-DESCRIPTION'] ?? [])
+    ]);
+
+    // Session-Daten aufräumen (optional)
+    session()->forget(['hook_url', 'oci_cart_data']);
+
+    // View mit Auto-Submit-Formular zurückgeben
+    // Das Formular sendet die Daten per POST an Mercateo
+    return view('oci.submit', [
+        'hookUrl' => $hookUrl,
+        'cartData' => $cartData
+    ]);
+}
 
 
 }
