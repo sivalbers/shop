@@ -347,7 +347,7 @@ class UserRepository
 
         $email = $externalUserId . '@'. $username . '.com'; // samundt@wesrnetz.com
 
-
+        Log::info([ '$email' => $email ] );
         // Prüfen, ob Benutzer existiert, wenn nicht anlegen
         $user = User::where('email', $email)->first();
         if (empty($user)) {
@@ -382,19 +382,20 @@ class UserRepository
                 $debitor->abholer = 0;
                 $debitor->save();
             }
-            $userDebitor = UserDebitor::where('email', $email)->where('debitor_nr', $debitor->nr)->with('debitor')->first();
-            if (empty($userDebitor)) {
-                $userDebitor = new UserDebitor();
-                $userDebitor->email = $email;
-                $userDebitor->debitor_nr = $debitor->nr;
-                $userDebitor->rolle = 0;
-                $userDebitor->standard = 1;
-                $userDebitor->save();
-            }
-
-        } else {
-           $userDebitor = UserDebitor::where('email', $email)->where('debitor_nr', $debitor->nr)->with('debitor')->first();
         }
+        $userDebitor = UserDebitor::where('email', $email)->where('debitor_nr', $debitor->nr)->with('debitor')->first();
+        if (empty($userDebitor)) {
+            $userDebitor = new UserDebitor();
+            $userDebitor->email = $email;
+            $userDebitor->debitor_nr = $debitor->nr;
+            $userDebitor->rolle = 0;
+            $userDebitor->standard = 1;
+            $userDebitor->save();
+        }
+
+
+        $userDebitor = UserDebitor::where('email', $email)->where('debitor_nr', $debitor->nr)->with('debitor')->first();
+
 
         $ans = AnschriftRepository::checkPunchOutAnschrift($debitor);
 

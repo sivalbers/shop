@@ -59,8 +59,8 @@ class PunchOut extends Controller
         $userRepository = new UserRepository();
         $userDebitor = $userRepository->createPunchoutUser($data);
 
-        Log::info('Get data:', [ $data, 'action' => $action, 'username' => $username, 'password' => $password,
-                'externalUserId' => $externalUserId, 'target' => $target, 'mercateoTarget' => $mercateoTarget, 'hook_url' => $hook_url  ]);
+//        Log::info('Get data:', [ $data, 'action' => $action, 'username' => $username, 'password' => $password,
+//                'externalUserId' => $externalUserId, 'target' => $target, 'mercateoTarget' => $mercateoTarget, 'hook_url' => $hook_url  ]);
 
         if (!$userDebitor){
             return response()->json([
