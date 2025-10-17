@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use App\Helpers\AuthHelper;
 
 
@@ -46,7 +47,46 @@ class PunchOut extends Controller
         // Hier kommt der PunchOut an.
         // Hier verarbeitest du den PunchOut-Request und erstellst die Antwort.
         // Beispiel: Prüfe die übermittelten Daten
+
         $data = $request->all();
+
+        // Pflichtfelder definieren
+        $required = [
+            'action',
+            'Username',
+            'Password',
+            'externalUserId',
+            '~TARGET',
+            'mercateoTarget',
+            'HOOK_URL',
+        ];
+
+        // Validator erstellen
+        $validator = Validator::make($data, [
+            'action'         => 'required|string',
+            'Username'       => 'required|string',
+            'Password'       => 'required|string',
+            'externalUserId' => 'required|string',
+            '~TARGET'        => 'required|string',
+            'mercateoTarget' => 'required|string',
+            'HOOK_URL'       => 'required|url',
+        ]);
+
+        // Wenn Validierung fehlschlägt
+        if ($validator->fails()) {
+            // Fehlende oder ungültige Felder protokollieren
+            Log::error('PunchOut Request: Fehlende oder ungültige Parameter', [
+                'errors' => $validator->errors()->toArray(),
+                'data'   => $data,
+            ]);
+
+return response()->json([
+    'success' => false,
+    'message' => 'Falsche oder unvollständige Aufrufparameter',
+    'errors'  => $validator->errors()->toArray(),
+], 401, [], JSON_UNESCAPED_UNICODE);
+
+        }
 
         $action = $data['action'] ?? 'no action';
         $username= $data['Username'] ?? 'no user';
@@ -56,11 +96,12 @@ class PunchOut extends Controller
         $mercateoTarget= $data['mercateoTarget'] ?? 'no mercateoTarget';
         $hook_url= $data['HOOK_URL'] ?? 'no Hook_url';
 
+
         $userRepository = new UserRepository();
         $userDebitor = $userRepository->createPunchoutUser($data);
 
-//        Log::info('Get data:', [ $data, 'action' => $action, 'username' => $username, 'password' => $password,
-//                'externalUserId' => $externalUserId, 'target' => $target, 'mercateoTarget' => $mercateoTarget, 'hook_url' => $hook_url  ]);
+        Log::info('Get data:', [ $data, 'action' => $action, 'username' => $username, 'password' => $password,
+                'externalUserId' => $externalUserId, 'target' => $target, 'mercateoTarget' => $mercateoTarget, 'hook_url' => $hook_url  ]);
 
         if (!$userDebitor){
             return response()->json([
