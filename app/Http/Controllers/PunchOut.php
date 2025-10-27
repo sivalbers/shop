@@ -44,6 +44,7 @@ class PunchOut extends Controller
 
     public function handlePunchOutGet(Request $request)
     {
+        Log::info('PunchOut Get Request received', [ 'request' => $request->all() ]);
         // Hier kommt der PunchOut an.
         // Hier verarbeitest du den PunchOut-Request und erstellst die Antwort.
         // Beispiel: Prüfe die übermittelten Daten

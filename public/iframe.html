@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iFrame Punchout Test</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .info {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 4px solid #0066cc;
+        }
+        
+        .info p {
+            margin: 5px 0;
+            color: #666;
+        }
+        
+        .iframe-wrapper {
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        iframe {
+            width: 100%;
+            height: 800px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+        
+        .controls {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        
+        button {
+            background-color: #0066cc;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-right: 10px;
+            font-size: 14px;
+        }
+        
+        button:hover {
+            background-color: #0052a3;
+        }
+        
+        .console {
+            background-color: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+        
+        .console-entry {
+            margin: 5px 0;
+            padding: 3px 0;
+            border-bottom: 1px solid #333;
+        }
+        
+        .timestamp {
+            color: #888;
+            font-size: 11px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 iFrame Punchout Debug-Tool</h1>
+        
+        <div class="info">
+            <p><strong>Test-URL:</strong> https://netzmaterial-online.de/</p>
+            <p><strong>Zweck:</strong> Simuliert das Verhalten von Mercateo beim Punchout-Aufruf</p>
+            <p><strong>Tipp:</strong> Öffne die Browser-DevTools (F12) und schaue in die Console und den Network-Tab</p>
+        </div>
+
+        <div class="controls">
+            <button onclick="reloadIframe()">🔄 iFrame neu laden</button>
+            <button onclick="openInNewTab()">🔗 In neuem Tab öffnen</button>
+            <button onclick="clearConsole()">🗑️ Console leeren</button>
+            <button onclick="checkCookies()">🍪 Cookie-Status prüfen</button>
+        </div>
+
+        <div class="iframe-wrapper">
+            <iframe 
+                id="punchoutFrame" 
+                src="https://netzmaterial-online.de/index_oci.php?redirect=shop&action=login&Username=mercateo&Password=WerderBremen01&externalUserId=SAMUNDT&~TARGET=_parent&mercateoTarget=_self&HOOK_URL=https%3A%2F%2Ftest4.netzmaterialonline.de%2Fpunchout"
+                sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-top-navigation"
+                allow="fullscreen"
+                loading="eager">
+            </iframe>
+        </div>
+
+        <div class="console" id="debugConsole">
+            <div class="console-entry">
+                <span class="timestamp">[Initialisiert]</span> Debug-Console bereit. Lade iFrame...
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const iframe = document.getElementById('punchoutFrame');
+        const debugConsole = document.getElementById('debugConsole');
+
+        function log(message, type = 'info') {
+            const entry = document.createElement('div');
+            entry.className = 'console-entry';
+            const timestamp = new Date().toLocaleTimeString('de-DE');
+            const icon = type === 'error' ? '❌' : type === 'warning' ? '⚠️' : 'ℹ️';
+            entry.innerHTML = `<span class="timestamp">[${timestamp}]</span> ${icon} ${message}`;
+            debugConsole.appendChild(entry);
+            debugConsole.scrollTop = debugConsole.scrollHeight;
+        }
+
+        // iFrame Events überwachen
+        iframe.addEventListener('load', function() {
+            log('iFrame erfolgreich geladen');
+            try {
+                // Versuch, auf iFrame-Content zuzugreifen (wird bei Cross-Origin fehlschlagen)
+                const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                log('✅ Zugriff auf iFrame-Document möglich (Same-Origin)', 'info');
+            } catch (e) {
+                log('⚠️ Kein Zugriff auf iFrame-Content (Cross-Origin / CORS)', 'warning');
+            }
+        });
+
+        iframe.addEventListener('error', function() {
+            log('❌ Fehler beim Laden des iFrames', 'error');
+        });
+
+        // Funktionen für Buttons
+        function reloadIframe() {
+            log('iFrame wird neu geladen...');
+            iframe.src = iframe.src;
+        }
+
+        function openInNewTab() {
+            log('Öffne URL in neuem Tab zum Vergleich');
+            window.open('https://netzmaterial-online.de/', '_blank');
+        }
+
+        function clearConsole() {
+            debugConsole.innerHTML = '<div class="console-entry"><span class="timestamp">[Geleert]</span> Console wurde zurückgesetzt</div>';
+        }
+
+        function checkCookies() {
+            log('Prüfe Cookie-Einstellungen...');
+            log('Third-Party-Cookies: ' + (navigator.cookieEnabled ? 'Browser erlaubt Cookies' : 'Browser blockiert Cookies'));
+            log('Aktuelle Domain-Cookies: ' + (document.cookie || 'Keine Cookies gesetzt'));
+            log('⚠️ iFrame-Cookies können aus Sicherheitsgründen nicht direkt ausgelesen werden', 'warning');
+        }
+
+        // Initial-Check
+        window.addEventListener('DOMContentLoaded', function() {
+            log('Seite geladen. Starte iFrame-Test...');
+            log('Browser: ' + navigator.userAgent);
+            log('Cookie-Support: ' + (navigator.cookieEnabled ? '✅ Aktiviert' : '❌ Deaktiviert'));
+        });
+
+        // Console-Fehler abfangen
+        window.addEventListener('error', function(e) {
+            log('JavaScript-Fehler: ' + e.message, 'error');
+        });
+    </script>
+</body>
+</html>

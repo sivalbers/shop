@@ -262,6 +262,17 @@ Route::middleware([AdminMiddleware::class])->group(function(){
 
         return $result ;
     });
+
+    Route::get('/test-cookies', function () {
+        return response()->json([
+            'session_config' => [
+                'same_site' => config('session.same_site'),
+                'secure' => config('session.secure'),
+                'http_only' => config('session.http_only'),
+            ],
+            'headers' => request()->headers->all(),
+        ])->cookie('test_cookie', 'test_value', 60, '/', null, true, true, false, 'none');
+    });
 });
 
 
