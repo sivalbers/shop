@@ -23,7 +23,3 @@ yarn-error.log
 public/css/
 clear-cache.sh
 shop.rar
-vite.config.js
-clear-cache.sh
-composer.lock
-package-lock.json
