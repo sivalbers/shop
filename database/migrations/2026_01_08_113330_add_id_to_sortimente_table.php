@@ -20,7 +20,7 @@ return new class extends Migration
                 $table
                     ->tinyInteger('id')
                     ->unsigned()
-                    ->primary()
+                    // ->primary()
                     ->first();
             });
         }
