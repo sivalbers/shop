@@ -14,6 +14,7 @@ return new class extends Migration
             $table->tinyIncrements('id');
             $table->string('bezeichnung', 20);
             $table->string('anzeigename', 20);
+            $table->tinyInteger('abholung')->unsigned()->default(1);
             $table->timestamps();
         });
     }
@@ -26,4 +27,3 @@ return new class extends Migration
         Schema::dropIfExists('sortimente');
     }
 };
-
