@@ -20,7 +20,7 @@
         <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100 dark:bg-gray-900">
             <div>
 
-                <img class="" style="width: 500px" src="{{ asset('storage/logoewe.png' ) }}" alt="Produktbild">
+                <img class="" style="width: 500px" src="{{ asset('images/logoewe.png' ) }}" alt="Produktbild">
 
             </div>
 
