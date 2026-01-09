@@ -13,9 +13,11 @@ return new class extends Migration
     {
         Schema::create('wghelper', function (Blueprint $table) {
             $table->id();
-            $table->string('wgnr', 20);
+            $table->string('wgnr', 20)->nullable();
+            $table->string('name', 80)->nullable()->comment('');
             $table->string('sortiment', 20);
             $table->timestamps();
+
         });
     }
 

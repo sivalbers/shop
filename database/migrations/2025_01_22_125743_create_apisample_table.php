@@ -14,8 +14,10 @@ return new class extends Migration
         Schema::create('apisample', function (Blueprint $table) {
             $table->id();
             $table->string('bezeichnung', 80); // Textfeld mit max. 40 Zeichen
+            $table->string('httpmethod')->nullable()->comment('POST GET PATCH DELETE');
             $table->string('url', 80); // Textfeld mit max. 80 Zeichen
             $table->json('data'); // JSON-Feld
+            $table->string('status')->nullable();
             $table->timestamps();
         });
     }

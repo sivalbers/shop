@@ -15,6 +15,7 @@ class CreateApiLogsTable extends Migration
     {
         Schema::create('apilogs', function (Blueprint $table) {
             $table->id(); // Primärschlüssel
+            $table->string('httpmethod')->nullable()->comment('POST GET PATCH DELETE');
             $table->string('version')->nullable(); // Version der API
             $table->string('pfad')->nullable(); // Pfad der Anfrage
             $table->string('key')->nullable(); // Schlüssel
@@ -23,6 +24,9 @@ class CreateApiLogsTable extends Migration
             $table->text('data')->nullable(); // Eingehende Daten (JSON oder anderer Typ)
             $table->text('response')->nullable(); // Antwortdaten (JSON oder anderer Typ)
             $table->timestamps(); // Erstellt `created_at` und `updated_at`
+
+
+
         });
     }
 

@@ -21,6 +21,9 @@ return new class extends Migration
             $table->string('kommission', 100)->nullable(); // Kommission
             $table->text('bemerkung')->nullable(); // Bemerkung, optional
             $table->date('lieferdatum')->nullable(); // Gewünschtes Lieferdatum
+            $table->string('erpid')->nullable()->comment('VerarbeitungsID aus faveo');
+            $table->string('kopieempfaenger')->nullable()->comment('Email Empfaenger für Bestellbestätigung');
+            $table->unsignedTinyInteger('abholer')->default(1);
             $table->timestamps(); // created_at und updated_at
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
@@ -40,3 +43,5 @@ return new class extends Migration
         Schema::dropIfExists('bestellungen');
     }
 };
+
+                  

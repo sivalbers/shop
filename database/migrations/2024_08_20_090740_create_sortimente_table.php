@@ -12,9 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('sortimente', function (Blueprint $table) {
-            $table->string('bezeichnung', 20)->primary();
+            $table->tinyIncrements('id');
+            $table->string('bezeichnung', 20);
             $table->string('anzeigename', 20);
-            $table->timestamps();
+            $table->unsignedTinyInteger('abholung')->default(1);
+        $table->timestamps();
         });
     }
 

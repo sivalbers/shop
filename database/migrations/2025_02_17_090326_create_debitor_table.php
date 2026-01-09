@@ -15,9 +15,9 @@ return new class extends Migration
             $table->unsignedInteger('nr');
             $table->string('name');
             $table->string('sortiment', 100);
+            $table->unsignedTinyInteger('abholer')->default(1);
             $table->smallInteger('gesperrt')->unsigned()->default(0);
             $table->timestamps();
-
             $table->primary(['nr']);
         });
     }
